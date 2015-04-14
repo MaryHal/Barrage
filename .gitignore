@@ -30,3 +30,9 @@
 
 # Debug files
 *.dSYM/
+
+test/bin/btest
+__pycache__/
+
+.ninja_deps
+.ninja_log
