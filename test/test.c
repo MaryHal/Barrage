@@ -1,6 +1,6 @@
 #include <greatest.h>
 
-#include <bl/Barrage.h>
+#include <barrage/Barrage.h>
 
 #include <math.h>
 
@@ -19,18 +19,17 @@ TEST TestPosition()
         "    setPosition(x + 20, y + 20)\n"
         "end\n";
 
-    struct Barrage barrage;
-    createBarrageFromScript(&barrage, script, 320.0f, 120.0f);
+    struct Barrage* barrage = createBarrageFromScript(script, 320.0f, 120.0f);
 
-    ASSERT(barrage.bullets[0].x == 320.0f);
-    ASSERT(barrage.bullets[0].y == 120.0f);
+    ASSERT(barrage->bullets[0].x == 320.0f);
+    ASSERT(barrage->bullets[0].y == 120.0f);
 
-    tick(&barrage);
+    tick(barrage);
 
-    ASSERT(barrage.bullets[0].x == 350.0f);
-    ASSERT(barrage.bullets[0].y == 150.0f);
+    ASSERT(barrage->bullets[0].x == 350.0f);
+    ASSERT(barrage->bullets[0].y == 150.0f);
 
-    deleteBarrage(&barrage);
+    deleteBarrage(barrage);
 
     PASS();
 }
@@ -42,23 +41,22 @@ TEST TestVelocity()
         "    setVelocity(10.0, 10.0)\n"
         "end\n";
 
-    struct Barrage barrage;
-    createBarrageFromScript(&barrage, script, 320.0f, 120.0f);
+    struct Barrage* barrage = createBarrageFromScript(script, 320.0f, 120.0f);
 
-    ASSERT(barrage.bullets[0].x == 320.0f);
-    ASSERT(barrage.bullets[0].y == 120.0f);
+    ASSERT(barrage->bullets[0].x == 320.0f);
+    ASSERT(barrage->bullets[0].y == 120.0f);
 
-    tick(&barrage);
+    tick(barrage);
 
-    ASSERT(barrage.bullets[0].x == 330.0f);
-    ASSERT(barrage.bullets[0].y == 130.0f);
+    ASSERT(barrage->bullets[0].x == 330.0f);
+    ASSERT(barrage->bullets[0].y == 130.0f);
 
-    tick(&barrage);
+    tick(barrage);
 
-    ASSERT(barrage.bullets[0].x == 340.0f);
-    ASSERT(barrage.bullets[0].y == 140.0f);
+    ASSERT(barrage->bullets[0].x == 340.0f);
+    ASSERT(barrage->bullets[0].y == 140.0f);
 
-    deleteBarrage(&barrage);
+    deleteBarrage(barrage);
 
     PASS();
 }
@@ -73,17 +71,16 @@ TEST TestSwitchFunction()
         "    setPosition(20.0, 30.0)\n"
         "end\n";
 
-    struct Barrage barrage;
-    createBarrageFromScript(&barrage, script, 320.0f, 120.0f);
+    struct Barrage* barrage = createBarrageFromScript(script, 320.0f, 120.0f);
 
     // Currently setFunction takes one frame, so we have to tick twice to run the new function.
-    tick(&barrage);
-    tick(&barrage);
+    tick(barrage);
+    tick(barrage);
 
-    ASSERT(barrage.bullets[0].x == 20.0f);
-    ASSERT(barrage.bullets[0].y == 30.0f);
+    ASSERT(barrage->bullets[0].x == 20.0f);
+    ASSERT(barrage->bullets[0].y == 30.0f);
 
-    deleteBarrage(&barrage);
+    deleteBarrage(barrage);
 
     PASS();
 }

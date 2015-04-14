@@ -1,32 +1,32 @@
 [
   {
     "directory": "/home/sanford/code/current/Barrage",
-    "command": "clang -fpic -MMD -MF obj/src/BulletLua.o.d -c -Wall -Wextra -pedantic -pedantic-errors -std=c11 -DNDEBUG -O3 -Iinclude -Iext/greatest -Werror src/BulletLua.c -o obj/src/BulletLua.o",
+    "command": "clang -fpic -MMD -MF obj/src/BulletLua.o.d -c -Wall -Wextra -pedantic -pedantic-errors -std=c11 -g -O0 -DDEBUG -Iinclude -Iext/greatest -Werror src/BulletLua.c -o obj/src/BulletLua.o",
     "file": "src/BulletLua.c"
   },
   {
     "directory": "/home/sanford/code/current/Barrage",
-    "command": "clang -fpic -MMD -MF obj/src/LuaBinding.o.d -c -Wall -Wextra -pedantic -pedantic-errors -std=c11 -DNDEBUG -O3 -Iinclude -Iext/greatest -Werror src/LuaBinding.c -o obj/src/LuaBinding.o",
+    "command": "clang -fpic -MMD -MF obj/src/LuaBinding.o.d -c -Wall -Wextra -pedantic -pedantic-errors -std=c11 -g -O0 -DDEBUG -Iinclude -Iext/greatest -Werror src/LuaBinding.c -o obj/src/LuaBinding.o",
     "file": "src/LuaBinding.c"
   },
   {
     "directory": "/home/sanford/code/current/Barrage",
-    "command": "clang -fpic -MMD -MF obj/src/Barrage.o.d -c -Wall -Wextra -pedantic -pedantic-errors -std=c11 -DNDEBUG -O3 -Iinclude -Iext/greatest -Werror src/Barrage.c -o obj/src/Barrage.o",
+    "command": "clang -fpic -MMD -MF obj/src/Barrage.o.d -c -Wall -Wextra -pedantic -pedantic-errors -std=c11 -g -O0 -DDEBUG -Iinclude -Iext/greatest -Werror src/Barrage.c -o obj/src/Barrage.o",
     "file": "src/Barrage.c"
   },
   {
     "directory": "/home/sanford/code/current/Barrage",
-    "command": "clang -fpic -MMD -MF obj/src/MathUtils.o.d -c -Wall -Wextra -pedantic -pedantic-errors -std=c11 -DNDEBUG -O3 -Iinclude -Iext/greatest -Werror src/MathUtils.c -o obj/src/MathUtils.o",
+    "command": "clang -fpic -MMD -MF obj/src/MathUtils.o.d -c -Wall -Wextra -pedantic -pedantic-errors -std=c11 -g -O0 -DDEBUG -Iinclude -Iext/greatest -Werror src/MathUtils.c -o obj/src/MathUtils.o",
     "file": "src/MathUtils.c"
   },
   {
     "directory": "/home/sanford/code/current/Barrage",
-    "command": "clang -fpic -MMD -MF obj/src/Bullet.o.d -c -Wall -Wextra -pedantic -pedantic-errors -std=c11 -DNDEBUG -O3 -Iinclude -Iext/greatest -Werror src/Bullet.c -o obj/src/Bullet.o",
+    "command": "clang -fpic -MMD -MF obj/src/Bullet.o.d -c -Wall -Wextra -pedantic -pedantic-errors -std=c11 -g -O0 -DDEBUG -Iinclude -Iext/greatest -Werror src/Bullet.c -o obj/src/Bullet.o",
     "file": "src/Bullet.c"
   },
   {
     "directory": "/home/sanford/code/current/Barrage",
-    "command": "clang -fpic -MMD -MF obj/test/test.o.d -c -Wall -Wextra -pedantic -pedantic-errors -std=c11 -DNDEBUG -O3 -Iinclude -Iext/greatest -Werror test/test.c -o obj/test/test.o",
+    "command": "clang -fpic -MMD -MF obj/test/test.o.d -c -Wall -Wextra -pedantic -pedantic-errors -std=c11 -g -O0 -DDEBUG -Iinclude -Iext/greatest -Werror test/test.c -o obj/test/test.o",
     "file": "test/test.c"
   }
 ]

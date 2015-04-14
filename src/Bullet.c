@@ -1,10 +1,10 @@
-#include <bl/Bullet.h>
+#include <barrage/Bullet.h>
 
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
 
-#include <bl/MathUtils.h>
+#include <barrage/MathUtils.h>
 
 #include <lauxlib.h>
 

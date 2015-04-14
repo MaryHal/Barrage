@@ -2,13 +2,14 @@
 #define BARRAGE_H
 
 #include <stddef.h>
-#include <bl/Bullet.h>
+#include <barrage/Bullet.h>
 
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
 
-#define MAX_BULLETS (1 << 12)
+/* #define MAX_BULLETS (1 << 12) */
+#define MAX_BULLETS (1 << 4)
 
 struct Barrage
 {
@@ -26,20 +27,19 @@ struct Barrage
 extern struct Bullet*  g_bullet;
 extern struct Barrage* g_barrage;
 
-void createBarrage(struct Barrage* barrage);
+struct Barrage* createBarrage();
 void deleteBarrage(struct Barrage* barrage);
-struct Bullet* getFreeBullet(struct Barrage* barrage);
 
-void createBarrageFromFile(struct Barrage* barrage,
-                           const char* filename,
-                           float originX, float originY);
-void createBarrageFromScript(struct Barrage* barrage,
-                             const char* script,
-                             float originX, float originY);
+struct Barrage* createBarrageFromFile(const char* filename,
+                                      float originX, float originY);
+struct Barrage* createBarrageFromScript(const char* script,
+                                        float originX, float originY);
 
 void createBullet(struct Barrage* barrage,
                   float x, float y, float vx, float vy,
                   int luaFuncRef);
+
+struct Bullet* getFreeBullet(struct Barrage* barrage);
 
 void setPlayerPosition(struct Barrage* barrage, float x, float y);
 void tick(struct Barrage* barrage);

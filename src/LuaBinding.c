@@ -1,5 +1,5 @@
-#include <bl/Bullet.h>
-#include <bl/Barrage.h>
+#include <barrage/Bullet.h>
+#include <barrage/Barrage.h>
 
 #include <lua.h>
 #include <lauxlib.h>
@@ -22,14 +22,12 @@ static int ud_barrage_newBarrage(lua_State* L)
 
     // Have lua allocate some data for our Barrage struct.
     struct Barrage_user_data* ud = (struct Barrage_user_data*) lua_newuserdata(L, sizeof(*ud));
-    ud->barrage = (struct Barrage*)malloc(sizeof(struct Barrage));
+    ud->barrage = createBarrageFromFile(filename, originX, originY);
 
     luaL_getmetatable(L, "Barrage");
 
     // Set metatable on userdata
     lua_setmetatable(L, -2);
-
-    createBarrageFromFile(ud->barrage, filename, originX, originY);
 
     return 1;
 }
@@ -41,7 +39,6 @@ static int ud_barrage_destroy(lua_State* L)
     if (ud->barrage != NULL)
     {
         deleteBarrage(ud->barrage);
-        free(ud->barrage);
     }
     ud->barrage = NULL;
 

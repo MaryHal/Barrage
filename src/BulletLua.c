@@ -1,12 +1,12 @@
-#include <bl/BulletLua.h>
+#include <barrage/BulletLua.h>
 
-#include <bl/Bullet.h>
-#include <bl/Barrage.h>
+#include <barrage/Bullet.h>
+#include <barrage/Barrage.h>
 
 #include <stdio.h>
 
 #include <math.h>
-#include <bl/MathUtils.h>
+#include <barrage/MathUtils.h>
 
 void stackDump (lua_State *L)
 {
