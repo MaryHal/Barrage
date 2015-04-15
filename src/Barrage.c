@@ -201,7 +201,7 @@ void tick(struct Barrage* barrage)
 
 int nextAvailable(struct Barrage* barrage)
 {
-    return barrage->currentIndex == barrage->activeCount;
+    return barrage->currentIndex < barrage->activeCount;
 }
 
 struct Bullet* yield(struct Barrage* barrage)
