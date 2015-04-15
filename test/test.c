@@ -9,36 +9,16 @@ int isInRange(float value, float expected, float tolerance)
     return fabs(expected - value) < tolerance;
 }
 
-TEST TestPosition()
+TEST BasicMovementTest()
 {
     const char* script =
         "function main()\n"
         "    x, y = getPosition()\n"
         "    setPosition(x + 10, y + 10)\n"
-        "    x, y = getPosition()\n"
-        "    setPosition(x + 20, y + 20)\n"
-        "end\n";
-
-    struct Barrage* barrage = createBarrageFromScript(script, 320.0f, 120.0f);
-
-    ASSERT(barrage->bullets[0].x == 320.0f);
-    ASSERT(barrage->bullets[0].y == 120.0f);
-
-    tick(barrage);
-
-    ASSERT(barrage->bullets[0].x == 350.0f);
-    ASSERT(barrage->bullets[0].y == 150.0f);
-
-    deleteBarrage(barrage);
-
-    PASS();
-}
-
-TEST TestVelocity()
-{
-    const char* script =
-        "function main()\n"
-        "    setVelocity(10.0, 10.0)\n"
+        "    setFunction(move)\n"
+        "end\n"
+        "function move()\n"
+        "    setVelocity(5.0, 5.0)\n"
         "end\n";
 
     struct Barrage* barrage = createBarrageFromScript(script, 320.0f, 120.0f);
@@ -53,32 +33,33 @@ TEST TestVelocity()
 
     tick(barrage);
 
-    ASSERT(barrage->bullets[0].x == 340.0f);
-    ASSERT(barrage->bullets[0].y == 140.0f);
+    ASSERT(barrage->bullets[0].x == 335.0f);
+    ASSERT(barrage->bullets[0].y == 135.0f);
 
     deleteBarrage(barrage);
 
     PASS();
 }
 
-TEST TestSwitchFunction()
+TEST LaunchTest()
 {
     const char* script =
         "function main()\n"
-        "    setFunction(hello)\n"
-        "end\n"
-        "function hello()\n"
-        "    setPosition(20.0, 30.0)\n"
+        "    launch(45, 1, kill)\n"
+        "    launch(45, 1, kill)\n"
+        "    launch(45, 1, kill)\n"
+        "    launch(45, 1, kill)\n"
+        "    launch(45, 1, kill)\n"
+        "    kill()\n"
         "end\n";
 
     struct Barrage* barrage = createBarrageFromScript(script, 320.0f, 120.0f);
 
-    // Currently setFunction takes one frame, so we have to tick twice to run the new function.
+    ASSERT_EQ(barrage->activeCount, 1);
     tick(barrage);
+    ASSERT_EQ(barrage->activeCount, 5);
     tick(barrage);
-
-    ASSERT(barrage->bullets[0].x == 20.0f);
-    ASSERT(barrage->bullets[0].y == 30.0f);
+    ASSERT_EQ(barrage->activeCount, 0);
 
     deleteBarrage(barrage);
 
@@ -87,9 +68,8 @@ TEST TestSwitchFunction()
 
 SUITE(Bullet_Functionality)
 {
-    RUN_TEST(TestPosition);
-    RUN_TEST(TestVelocity);
-    RUN_TEST(TestSwitchFunction);
+    RUN_TEST(BasicMovementTest);
+    RUN_TEST(LaunchTest);
 }
 
 /* Add definitions that need to be in the test runner's main file. */

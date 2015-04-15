@@ -34,6 +34,19 @@ void bl_setBulletData(struct Bullet* b, float x, float y, float vx, float vy)
     bl_fixSpeed(b);
 }
 
+void bl_copyBullet(struct Bullet* to, struct Bullet* from)
+{
+    to->x  = from->x;
+    to->y  = from->y;
+    to->vx = from->vx;
+    to->vy = from->vy;
+
+    to->life = from->life;
+    to->turn = from->turn;
+
+    to->luaFuncRef = from->luaFuncRef;
+}
+
 void bl_setNext(struct Bullet* b, struct Bullet* next)
 {
     b->next = next;

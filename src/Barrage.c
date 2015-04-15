@@ -1,5 +1,6 @@
 #include <barrage/Barrage.h>
 #include <barrage/BulletLua.h>
+#include <barrage/LuaUtils.h>
 
 #include <stdlib.h>
 
@@ -38,6 +39,8 @@ struct Barrage* createBarrage()
     // Terminate our linked list
     bl_setNext(&barrage->bullets[MAX_BULLETS - 1], NULL);
 
+    barrage->queue.size = 0;
+
     barrage->playerX = 0.0f;
     barrage->playerY = 0.0f;
 
@@ -48,6 +51,11 @@ struct Barrage* createBarrage()
 
 void deleteBarrage(struct Barrage* barrage)
 {
+    for (int i = 0; i < MAX_BULLETS; ++i)
+    {
+        luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef);
+    }
+
     lua_close(barrage->L);
     free(barrage);
 }
@@ -58,7 +66,10 @@ struct Barrage* createBarrageFromFile(const char* filename,
     struct Barrage* barrage = createBarrage();
 
     /* luaL_loadfile(barrage->L, filename); */
-    luaL_dofile(barrage->L, filename);
+    if (luaL_dofile(barrage->L, filename))
+    {
+        luaL_error(barrage->L, "%s", lua_tostring(barrage->L, -1));
+    }
 
     struct Bullet* b = getFreeBullet(barrage);
     bl_setPosition(b, originX, originY);
@@ -67,6 +78,8 @@ struct Barrage* createBarrageFromFile(const char* filename,
     lua_getglobal(barrage->L, "main");
     int ref = luaL_ref(barrage->L, LUA_REGISTRYINDEX);
     bl_setLuaFunction(b, ref);
+
+    barrage->activeCount++;
 
     return barrage;
 }
@@ -76,7 +89,10 @@ struct Barrage* createBarrageFromScript(const char* script,
 {
     struct Barrage* barrage = createBarrage();
 
-    luaL_dostring(barrage->L, script);
+    if (luaL_dostring(barrage->L, script))
+    {
+        luaL_error(barrage->L, "%s", lua_tostring(barrage->L, -1));
+    }
 
     struct Bullet* b = getFreeBullet(barrage);
     bl_setPosition(b, originX, originY);
@@ -86,6 +102,8 @@ struct Barrage* createBarrageFromScript(const char* script,
     int ref = luaL_ref(barrage->L, LUA_REGISTRYINDEX);
     bl_setLuaFunction(b, ref);
 
+    barrage->activeCount++;
+
     return barrage;
 }
 
@@ -93,11 +111,12 @@ void createBullet(struct Barrage* barrage,
                   float x, float y, float vx, float vy,
                   int luaFuncRef)
 {
-    struct Bullet* b = getFreeBullet(barrage);
-    bl_setBulletData(b, x, y, vx, vy);
+    struct Bullet* b = &barrage->queue.bullets[barrage->queue.size];
 
-    // Set lua function
+    bl_setBulletData(b, x, y, vx, vy);
     bl_setLuaFunction(b, luaFuncRef);
+
+    barrage->queue.size++;
 }
 
 struct Bullet* getFreeBullet(struct Barrage* barrage)
@@ -107,12 +126,22 @@ struct Bullet* getFreeBullet(struct Barrage* barrage)
     struct Bullet* b = barrage->firstAvailable;
     barrage->firstAvailable = b->next;
 
-    barrage->activeCount++;
-
     bl_setBullet(b);
     bl_setLuaFunction(b, LUA_NOREF);
 
     return b;
+}
+
+void addQueuedBullets(struct Barrage* barrage)
+{
+    for (size_t i = 0; i <  barrage->queue.size; ++i)
+    {
+        // Copy data from queue
+        bl_copyBullet(getFreeBullet(barrage), &barrage->queue.bullets[i]);
+    }
+
+    barrage->activeCount += barrage->queue.size;
+    barrage->queue.size = 0;
 }
 
 void setPlayerPosition(struct Barrage* barrage, float x, float y)
@@ -128,29 +157,47 @@ void tick(struct Barrage* barrage)
 
     int killed = 0;
 
-    for (size_t i = 0; i < barrage->activeCount; ++i)
+    /* // We want a constant amount of bullets this frame for consistency. Otherwise, since a bullet */
+    /* // can fire a new bullet when updating, the new bullet may or may not be updated this frame. */
+    const size_t bulletCount = barrage->activeCount;
+
+    /* const size_t bulletCount = MAX_BULLETS; */
+
+    for (size_t i = 0; i < bulletCount; ++i)
     {
         // Make sure the lua interface knows which bullet is currently being updated.
         g_bullet = &barrage->bullets[i];
 
         // Run lua function.
-        lua_rawgeti(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef);
-        lua_call(barrage->L, 0, 0);
-
-        bl_update(&barrage->bullets[i]);
+        /* if (!bl_isDead(&barrage->bullets[i])) */
+        /* { */
+            lua_rawgeti(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef);
+            if (lua_pcall(barrage->L, 0, 0, 0))
+            {
+                luaL_error(barrage->L, "[%s]", lua_tostring(barrage->L, -1));
+            }
+        /* } */
 
         // TODO: Check if out of bounds or bullet is dead
-        if (0)
+        if (bl_isDead(&barrage->bullets[i]))
         {
+            // Remove function reference from bullet.
+            /* luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef); */
+
             bl_setNext(&barrage->bullets[i], barrage->firstAvailable);
             barrage->firstAvailable = &barrage->bullets[i];
 
             killed++;
+
+            continue;
         }
+
+        bl_update(&barrage->bullets[i]);
     }
 
-    barrage->activeCount -= killed;
+    addQueuedBullets(barrage);
 
+    barrage->activeCount -= killed;
     barrage->currentIndex = 0;
 }
 

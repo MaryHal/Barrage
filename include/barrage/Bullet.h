@@ -38,6 +38,7 @@ enum BulletState
 void bl_resetBullet(struct Bullet* b);
 void bl_setBullet(struct Bullet* b);
 void bl_setBulletData(struct Bullet* b, float x, float y, float vx, float vy);
+void bl_copyBullet(struct Bullet* b1, struct Bullet* b2);
 
 void bl_setNext(struct Bullet* b, struct Bullet* next);
 struct Bullet* bl_getNext(struct Bullet* b);

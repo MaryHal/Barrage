@@ -28,11 +28,13 @@ build obj/src/BulletLua.o: compile src/BulletLua.c
 build obj/src/LuaBinding.o: compile src/LuaBinding.c
 build obj/src/Barrage.o: compile src/Barrage.c
 build obj/src/MathUtils.o: compile src/MathUtils.c
+build obj/src/LuaUtils.o: compile src/LuaUtils.c
 build obj/src/Bullet.o: compile src/Bullet.c
 build obj/test/test.o: compile test/test.c
 
 build ./lib/libbarrage.so: dynlink obj/src/BulletLua.o obj/src/LuaBinding.o $
-    obj/src/Barrage.o obj/src/MathUtils.o obj/src/Bullet.o
+    obj/src/Barrage.o obj/src/MathUtils.o obj/src/LuaUtils.o obj/src/Bullet.o
 
 build ./test/bin/btest: link obj/src/BulletLua.o obj/src/LuaBinding.o $
-    obj/src/Barrage.o obj/src/MathUtils.o obj/src/Bullet.o obj/test/test.o
+    obj/src/Barrage.o obj/src/MathUtils.o obj/src/LuaUtils.o $
+    obj/src/Bullet.o obj/test/test.o

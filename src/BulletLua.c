@@ -8,42 +8,9 @@
 #include <math.h>
 #include <barrage/MathUtils.h>
 
-void stackDump (lua_State *L)
-{
-    int i;
-    int top = lua_gettop(L);/* depth of the stack */
-
-    /* repeat for each level */
-    for (i = 1; i <= top; i++)
-    {
-        int t = lua_type(L, i);
-        switch (t)
-        {
-        case LUA_TSTRING: {/* strings */
-            printf("%d '%s'", i, lua_tostring(L, i));
-            break;
-        }
-        case LUA_TBOOLEAN: {/* booleans */
-            printf("%d %s", i, lua_toboolean(L, i) ? "true" : "false");
-            break;
-        }
-        case LUA_TNUMBER: {/* numbers */
-            printf("%d %g", i, lua_tonumber(L, i));
-            break;
-        }
-        default: {/* other values */
-            printf("%d %s", i, lua_typename(L, t));
-            break;
-        }
-        }
-        printf("\n");/* put a separator */
-    }
-    printf("---\n");/* end the listing */
-}
-
 void registerLuaFunctions(lua_State* L)
 {
-    lua_register(L, "nullFunc", &l_nullFunc);
+    lua_register(L, "nullfunc", &l_nullFunc);
 
     lua_register(L, "setPosition", &l_setPosition);
     lua_register(L, "getPosition", &l_getPosition);
@@ -260,8 +227,8 @@ int l_setLuaFunction(lua_State* L)
     /* int ref = luaL_checkint(L, 1); */
     /* lua_pushinteger(L, ref); */
 
-    // Release g_bullet function reference
-    luaL_unref(L, LUA_REGISTRYINDEX, g_bullet->luaFuncRef);
+    /* // Release g_bullet function reference */
+    /* luaL_unref(L, LUA_REGISTRYINDEX, g_bullet->luaFuncRef); */
 
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
     bl_setLuaFunction(g_bullet, ref);
@@ -289,7 +256,6 @@ int l_launch(lua_State* L)
     float speed = luaL_checknumber(L, 2);
 
     // Third argument is a function handle.
-    luaL_unref(L, LUA_REGISTRYINDEX, g_bullet->luaFuncRef);
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
     float vx =  speed * sin(dir);
@@ -305,7 +271,6 @@ int l_launchAtTarget(lua_State* L)
     float speed = luaL_checknumber(L, 1);
 
     // Second argument is a function handle.
-    luaL_unref(L, LUA_REGISTRYINDEX, g_bullet->luaFuncRef);
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
     float vx =  speed * sin(dir);
@@ -321,7 +286,6 @@ int l_launchCircle(lua_State* L)
     float speed  = luaL_checknumber(L, 2);
 
     // Third argument is a function handle.
-    luaL_unref(L, LUA_REGISTRYINDEX, g_bullet->luaFuncRef);
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
     float segRad = bl_PI * 2 / segments;
