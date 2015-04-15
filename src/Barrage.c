@@ -165,32 +165,32 @@ void tick(struct Barrage* barrage)
         g_bullet = &barrage->bullets[i];
 
         // Run lua function.
-        /* if (!bl_isDead(&barrage->bullets[i])) */
-        /* { */
+        if (!bl_isDead(&barrage->bullets[i]))
+        {
             lua_rawgeti(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef);
             if (lua_pcall(barrage->L, 0, 0, 0))
             {
                 luaL_error(barrage->L, "[%s]", lua_tostring(barrage->L, -1));
             }
-        /* } */
 
-        // TODO: Check if out of bounds or bullet is dead
-        if (bl_isDead(&barrage->bullets[i]))
-        {
-            // Remove function reference from bullet.
-            /* luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef); */
+            // TODO: Check if out of bounds or bullet is dead
+            if (bl_isDead(&barrage->bullets[i]))
+            {
+                // Remove function reference from bullet.
+                /* luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef); */
 
-            bl_setNext(&barrage->bullets[i], barrage->firstAvailable);
-            barrage->firstAvailable = &barrage->bullets[i];
+                bl_setNext(&barrage->bullets[i], barrage->firstAvailable);
+                barrage->firstAvailable = &barrage->bullets[i];
 
-            barrage->bullets[i].turn = DEAD;
+                barrage->bullets[i].turn = DEAD;
 
-            killed++;
+                killed++;
 
-            continue;
+                continue;
+            }
+
+            bl_update(&barrage->bullets[i]);
         }
-
-        bl_update(&barrage->bullets[i]);
     }
 
     addQueuedBullets(barrage);

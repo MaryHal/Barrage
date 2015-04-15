@@ -252,7 +252,7 @@ int l_getTargetPosition(lua_State* L)
 
 int l_launch(lua_State* L)
 {
-    float dir   = luaL_checknumber(L, 1);
+    float dir   = degToRad(luaL_checknumber(L, 1));
     float speed = luaL_checknumber(L, 2);
 
     // Third argument is a function handle.
