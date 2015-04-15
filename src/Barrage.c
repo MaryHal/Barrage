@@ -6,10 +6,6 @@
 
 #include <assert.h>
 
-#include <lua.h>
-#include <lauxlib.h>
-#include <lualib.h>
-
 struct Bullet*  g_bullet  = NULL;
 struct Barrage* g_barrage = NULL;
 
@@ -186,6 +182,8 @@ void tick(struct Barrage* barrage)
 
             bl_setNext(&barrage->bullets[i], barrage->firstAvailable);
             barrage->firstAvailable = &barrage->bullets[i];
+
+            barrage->bullets[i].turn = DEAD;
 
             killed++;
 

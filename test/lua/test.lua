@@ -1,6 +1,6 @@
-barrage = require("libbarrage")
+local barrage = require "libbarrage"
 
-b = barrage.new("script.lua", 320.0, 120.0)
+local b = barrage.new("script.lua", 320.0, 120.0)
 
 print("Hello World")
 

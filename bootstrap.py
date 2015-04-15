@@ -50,7 +50,8 @@ if args.ci:
     ldflags.extend(['-llua5.2'])
     include.extend(['-I/usr/include/lua5.2', '-I./lua-5.2.2/src'])
 else:
-    ldflags.extend(['-llua'])
+    include.extend(['-I/usr/include/luajit-2.0'])
+    ldflags.extend(['-lluajit-5.1'])
 
 def warning(string):
     print('warning: {}'.format(string))
