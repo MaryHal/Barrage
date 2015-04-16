@@ -2,7 +2,8 @@ theta = 0
 
 function final()
    if (getTurn() == 60) then
-      vanish()
+      -- vanish()
+      kill()
    end
 end
 

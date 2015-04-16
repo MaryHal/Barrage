@@ -98,7 +98,7 @@ int l_getVelocity(lua_State* L)
 int l_setSpeedAndDirection(lua_State* L)
 {
     float speed = luaL_checknumber(L, 1);
-    float dir   = luaL_checknumber(L, 2);
+    float dir   = degToRad(luaL_checknumber(L, 2));
     bl_setSpeedAndDirection(g_bullet, speed, dir);
 
     return 0;
@@ -129,7 +129,7 @@ int l_getSpeed(lua_State* L)
 
 int l_setDirection(lua_State* L)
 {
-    float dir = luaL_checknumber(L, 1);
+    float dir = degToRad(luaL_checknumber(L, 1));
     bl_setDirection(g_bullet, dir);
 
     return 0;
@@ -137,7 +137,7 @@ int l_setDirection(lua_State* L)
 
 int l_setDirectionRelative(lua_State* L)
 {
-    float dir = luaL_checknumber(L, 1);
+    float dir = degToRad(luaL_checknumber(L, 1));
     bl_setDirectionRelative(g_bullet, dir);
 
     return 0;
@@ -157,7 +157,7 @@ int l_getAimDirection(lua_State* L)
     float targetX = luaL_checknumber(L, 1);
     float targetY = luaL_checknumber(L, 2);
 
-    lua_pushnumber(L, bl_getAimDirection(g_bullet, targetX, targetY));
+    lua_pushnumber(L, radToDeg(bl_getAimDirection(g_bullet, targetX, targetY)));
     return 1;
 }
 
@@ -176,7 +176,7 @@ int l_linearInterpolate(lua_State* L)
 
 int l_getDirection(lua_State* L)
 {
-    lua_pushnumber(L, bl_getDirection(g_bullet));
+    lua_pushnumber(L, radToDeg(bl_getDirection(g_bullet)));
     return 1;
 }
 
@@ -267,7 +267,7 @@ int l_launch(lua_State* L)
 
 int l_launchAtTarget(lua_State* L)
 {
-    float dir = bl_getAimDirection(g_bullet, g_barrage->playerX, g_barrage->playerY);
+    float dir = radToDeg(bl_getAimDirection(g_bullet, g_barrage->playerX, g_barrage->playerY));
     float speed = luaL_checknumber(L, 1);
 
     // Second argument is a function handle.

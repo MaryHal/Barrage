@@ -6,3 +6,8 @@ float degToRad(float deg)
 {
     return bl_PI * deg / 180.0f;
 }
+
+float radToDeg(float rad)
+{
+    return rad * 180.0f / bl_PI;
+}
