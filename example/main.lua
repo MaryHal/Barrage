@@ -6,7 +6,7 @@ local b = nil
 function love.load(arg)
    bulletImg = love.graphics.newImage('assets/bullet.png')
    print (bulletImg:getWidth(), bulletImg:getHeight())
-   b = barrage.new('barrage/test3.lua', 320.0, 120.0)
+   b = barrage.new('barrage/test.lua', 320.0, 120.0)
 end
 
 function love.update(dt)

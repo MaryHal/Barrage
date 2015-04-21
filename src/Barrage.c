@@ -179,6 +179,8 @@ void tick(struct Barrage* barrage)
                 luaL_error(barrage->L, "[%s]", lua_tostring(barrage->L, -1));
             }
 
+            barrage->processedCount++;
+
             // TODO: Check if out of bounds or bullet is dead
             if (bl_isDead(&barrage->bullets[i]))
             {
@@ -192,11 +194,11 @@ void tick(struct Barrage* barrage)
 
                 killed++;
 
+                // Don't update this bullet.
                 continue;
             }
 
             bl_update(&barrage->bullets[i]);
-            barrage->processedCount++;
         }
     }
 
