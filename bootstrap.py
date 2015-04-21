@@ -32,6 +32,7 @@ parser = argparse.ArgumentParser(usage='%(prog)s [options...]')
 parser.add_argument('--debug', action='store_true', help='compile with debug flags')
 parser.add_argument('--ci', action='store_true', help=argparse.SUPPRESS)
 parser.add_argument('--cxx', metavar='<compiler>', help='compiler name to use (default: gcc)', default='gcc')
+parser.add_argument('--luajit', action='store_true', help='link luajit instead of regular lua')
 args = parser.parse_args()
 
 BUILD_FILENAME = 'build.ninja'
@@ -50,10 +51,11 @@ if args.ci:
     ldflags.extend(['-llua5.2'])
     include.extend(['-I/usr/include/lua5.2', '-I./lua-5.2.2/src'])
 else:
-    include.extend(['-I/usr/include/luajit-2.0'])
-    ldflags.extend(['-lluajit-5.1'])
-
-    # ldflags.extend(['-llua'])
+    if args.luajit:
+        include.extend(['-I/usr/include/luajit-2.0'])
+        ldflags.extend(['-lluajit-5.1'])
+    else:
+        ldflags.extend(['-llua'])
 
 def warning(string):
     print('warning: {}'.format(string))
