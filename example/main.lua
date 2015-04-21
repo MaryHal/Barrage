@@ -1,8 +1,7 @@
-barrage = require("libbarrage")
+local barrage = require "barrageC"
 
-bulletImg = nil
-
-b = nil
+local bulletImg = nil
+local b = nil
 
 function love.load(arg)
    bulletImg = love.graphics.newImage('assets/bullet.png')
@@ -19,7 +18,6 @@ end
 function love.draw(dt)
    while b:nextAvailable() do
       x, y = b:yield()
-      -- print (x, y)
       love.graphics.draw(bulletImg, x, y, 0, 0.5, 0.5)
    end
 end
