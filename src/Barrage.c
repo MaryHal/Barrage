@@ -153,13 +153,15 @@ void tick(struct Barrage* barrage)
 
     int killed = 0;
 
-    /* // We want a constant amount of bullets this frame for consistency. Otherwise, since a bullet */
-    /* // can fire a new bullet when updating, the new bullet may or may not be updated this frame. */
-    const size_t bulletCount = barrage->activeCount;
+    /* /\* // We want a constant amount of bullets this frame for consistency. Otherwise, since a bullet *\/ */
+    /* /\* // can fire a new bullet when updating, the new bullet may or may not be updated this frame. *\/ */
+    /* const size_t bulletCount = barrage->activeCount; */
 
-    /* const size_t bulletCount = MAX_BULLETS; */
+    barrage->processedCount= 0;
 
-    for (size_t i = 0; i < bulletCount; ++i)
+    for (size_t i = 0;
+         barrage->processedCount < barrage->activeCount && i < MAX_BULLETS;
+         ++i)
     {
         // Make sure the lua interface knows which bullet is currently being updated.
         g_bullet = &barrage->bullets[i];
@@ -190,6 +192,7 @@ void tick(struct Barrage* barrage)
             }
 
             bl_update(&barrage->bullets[i]);
+            barrage->processedCount++;
         }
     }
 
@@ -197,14 +200,21 @@ void tick(struct Barrage* barrage)
 
     barrage->activeCount -= killed;
     barrage->currentIndex = 0;
+    barrage->processedCount = 0;
 }
 
 int nextAvailable(struct Barrage* barrage)
 {
-    return barrage->currentIndex < barrage->activeCount;
+    return barrage->processedCount < barrage->activeCount && barrage->currentIndex < MAX_BULLETS;
 }
 
 struct Bullet* yield(struct Barrage* barrage)
 {
-    return &barrage->bullets[barrage->currentIndex++];
+    if (!bl_isDead(&barrage->bullets[barrage->currentIndex]))
+    {
+        barrage->processedCount++;
+        return &barrage->bullets[barrage->currentIndex++];
+    }
+
+    return NULL;
 }

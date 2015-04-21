@@ -26,6 +26,7 @@ struct Barrage
         lua_State* L;
 
         size_t currentIndex;
+        size_t processedCount;
         size_t activeCount;
         struct Bullet* firstAvailable;
         struct Bullet bullets[MAX_BULLETS];
