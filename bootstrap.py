@@ -53,6 +53,8 @@ else:
     include.extend(['-I/usr/include/luajit-2.0'])
     ldflags.extend(['-lluajit-5.1'])
 
+    # ldflags.extend(['-llua'])
+
 def warning(string):
     print('warning: {}'.format(string))
 

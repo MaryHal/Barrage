@@ -6,7 +6,7 @@
 #include <lualib.h>
 
 // < Lua5.2 compatibility
-#if LUA_VERSION_NUM < 520
+#if LUA_VERSION_NUM < 502
 #define luaL_newlib(L,l) (luaL_newlibtable(L,l), luaL_setfuncs(L,l,0))
 
 #define luaL_newlibtable(L,l) (lua_createtable(L,0,sizeof(l)))
@@ -31,7 +31,6 @@ static inline void luaX52_luaL_setfuncs(lua_State *L, const luaL_Reg *l, int nup
     /* remove upvalues */
     lua_pop(L, nup);
 }
-#endif
-
+#endif // LUA_VERSION_NUM < 520
 
 #endif /* LUACOMPAT_H */
