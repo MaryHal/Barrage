@@ -4,6 +4,9 @@
 
 #include <stdlib.h>
 
+#include <math.h>
+#include <barrage/MathUtils.h>
+
 #include <assert.h>
 
 struct Bullet*  g_bullet  = NULL;
@@ -151,11 +154,12 @@ void tick(struct Barrage* barrage)
     // Make sure the lua interface knows which barrage is currently being updated.
     g_barrage = barrage;
 
+    // Amount of killed bullets this frame. We want to update activeCount after all the bullets have
+    // been updated. Since a new bullet can be launched during the update loop and we don't know
+    // where in our bullets array a new bullet will spawn, we wouldn't know whether or not the new
+    // bullet will be updated this frame or not. If we queue up bullet updates (and bullet counts)
+    // after the loop, we have much more consistent behavior.
     int killed = 0;
-
-    /* /\* // We want a constant amount of bullets this frame for consistency. Otherwise, since a bullet *\/ */
-    /* /\* // can fire a new bullet when updating, the new bullet may or may not be updated this frame. *\/ */
-    /* const size_t bulletCount = barrage->activeCount; */
 
     barrage->processedCount= 0;
 
@@ -196,6 +200,8 @@ void tick(struct Barrage* barrage)
         }
     }
 
+    // TODO: Consider whether or not we should add new bullets after updating (here) or after
+    // drawing.
     addQueuedBullets(barrage);
 
     barrage->activeCount -= killed;
@@ -217,4 +223,36 @@ struct Bullet* yield(struct Barrage* barrage)
     }
 
     return NULL;
+}
+
+void launch(struct Barrage* barrage, struct Bullet* current,
+            float dir, float speed, int luaFuncRef)
+{
+    float vx =  speed * sin(dir);
+    float vy = -speed * cos(dir);
+    createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
+}
+
+void launchAtTarget(struct Barrage* barrage, struct Bullet* current,
+                    float speed, int luaFuncRef)
+{
+    float dir = radToDeg(bl_getAimDirection(current, barrage->playerX, barrage->playerY));
+    float vx =  speed * sin(dir);
+    float vy = -speed * cos(dir);
+
+    createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
+}
+
+void launchCircle(struct Barrage* barrage, struct Bullet* current,
+                  int segments, float speed, int luaFuncRef)
+{
+    float segRad = bl_PI * 2 / segments;
+
+    for (int i = 0; i < segments; ++i)
+    {
+        float vx =  speed * sin(segRad * i);
+        float vy = -speed * cos(segRad * i);
+
+        createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
+    }
 }

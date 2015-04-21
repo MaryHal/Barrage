@@ -56,6 +56,7 @@ void bl_setDirectionRelative(struct Bullet* b, float dir);
 
 void bl_aimAtPoint(struct Bullet* b, float tx, float ty);
 float bl_getAimDirection(struct Bullet* b, float tx, float ty);
+void bl_linearInterpolate(struct Bullet* b, float tx, float ty, int steps);
 
 float bl_getDirection(struct Bullet* b);
 

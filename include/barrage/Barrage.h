@@ -26,14 +26,16 @@ struct Barrage
         lua_State* L;
 
         size_t currentIndex;
-        size_t processedCount;
-        size_t activeCount;
-        struct Bullet* firstAvailable;
+        size_t processedCount; // Internally keeps track of the number of bullets that still need to
+                               // be processed (updated or yielded).
+        size_t activeCount;    // Keeps track of the number of alive bullets.
+
+        struct Bullet* firstAvailable; // Implicit linked list of free bullets.
         struct Bullet bullets[MAX_BULLETS];
-        struct BulletQueue queue;
+        struct BulletQueue queue; // Queue of new bullets to add at the end up update phase.
 
         float playerX, playerY;
-        float rank;
+        float rank;             // Requested difficulty of this barrage (0.0, 1.0]
 };
 
 // Pointers to the bullet/barrage that is currently being processed.
@@ -61,5 +63,14 @@ void tick(struct Barrage* barrage);
 // Return the next active bullet in the barrage.
 int nextAvailable(struct Barrage* barrage);
 struct Bullet* yield(struct Barrage* barrage);
+
+
+// "Meta"-functions used by the Lua-interface.
+void launch(struct Barrage* barrage, struct Bullet* current,
+            float dir, float speed, int luaFuncRef);
+void launchAtTarget(struct Barrage* barrage, struct Bullet* current,
+                    float speed, int luaFuncRef);
+void launchCircle(struct Barrage* barrage, struct Bullet* current,
+                  int segments, float speed, int luaFuncRef);
 
 #endif /* BARRAGE_H */

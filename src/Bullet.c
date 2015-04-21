@@ -129,6 +129,13 @@ float bl_getAimDirection(struct Bullet* b, float tx, float ty)
     return bl_PI - atan2(tx - b->x, ty - b->y);
 }
 
+void bl_linearInterpolate(struct Bullet* b, float tx, float ty, int steps)
+{
+    bl_setVelocity(b,
+                   (tx - b->x) / steps,
+                   (ty - b->y) / steps);
+}
+
 float bl_getDirection(struct Bullet* b)
 {
     return bl_PI - atan2(b->vx, b->vy);

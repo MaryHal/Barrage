@@ -5,7 +5,6 @@
 
 #include <stdio.h>
 
-#include <math.h>
 #include <barrage/MathUtils.h>
 
 void registerLuaFunctions(lua_State* L)
@@ -167,9 +166,7 @@ int l_linearInterpolate(lua_State* L)
     float targetY = luaL_checknumber(L, 2);
     int steps = luaL_checkint(L, 3);
 
-    bl_setVelocity(g_bullet,
-                   (targetX - g_bullet->x) / steps,
-                   (targetY - g_bullet->y) / steps);
+    bl_linearInterpolate(g_bullet, targetX, targetY, steps);
 
     return 0;
 }
@@ -258,24 +255,19 @@ int l_launch(lua_State* L)
     // Third argument is a function handle.
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    float vx =  speed * sin(dir);
-    float vy = -speed * cos(dir);
-    createBullet(g_barrage, g_bullet->x, g_bullet->y, vx, vy, ref);
+    launch(g_barrage, g_bullet, dir, speed, ref);
 
     return 0;
 }
 
 int l_launchAtTarget(lua_State* L)
 {
-    float dir = radToDeg(bl_getAimDirection(g_bullet, g_barrage->playerX, g_barrage->playerY));
     float speed = luaL_checknumber(L, 1);
 
     // Second argument is a function handle.
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    float vx =  speed * sin(dir);
-    float vy = -speed * cos(dir);
-    createBullet(g_barrage, g_bullet->x, g_bullet->y, vx, vy, ref);
+    launchAtTarget(g_barrage, g_bullet, speed, ref);
 
     return 0;
 }
@@ -288,15 +280,7 @@ int l_launchCircle(lua_State* L)
     // Third argument is a function handle.
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    float segRad = bl_PI * 2 / segments;
-
-    for (int i = 0; i < segments; ++i)
-    {
-        float vx =  speed * sin(segRad * i);
-        float vy = -speed * cos(segRad * i);
-
-        createBullet(g_barrage, g_bullet->x, g_bullet->y, vx, vy, ref);
-    }
+    launchCircle(g_barrage, g_bullet, segments, speed, ref);
 
     return 0;
 }
