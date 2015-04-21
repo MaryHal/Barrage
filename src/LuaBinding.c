@@ -112,25 +112,24 @@ static const struct luaL_Reg ud_barrage_functions[] =
 
 int luaopen_barrageC(lua_State* L)
 {
-    /* Create the metatable and put it on the stack. */
+    // Create the metatable and put it on the stack.
     luaL_newmetatable(L, "Barrage");
 
-    /* Duplicate the metatable on the stack (We know have 2). */
+    // Duplicate the metatable on the stack (We know have 2).
     lua_pushvalue(L, -1);
 
-    /* Pop the first metatable off the stack and assign it to __index
-     * of the second one. We set the metatable for the table to itself.
-     * This is equivalent to the following in lua:
-     * metatable = {}
-     * metatable.__index = metatable
-     */
+    // Pop the first metatable off the stack and assign it to __index of the second one. We set the
+    // metatable for the table to itself. This is equivalent to the following in lua:
+    //
+    // metatable = {}
+    // metatable.__index = metatable
+
     lua_setfield(L, -2, "__index");
 
-    /* Set the methods to the metatable that should be accessed via object:func */
+    // Set the methods to the metatable that should be accessed via object:func
     luaL_setfuncs(L, ud_barrage_methods, 0);
 
-    /* Register the object.func functions into the table that is at the top of the
-     * stack. */
+    // Register the object.func functions into the table that is at the top of the stack.
     luaL_newlib(L, ud_barrage_functions);
 
     return 1;

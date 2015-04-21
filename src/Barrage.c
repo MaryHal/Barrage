@@ -50,6 +50,7 @@ struct Barrage* createBarrage()
 
 void deleteBarrage(struct Barrage* barrage)
 {
+    // TODO: Determine which function references to unref.
     for (int i = 0; i < MAX_BULLETS; ++i)
     {
         luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef);

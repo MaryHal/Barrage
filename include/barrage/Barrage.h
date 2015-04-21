@@ -42,6 +42,8 @@ struct Barrage
 extern struct Bullet*  g_bullet;
 extern struct Barrage* g_barrage;
 
+// TODO: Prefix barrage function names.
+
 struct Barrage* createBarrage();
 void deleteBarrage(struct Barrage* barrage);
 
