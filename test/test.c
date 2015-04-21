@@ -66,10 +66,33 @@ TEST LaunchTest()
     PASS();
 }
 
+/* TEST FileTest() */
+/* { */
+/*     struct Barrage* barrage = createBarrageFromFile("example/barrage/test11.lua", 320.0f, 120.0f); */
+
+/*     for (int i = 0; i < 200; ++i) */
+/*     { */
+/*         tick(barrage); */
+
+/*         while (available(barrage)) */
+/*         { */
+/*             yield(barrage); */
+/*         } */
+
+/*         printf("%d %lu\n", i, barrage->activeCount); */
+/*     } */
+
+/*     deleteBarrage(barrage); */
+
+/*     PASS(); */
+/* } */
+
 SUITE(Bullet_Functionality)
 {
     RUN_TEST(BasicMovementTest);
     RUN_TEST(LaunchTest);
+
+    /* RUN_TEST(FileTest); */
 }
 
 /* Add definitions that need to be in the test runner's main file. */

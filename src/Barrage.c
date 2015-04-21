@@ -24,7 +24,10 @@ struct Barrage* createBarrage()
     luaL_openlibs(barrage->L);
 
     barrage->currentIndex = 0;
+    barrage->processedCount = 0;
+
     barrage->activeCount = 0;
+    barrage->killCount = 0;
 
     // Setup our linked list of free bullets
     barrage->firstAvailable = &barrage->bullets[0];
@@ -160,7 +163,7 @@ void tick(struct Barrage* barrage)
     // where in our bullets array a new bullet will spawn, we wouldn't know whether or not the new
     // bullet will be updated this frame or not. If we queue up bullet updates (and bullet counts)
     // after the loop, we have much more consistent behavior.
-    int killed = 0;
+    barrage->killCount = 0;
 
     barrage->processedCount= 0;
 
@@ -191,9 +194,10 @@ void tick(struct Barrage* barrage)
                 bl_setNext(&barrage->bullets[i], barrage->firstAvailable);
                 barrage->firstAvailable = &barrage->bullets[i];
 
-                barrage->bullets[i].turn = DEAD;
+                /* // Kill this bullet again??? */
+                /* barrage->bullets[i].turn = DEAD; */
 
-                killed++;
+                barrage->killCount++;
 
                 // Don't update this bullet.
                 continue;
@@ -206,23 +210,23 @@ void tick(struct Barrage* barrage)
     // TODO: Consider whether or not we should add new bullets after updating (here) or after
     // drawing.
     addQueuedBullets(barrage);
+    barrage->activeCount -= barrage->killCount;
 
-    barrage->activeCount -= killed;
     barrage->currentIndex = 0;
     barrage->processedCount = 0;
 }
 
-int nextAvailable(struct Barrage* barrage)
+int hasNext(struct Barrage* barrage)
 {
     return barrage->processedCount < barrage->activeCount && barrage->currentIndex < MAX_BULLETS;
 }
 
 struct Bullet* yield(struct Barrage* barrage)
 {
-    if (!bl_isDead(&barrage->bullets[barrage->currentIndex]))
+    if (!bl_isDead(&barrage->bullets[barrage->currentIndex++]))
     {
         barrage->processedCount++;
-        return &barrage->bullets[barrage->currentIndex++];
+        return &barrage->bullets[barrage->currentIndex - 1];
     }
 
     return NULL;
@@ -236,31 +240,40 @@ void aimAtTarget(struct Barrage* barrage, struct Bullet* current)
 void launch(struct Barrage* barrage, struct Bullet* current,
             float dir, float speed, int luaFuncRef)
 {
-    float vx =  speed * sin(dir);
-    float vy = -speed * cos(dir);
-    createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
+    if (!bl_isDying(current))
+    {
+        float vx =  speed * sin(dir);
+        float vy = -speed * cos(dir);
+        createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
+    }
 }
 
 void launchAtTarget(struct Barrage* barrage, struct Bullet* current,
                     float speed, int luaFuncRef)
 {
-    float dir = radToDeg(bl_getAimDirection(current, barrage->playerX, barrage->playerY));
-    float vx =  speed * sin(dir);
-    float vy = -speed * cos(dir);
+    if (!bl_isDying(current))
+    {
+        float dir = radToDeg(bl_getAimDirection(current, barrage->playerX, barrage->playerY));
+        float vx =  speed * sin(dir);
+        float vy = -speed * cos(dir);
 
-    createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
+        createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
+    }
 }
 
 void launchCircle(struct Barrage* barrage, struct Bullet* current,
                   int segments, float speed, int luaFuncRef)
 {
-    float segRad = bl_PI * 2 / segments;
-
-    for (int i = 0; i < segments; ++i)
+    if (!bl_isDying(current))
     {
-        float vx =  speed * sin(segRad * i);
-        float vy = -speed * cos(segRad * i);
+        float segRad = bl_PI * 2 / segments;
 
-        createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
+        for (int i = 0; i < segments; ++i)
+        {
+            float vx =  speed * sin(segRad * i);
+            float vy = -speed * cos(segRad * i);
+
+            createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
+        }
     }
 }

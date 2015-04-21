@@ -29,6 +29,7 @@ struct Barrage
         size_t processedCount; // Internally keeps track of the number of bullets that still need to
                                // be processed (updated or yielded).
         size_t activeCount;    // Keeps track of the number of alive bullets.
+        size_t killCount;      // Number of bullets to kill on next update.
 
         struct Bullet* firstAvailable; // Implicit linked list of free bullets.
         struct Bullet bullets[MAX_BULLETS];
@@ -62,8 +63,10 @@ void addQueuedBullets(struct Barrage* barrage);
 void setPlayerPosition(struct Barrage* barrage, float x, float y);
 void tick(struct Barrage* barrage);
 
+// TODO: Double check the logic of these two functions.
+
 // Return the next active bullet in the barrage.
-int nextAvailable(struct Barrage* barrage);
+int hasNext(struct Barrage* barrage);
 struct Bullet* yield(struct Barrage* barrage);
 
 

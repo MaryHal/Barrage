@@ -29,6 +29,7 @@ struct Bullet
 /*         float r, g, b; */
 /* }; */
 
+// TODO: Reconsider implication of Dying vs Dead
 enum BulletState
 {
     DYING = -1,

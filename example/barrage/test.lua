@@ -1,34 +1,35 @@
 -- BulletLua Test Script
 
-dir = 0
+local dir = 0
 
 function main()
-    local turn = getTurn()
-    local rank = getRank()
+   local turn = getTurn()
+   local rank = getRank()
 
-    if (math.fmod(turn, 15) == 0) then
-        launch(dir, 1.5, explode)
-        dir = dir + 34
-    end
+   if (math.fmod(turn, 15) == 0) then
+      launch(dir, 1.5, explode)
+      dir = dir + 34
+   end
 end
 
 function explode()
-    local turn = getTurn()
-    if (turn == 60) then
-        launchCircle(40, 4.0, homeIn)
+   local turn = getTurn()
+   if (turn == 60) then
+      launchCircle(40, 4.0, homeIn)
 
-        kill()
-    end
+      kill()
+   end
 end
 
 function homeIn()
-    local turn = getTurn()
-    if (turn == 20) then
-        setSpeed(1)
-    elseif (turn == 25) then
-        aimAtTarget()
-        setSpeed(10)
-    elseif (turn == 50) then
-        vanish()
-    end
+   local turn = getTurn()
+   if (turn == 20) then
+      setSpeed(1)
+   elseif (turn == 25) then
+      aimAtTarget()
+      setSpeed(10)
+   elseif (turn == 50) then
+      -- vanish()
+      kill()
+   end
 end

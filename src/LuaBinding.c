@@ -74,10 +74,10 @@ static int ud_barrage_tick(lua_State* L)
     return 0;
 }
 
-static int ud_barrage_nextAvailable(lua_State* L)
+static int ud_barrage_hasNext(lua_State* L)
 {
     struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
-    lua_pushboolean(L, nextAvailable(ud->barrage));
+    lua_pushboolean(L, hasNext(ud->barrage));
 
     return 1;
 }
@@ -87,8 +87,18 @@ static int ud_barrage_yield(lua_State* L)
     struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
 
     struct Bullet* b = yield(ud->barrage);
-    lua_pushnumber(L, b->x);
-    lua_pushnumber(L, b->y);
+    if (b != NULL)
+    {
+        lua_pushnumber(L, b->x);
+        lua_pushnumber(L, b->y);
+    }
+    else
+    {
+        // TODO: Determine what should happen in NULL case. Current "solution" is pretty
+        // unreasonable.
+        lua_pushnumber(L, -100);
+        lua_pushnumber(L, -100);
+    }
 
     return 2;
 }
@@ -98,7 +108,7 @@ static const struct luaL_Reg ud_barrage_methods[] =
     { "getActiveCount", &ud_barrage_getActiveCount },
     { "setPlayerPosition", &ud_barrage_setPlayerPosition },
     { "tick", &ud_barrage_tick },
-    { "nextAvailable", &ud_barrage_nextAvailable },
+    { "hasNext", &ud_barrage_hasNext },
     { "yield", &ud_barrage_yield },
     { "__gc", &ud_barrage_destroy },
     { NULL, NULL }
