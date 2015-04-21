@@ -228,6 +228,11 @@ struct Bullet* yield(struct Barrage* barrage)
     return NULL;
 }
 
+void aimAtTarget(struct Barrage* barrage, struct Bullet* current)
+{
+    bl_aimAtPoint(current, barrage->playerX, barrage->playerY);
+}
+
 void launch(struct Barrage* barrage, struct Bullet* current,
             float dir, float speed, int luaFuncRef)
 {

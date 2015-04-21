@@ -68,6 +68,8 @@ struct Bullet* yield(struct Barrage* barrage);
 
 
 // "Meta"-functions used by the Lua-interface.
+void aimAtTarget(struct Barrage* barrage, struct Bullet* current);
+
 void launch(struct Barrage* barrage, struct Bullet* current,
             float dir, float speed, int luaFuncRef);
 void launchAtTarget(struct Barrage* barrage, struct Bullet* current,

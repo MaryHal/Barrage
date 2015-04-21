@@ -30,6 +30,7 @@ int l_getSpeed(lua_State* L);
 int l_setDirection(lua_State* L);
 int l_setDirectionRelative(lua_State* L);
 
+int l_aimAtTarget(lua_State* L);
 int l_aimAtPoint(lua_State* L);
 int l_getAimDirection(lua_State* L);
 

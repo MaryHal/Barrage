@@ -25,6 +25,7 @@ void registerLuaFunctions(lua_State* L)
     lua_register(L, "setDirection", &l_setDirection);
     lua_register(L, "setDirectionRelative", &l_setDirectionRelative);
 
+    lua_register(L, "aimAtTarget", &l_aimAtTarget);
     lua_register(L, "aimAtPoint", &l_aimAtPoint);
     lua_register(L, "getAimDirection", &l_getAimDirection);
 
@@ -138,6 +139,15 @@ int l_setDirectionRelative(lua_State* L)
 {
     float dir = degToRad(luaL_checknumber(L, 1));
     bl_setDirectionRelative(g_bullet, dir);
+
+    return 0;
+}
+
+int l_aimAtTarget(lua_State* L)
+{
+    (void)L;
+
+    aimAtTarget(g_barrage, g_bullet);
 
     return 0;
 }
