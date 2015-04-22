@@ -1,0 +1,6 @@
+[submodule "ext/greatest"]
+	path = ext/greatest
+	url = https://github.com/silentbicycle/greatest.git
+[submodule "ext/randamu"]
+	path = ext/randamu
+	url = https://github.com/PhDP/randamu.git
