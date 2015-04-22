@@ -21,6 +21,8 @@ Dependencies: python, [ninja](https://martine.github.io/ninja/), [lua](http://ww
 
 Arguments in parenthesis are optional. The default compiler is gcc and this project assumes [C11](https://en.wikipedia.org/wiki/C11_(C_standard_revision)) support. The `ci` switch links `lua5.2` instead of `lua` if your system does not default to lua 5.2. The `luajit` switch links luajit in place of lua.
 
+The bootstrap script is python2/3 compatible.
+
 ### Building the library and unit test
 
 Simply run `ninja`
@@ -109,6 +111,7 @@ When you create a barrage, it automatically creates a `root` bullet that is link
 ### Available bullet functions
 
 #### Do nothing
+
     nullfunc()
 
 #### Position functions
@@ -163,6 +166,7 @@ When you create a barrage, it automatically creates a `root` bullet that is link
     getRank()
 
 #### Random numbers (currently missing)
+
     -- Generate random floating point numbers
     randFloat()
     randFloatRange(float min, float max)

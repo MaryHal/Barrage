@@ -147,6 +147,16 @@ void br_addQueuedBullets(struct Barrage* barrage)
     barrage->queue.size = 0;
 }
 
+void br_setRank(struct Barrage* barrage, float rank)
+{
+    barrage->rank = rank;
+}
+
+float br_getRank(struct Barrage* barrage)
+{
+    return barrage->rank;
+}
+
 void br_setPlayerPosition(struct Barrage* barrage, float x, float y)
 {
     barrage->playerX = x;

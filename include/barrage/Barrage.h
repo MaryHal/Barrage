@@ -58,6 +58,9 @@ void br_createBullet(struct Barrage* barrage,
 struct Bullet* br_getFreeBullet(struct Barrage* barrage);
 void br_addQueuedBullets(struct Barrage* barrage);
 
+void br_setRank(struct Barrage* barrage, float rank);
+float br_getRank(struct Barrage* barrage);
+
 void br_setPlayerPosition(struct Barrage* barrage, float x, float y);
 void br_tick(struct Barrage* barrage);
 

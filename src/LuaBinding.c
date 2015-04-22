@@ -50,7 +50,28 @@ static int ud_barrage_destroy(lua_State* L)
 
 static int ud_barrage_getActiveCount(lua_State* L)
 {
-    lua_pushinteger(L, g_barrage->activeCount);
+    struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
+    lua_pushinteger(L, ud->barrage->activeCount);
+
+    return 1;
+}
+
+static int ud_barrage_setRank(lua_State* L)
+{
+    struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
+    float rank = luaL_checknumber(L, 2);
+
+    /* br_setRank(ud->barrage, rank); */
+    ud->barrage->rank = rank;
+
+    return 0;
+}
+
+static int ud_barrage_getRank(lua_State* L)
+{
+    struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
+    lua_pushnumber(L, ud->barrage->rank);
+
     return 1;
 }
 
@@ -106,6 +127,8 @@ static int ud_barrage_yield(lua_State* L)
 static const struct luaL_Reg ud_barrage_methods[] =
 {
     { "getActiveCount", &ud_barrage_getActiveCount },
+    { "setRank", &ud_barrage_setRank },
+    { "getRank", &ud_barrage_getRank },
     { "setPlayerPosition", &ud_barrage_setPlayerPosition },
     { "tick", &ud_barrage_tick },
     { "hasNext", &ud_barrage_hasNext },
