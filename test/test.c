@@ -41,6 +41,38 @@ TEST BasicMovementTest()
     PASS();
 }
 
+TEST VanishTest()
+{
+    const char* script =
+        "function main()\n"
+        "    vanish()\n"
+        "end\n";
+
+    struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
+
+    printf("\n");
+
+    ASSERT_EQ(barrage->activeCount, 1);
+
+    for (int i = 0; i < 30; ++i)
+    {
+        br_tick(barrage);
+    }
+
+    ASSERT_EQ(barrage->activeCount, 0);
+
+    for (int i = 0; i < 10; ++i)
+    {
+        br_tick(barrage);
+    }
+
+    ASSERT_EQ(barrage->activeCount, 0);
+
+    br_deleteBarrage(barrage);
+
+    PASS();
+}
+
 TEST LaunchTest()
 {
     const char* script =
@@ -91,6 +123,8 @@ SUITE(Bullet_Functionality)
 {
     RUN_TEST(BasicMovementTest);
     RUN_TEST(LaunchTest);
+
+    RUN_TEST(VanishTest);
 
     /* RUN_TEST(FileTest); */
 }

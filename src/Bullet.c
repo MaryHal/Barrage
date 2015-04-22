@@ -12,7 +12,7 @@ void bl_resetBullet(struct Bullet* b)
 {
     bl_setBulletData(b, 0.0f, 0.0f, 0.0f, 0.0f);
 
-    b->life = 0;
+    /* b->life = 0; */
     b->turn = 0;
 
     b->luaFuncRef = LUA_NOREF;
@@ -41,7 +41,7 @@ void bl_copyBullet(struct Bullet* to, struct Bullet* from)
     to->vx = from->vx;
     to->vy = from->vy;
 
-    to->life = from->life;
+    /* to->life = from->life; */
     to->turn = from->turn;
 
     to->luaFuncRef = from->luaFuncRef;
@@ -143,7 +143,11 @@ float bl_getDirection(struct Bullet* b)
 
 void bl_vanish(struct Bullet* b)
 {
-    b->turn = DYING;
+    if (!bl_isDying(b))
+        b->turn = DYING;
+
+    /* // TODO: consider whether this will leave hanging references. */
+    /* b->luaFuncRef = LUA_NOREF; */
 }
 
 void bl_kill(struct Bullet* b)

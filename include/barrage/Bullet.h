@@ -14,7 +14,7 @@ struct Bullet
                 struct Bullet* next;
         };
 
-        int life;
+        /* int life; */
         int turn;
 
         union
@@ -33,6 +33,7 @@ struct Bullet
 enum BulletState
 {
     DYING = -31,
+    JUST_ABOUT_DEAD = -2,
     DEAD  = -1
 };
 

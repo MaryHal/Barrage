@@ -204,7 +204,36 @@ void br_tick(struct Barrage* barrage)
             continue;
         }
 
-        bl_update(&barrage->bullets[i]);
+        if (bl_isDying(&barrage->bullets[i]))
+        {
+            barrage->processedCount++;
+        }
+
+        /* bl_update(&barrage->bullets[i]); */
+
+        // Move current bullet
+        barrage->bullets[i].x += barrage->bullets[i].vx;
+        barrage->bullets[i].y += barrage->bullets[i].vy;
+
+        barrage->bullets[i].turn++;
+
+        if (bl_isDead(&barrage->bullets[i]))
+        {
+            // Remove function reference from bullet.
+            /* luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef); */
+
+            bl_setNext(&barrage->bullets[i], barrage->firstAvailable);
+            barrage->firstAvailable = &barrage->bullets[i];
+
+            /* // Kill this bullet again??? */
+            /* barrage->bullets[i].turn = DEAD; */
+
+            barrage->killCount++;
+            barrage->processedCount++;
+
+            // Don't update this bullet.
+            continue;
+        }
     }
 
     // TODO: Consider whether or not we should add new bullets after updating (here) or after
