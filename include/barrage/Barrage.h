@@ -43,41 +43,39 @@ struct Barrage
 extern struct Bullet*  g_bullet;
 extern struct Barrage* g_barrage;
 
-// TODO: Prefix barrage function names.
+struct Barrage* br_createBarrage();
+void br_deleteBarrage(struct Barrage* barrage);
 
-struct Barrage* createBarrage();
-void deleteBarrage(struct Barrage* barrage);
+struct Barrage* br_createBarrageFromFile(const char* filename,
+                                         float originX, float originY);
+struct Barrage* br_createBarrageFromScript(const char* script,
+                                           float originX, float originY);
 
-struct Barrage* createBarrageFromFile(const char* filename,
-                                      float originX, float originY);
-struct Barrage* createBarrageFromScript(const char* script,
-                                        float originX, float originY);
+void br_createBullet(struct Barrage* barrage,
+                     float x, float y, float vx, float vy,
+                     int luaFuncRef);
 
-void createBullet(struct Barrage* barrage,
-                  float x, float y, float vx, float vy,
-                  int luaFuncRef);
+struct Bullet* br_getFreeBullet(struct Barrage* barrage);
+void br_addQueuedBullets(struct Barrage* barrage);
 
-struct Bullet* getFreeBullet(struct Barrage* barrage);
-void addQueuedBullets(struct Barrage* barrage);
-
-void setPlayerPosition(struct Barrage* barrage, float x, float y);
-void tick(struct Barrage* barrage);
+void br_setPlayerPosition(struct Barrage* barrage, float x, float y);
+void br_tick(struct Barrage* barrage);
 
 // TODO: Double check the logic of these two functions.
 
 // Return the next active bullet in the barrage.
-int hasNext(struct Barrage* barrage);
-struct Bullet* yield(struct Barrage* barrage);
+int br_hasNext(struct Barrage* barrage);
+struct Bullet* br_yield(struct Barrage* barrage);
 
 
 // "Meta"-functions used by the Lua-interface.
-void aimAtTarget(struct Barrage* barrage, struct Bullet* current);
+void br_aimAtTarget(struct Barrage* barrage, struct Bullet* current);
 
-void launch(struct Barrage* barrage, struct Bullet* current,
-            float dir, float speed, int luaFuncRef);
-void launchAtTarget(struct Barrage* barrage, struct Bullet* current,
-                    float speed, int luaFuncRef);
-void launchCircle(struct Barrage* barrage, struct Bullet* current,
-                  int segments, float speed, int luaFuncRef);
+void br_launch(struct Barrage* barrage, struct Bullet* current,
+               float dir, float speed, int luaFuncRef);
+void br_launchAtTarget(struct Barrage* barrage, struct Bullet* current,
+                       float speed, int luaFuncRef);
+void br_launchCircle(struct Barrage* barrage, struct Bullet* current,
+                     int segments, float speed, int luaFuncRef);
 
 #endif /* BARRAGE_H */

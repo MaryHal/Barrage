@@ -25,7 +25,7 @@ static int ud_barrage_newBarrage(lua_State* L)
 
     // Have lua allocate some data for our Barrage struct.
     struct Barrage_user_data* ud = (struct Barrage_user_data*) lua_newuserdata(L, sizeof(*ud));
-    ud->barrage = createBarrageFromFile(filename, originX, originY);
+    ud->barrage = br_createBarrageFromFile(filename, originX, originY);
 
     luaL_getmetatable(L, "Barrage");
 
@@ -41,7 +41,7 @@ static int ud_barrage_destroy(lua_State* L)
 
     if (ud->barrage != NULL)
     {
-        deleteBarrage(ud->barrage);
+        br_deleteBarrage(ud->barrage);
     }
     ud->barrage = NULL;
 
@@ -60,7 +60,7 @@ static int ud_barrage_setPlayerPosition(lua_State* L)
     float playerX = luaL_checknumber(L, 2);
     float playerY = luaL_checknumber(L, 3);
 
-    setPlayerPosition(ud->barrage, playerX, playerY);
+    br_setPlayerPosition(ud->barrage, playerX, playerY);
 
     return 0;
 }
@@ -69,7 +69,7 @@ static int ud_barrage_tick(lua_State* L)
 {
     struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
 
-    tick(ud->barrage);
+    br_tick(ud->barrage);
 
     return 0;
 }
@@ -77,7 +77,7 @@ static int ud_barrage_tick(lua_State* L)
 static int ud_barrage_hasNext(lua_State* L)
 {
     struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
-    lua_pushboolean(L, hasNext(ud->barrage));
+    lua_pushboolean(L, br_hasNext(ud->barrage));
 
     return 1;
 }
@@ -86,7 +86,7 @@ static int ud_barrage_yield(lua_State* L)
 {
     struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
 
-    struct Bullet* b = yield(ud->barrage);
+    struct Bullet* b = br_yield(ud->barrage);
     if (b != NULL)
     {
         lua_pushnumber(L, b->x);

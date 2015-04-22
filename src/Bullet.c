@@ -158,7 +158,7 @@ int bl_isDead(struct Bullet* b)
 
 int bl_isDying(struct Bullet* b)
 {
-    return b->turn == DYING;
+    return b->turn < 0;
 }
 
 void bl_resetTurns(struct Bullet* b)

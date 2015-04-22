@@ -147,7 +147,7 @@ int l_aimAtTarget(lua_State* L)
 {
     (void)L;
 
-    aimAtTarget(g_barrage, g_bullet);
+    br_aimAtTarget(g_barrage, g_bullet);
 
     return 0;
 }
@@ -265,7 +265,7 @@ int l_launch(lua_State* L)
     // Third argument is a function handle.
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    launch(g_barrage, g_bullet, dir, speed, ref);
+    br_launch(g_barrage, g_bullet, dir, speed, ref);
 
     return 0;
 }
@@ -277,7 +277,7 @@ int l_launchAtTarget(lua_State* L)
     // Second argument is a function handle.
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    launchAtTarget(g_barrage, g_bullet, speed, ref);
+    br_launchAtTarget(g_barrage, g_bullet, speed, ref);
 
     return 0;
 }
@@ -290,7 +290,7 @@ int l_launchCircle(lua_State* L)
     // Third argument is a function handle.
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    launchCircle(g_barrage, g_bullet, segments, speed, ref);
+    br_launchCircle(g_barrage, g_bullet, segments, speed, ref);
 
     return 0;
 }

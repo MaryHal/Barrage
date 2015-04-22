@@ -32,8 +32,8 @@ struct Bullet
 // TODO: Reconsider implication of Dying vs Dead
 enum BulletState
 {
-    DYING = -1,
-    DEAD  = -2
+    DYING = -31,
+    DEAD  = -1
 };
 
 void bl_resetBullet(struct Bullet* b);

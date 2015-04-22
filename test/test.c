@@ -21,22 +21,22 @@ TEST BasicMovementTest()
         "    setVelocity(5.0, 5.0)\n"
         "end\n";
 
-    struct Barrage* barrage = createBarrageFromScript(script, 320.0f, 120.0f);
+    struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
 
     ASSERT(barrage->bullets[0].x == 320.0f);
     ASSERT(barrage->bullets[0].y == 120.0f);
 
-    tick(barrage);
+    br_tick(barrage);
 
     ASSERT(barrage->bullets[0].x == 330.0f);
     ASSERT(barrage->bullets[0].y == 130.0f);
 
-    tick(barrage);
+    br_tick(barrage);
 
     ASSERT(barrage->bullets[0].x == 335.0f);
     ASSERT(barrage->bullets[0].y == 135.0f);
 
-    deleteBarrage(barrage);
+    br_deleteBarrage(barrage);
 
     PASS();
 }
@@ -53,39 +53,39 @@ TEST LaunchTest()
         "    kill()\n"
         "end\n";
 
-    struct Barrage* barrage = createBarrageFromScript(script, 320.0f, 120.0f);
+    struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
 
     ASSERT_EQ(barrage->activeCount, 1);
-    tick(barrage);
+    br_tick(barrage);
     ASSERT_EQ(barrage->activeCount, 5);
-    tick(barrage);
+    br_tick(barrage);
     ASSERT_EQ(barrage->activeCount, 0);
 
-    deleteBarrage(barrage);
+    br_deleteBarrage(barrage);
 
     PASS();
 }
 
-/* TEST FileTest() */
-/* { */
-/*     struct Barrage* barrage = createBarrageFromFile("example/barrage/test11.lua", 320.0f, 120.0f); */
+#if 0
+TEST FileTest()
+{
+    struct Barrage* barrage = br_createBarrageFromFile("example/barrage/test.lua", 320.0f, 120.0f);
 
-/*     for (int i = 0; i < 200; ++i) */
-/*     { */
-/*         tick(barrage); */
+    for (int i = 0; i < 200; ++i)
+    {
+        br_tick(barrage);
 
-/*         while (available(barrage)) */
-/*         { */
-/*             yield(barrage); */
-/*         } */
+        while (br_hasNext(barrage))
+        {
+            br_yield(barrage);
+        }
+    }
 
-/*         printf("%d %lu\n", i, barrage->activeCount); */
-/*     } */
+    br_deleteBarrage(barrage);
 
-/*     deleteBarrage(barrage); */
-
-/*     PASS(); */
-/* } */
+    PASS();
+}
+#endif
 
 SUITE(Bullet_Functionality)
 {

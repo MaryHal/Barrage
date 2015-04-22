@@ -12,7 +12,7 @@
 struct Bullet*  g_bullet  = NULL;
 struct Barrage* g_barrage = NULL;
 
-struct Barrage* createBarrage()
+struct Barrage* br_createBarrage()
 {
     struct Barrage* barrage = (struct Barrage*)malloc(sizeof(struct Barrage));
 
@@ -51,7 +51,7 @@ struct Barrage* createBarrage()
     return barrage;
 }
 
-void deleteBarrage(struct Barrage* barrage)
+void br_deleteBarrage(struct Barrage* barrage)
 {
     // TODO: Determine which function references to unref.
     for (int i = 0; i < MAX_BULLETS; ++i)
@@ -63,10 +63,10 @@ void deleteBarrage(struct Barrage* barrage)
     free(barrage);
 }
 
-struct Barrage* createBarrageFromFile(const char* filename,
-                                      float originX, float originY)
+struct Barrage* br_createBarrageFromFile(const char* filename,
+                                         float originX, float originY)
 {
-    struct Barrage* barrage = createBarrage();
+    struct Barrage* barrage = br_createBarrage();
 
     /* luaL_loadfile(barrage->L, filename); */
     if (luaL_dofile(barrage->L, filename))
@@ -74,7 +74,7 @@ struct Barrage* createBarrageFromFile(const char* filename,
         luaL_error(barrage->L, "%s", lua_tostring(barrage->L, -1));
     }
 
-    struct Bullet* b = getFreeBullet(barrage);
+    struct Bullet* b = br_getFreeBullet(barrage);
     bl_setPosition(b, originX, originY);
 
     // Set lua function
@@ -87,17 +87,17 @@ struct Barrage* createBarrageFromFile(const char* filename,
     return barrage;
 }
 
-struct Barrage* createBarrageFromScript(const char* script,
-                                        float originX, float originY)
+struct Barrage* br_createBarrageFromScript(const char* script,
+                                           float originX, float originY)
 {
-    struct Barrage* barrage = createBarrage();
+    struct Barrage* barrage = br_createBarrage();
 
     if (luaL_dostring(barrage->L, script))
     {
         luaL_error(barrage->L, "%s", lua_tostring(barrage->L, -1));
     }
 
-    struct Bullet* b = getFreeBullet(barrage);
+    struct Bullet* b = br_getFreeBullet(barrage);
     bl_setPosition(b, originX, originY);
 
     // Set lua function
@@ -110,9 +110,9 @@ struct Barrage* createBarrageFromScript(const char* script,
     return barrage;
 }
 
-void createBullet(struct Barrage* barrage,
-                  float x, float y, float vx, float vy,
-                  int luaFuncRef)
+void br_createBullet(struct Barrage* barrage,
+                     float x, float y, float vx, float vy,
+                     int luaFuncRef)
 {
     struct Bullet* b = &barrage->queue.bullets[barrage->queue.size];
 
@@ -122,7 +122,7 @@ void createBullet(struct Barrage* barrage,
     barrage->queue.size++;
 }
 
-struct Bullet* getFreeBullet(struct Barrage* barrage)
+struct Bullet* br_getFreeBullet(struct Barrage* barrage)
 {
     assert(barrage->activeCount < MAX_BULLETS);
 
@@ -135,25 +135,25 @@ struct Bullet* getFreeBullet(struct Barrage* barrage)
     return b;
 }
 
-void addQueuedBullets(struct Barrage* barrage)
+void br_addQueuedBullets(struct Barrage* barrage)
 {
     for (size_t i = 0; i <  barrage->queue.size; ++i)
     {
         // Copy data from queue
-        bl_copyBullet(getFreeBullet(barrage), &barrage->queue.bullets[i]);
+        bl_copyBullet(br_getFreeBullet(barrage), &barrage->queue.bullets[i]);
     }
 
     barrage->activeCount += barrage->queue.size;
     barrage->queue.size = 0;
 }
 
-void setPlayerPosition(struct Barrage* barrage, float x, float y)
+void br_setPlayerPosition(struct Barrage* barrage, float x, float y)
 {
     barrage->playerX = x;
     barrage->playerY = y;
 }
 
-void tick(struct Barrage* barrage)
+void br_tick(struct Barrage* barrage)
 {
     // Make sure the lua interface knows which barrage is currently being updated.
     g_barrage = barrage;
@@ -184,72 +184,73 @@ void tick(struct Barrage* barrage)
             }
 
             barrage->processedCount++;
-
-            // TODO: Check if out of bounds or bullet is dead
-            if (bl_isDead(&barrage->bullets[i]))
-            {
-                // Remove function reference from bullet.
-                /* luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef); */
-
-                bl_setNext(&barrage->bullets[i], barrage->firstAvailable);
-                barrage->firstAvailable = &barrage->bullets[i];
-
-                /* // Kill this bullet again??? */
-                /* barrage->bullets[i].turn = DEAD; */
-
-                barrage->killCount++;
-
-                // Don't update this bullet.
-                continue;
-            }
-
-            bl_update(&barrage->bullets[i]);
         }
+
+        // TODO: Check if out of bounds or bullet is dead
+        if (bl_isDead(&barrage->bullets[i]))
+        {
+            // Remove function reference from bullet.
+            /* luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef); */
+
+            bl_setNext(&barrage->bullets[i], barrage->firstAvailable);
+            barrage->firstAvailable = &barrage->bullets[i];
+
+            /* // Kill this bullet again??? */
+            /* barrage->bullets[i].turn = DEAD; */
+
+            barrage->killCount++;
+
+            // Don't update this bullet.
+            continue;
+        }
+
+        bl_update(&barrage->bullets[i]);
     }
 
     // TODO: Consider whether or not we should add new bullets after updating (here) or after
     // drawing.
-    addQueuedBullets(barrage);
+    br_addQueuedBullets(barrage);
     barrage->activeCount -= barrage->killCount;
 
     barrage->currentIndex = 0;
     barrage->processedCount = 0;
 }
 
-int hasNext(struct Barrage* barrage)
+int br_hasNext(struct Barrage* barrage)
 {
     return barrage->processedCount < barrage->activeCount && barrage->currentIndex < MAX_BULLETS;
 }
 
-struct Bullet* yield(struct Barrage* barrage)
+struct Bullet* br_yield(struct Barrage* barrage)
 {
-    if (!bl_isDead(&barrage->bullets[barrage->currentIndex++]))
+    while (bl_isDead(&barrage->bullets[barrage->currentIndex]))
     {
-        barrage->processedCount++;
-        return &barrage->bullets[barrage->currentIndex - 1];
+        barrage->currentIndex++;
     }
 
-    return NULL;
+    barrage->processedCount++;
+    barrage->currentIndex++;
+    return &barrage->bullets[barrage->currentIndex - 1];
 }
 
-void aimAtTarget(struct Barrage* barrage, struct Bullet* current)
+void br_aimAtTarget(struct Barrage* barrage, struct Bullet* current)
 {
     bl_aimAtPoint(current, barrage->playerX, barrage->playerY);
 }
 
-void launch(struct Barrage* barrage, struct Bullet* current,
-            float dir, float speed, int luaFuncRef)
+void br_launch(struct Barrage* barrage, struct Bullet* current,
+               float dir, float speed, int luaFuncRef)
 {
     if (!bl_isDying(current))
     {
         float vx =  speed * sin(dir);
         float vy = -speed * cos(dir);
-        createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
+        br_createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
     }
 }
 
-void launchAtTarget(struct Barrage* barrage, struct Bullet* current,
-                    float speed, int luaFuncRef)
+void br_launchAtTarget(struct Barrage* barrage, struct Bullet* current,
+                       float speed, int luaFuncRef)
 {
     if (!bl_isDying(current))
     {
@@ -257,12 +258,12 @@ void launchAtTarget(struct Barrage* barrage, struct Bullet* current,
         float vx =  speed * sin(dir);
         float vy = -speed * cos(dir);
 
-        createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
+        br_createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
     }
 }
 
-void launchCircle(struct Barrage* barrage, struct Bullet* current,
-                  int segments, float speed, int luaFuncRef)
+void br_launchCircle(struct Barrage* barrage, struct Bullet* current,
+                     int segments, float speed, int luaFuncRef)
 {
     if (!bl_isDying(current))
     {
@@ -273,7 +274,7 @@ void launchCircle(struct Barrage* barrage, struct Bullet* current,
             float vx =  speed * sin(segRad * i);
             float vy = -speed * cos(segRad * i);
 
-            createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
+            br_createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
         }
     }
 }
