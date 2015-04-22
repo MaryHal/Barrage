@@ -2,6 +2,10 @@
 
 Lua scripting for shmup barrage patterns. Rewrite of the C++ version ([BulletLua](https://github.com/sanford1/BulletLua)).
 
+> This C project aims to create a sane scriptable interface to define bullet patterns in shoot 'em
+> up games. These patterns, while difficult to dodge in game and hard to appreciate while in the
+> heat of the moment, can be beautiful to spectate.
+
 ## Building this project
 
 Dependencies: python, [ninja](https://martine.github.io/ninja/), [lua](http://www.lua.org/) (or [luajit](http://luajit.org/))
@@ -15,13 +19,15 @@ Dependencies: python, [ninja](https://martine.github.io/ninja/), [lua](http://ww
 
     python bootstrap.py (--debug) (--cxx=<compiler>) (--ci) (--luajit)
 
-Arguments in parenthesis are optional. The default compiler is gcc and this project assumes [C11](https://en.wikipedia.org/wiki/C11_(C_standard_revision)) support. The `ci` switch links `lua5.2` instead of `lua` if your system does not default to lua 5.2. The `luajit` switch links luajit in place of lua (5.2).
+Arguments in parenthesis are optional. The default compiler is gcc and this project assumes [C11](https://en.wikipedia.org/wiki/C11_(C_standard_revision)) support. The `ci` switch links `lua5.2` instead of `lua` if your system does not default to lua 5.2. The `luajit` switch links luajit in place of lua.
 
-### Build library and unit test
+### Building the library and unit test
 
 Simply run `ninja`
 
 ## Usage
+
+Currently you can access the C library directly or use Lua wrapper functions. More wrappers once this project is more stable.
 
 ### C
 
@@ -33,12 +39,14 @@ Link libbarrage.so and make sure your compiler can find the correct header files
 
     #include <barrage/Barrage.h>
 
-    struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
+    struct Barrage* barrage = br_createBarrageFromFile(my_file, 320.0f, 120.0f);
 
     while (running)
     {
+        // Update
         br_tick(barrage);
 
+        // Draw loop
         while (br_hasNext(barrage))
         {
             struct Bullet* b = br_yield(barrage);
@@ -46,17 +54,18 @@ Link libbarrage.so and make sure your compiler can find the correct header files
         }
     }
 
+    // Cleanup
     br_deleteBarrage(barrage);
 
 ### Lua
 
 #### Importing the shared library
 
-Coding in Lua that runs C code that runs Lua code. A bit interesting huh.
-
 First things first is that lua needs to be able to find libbarrage.so. Whether that means installing the shared library to a system directory or telling lua where it can find the file is up to you. For example, when running your script you can direct the lua executable to find the shared library like this:
 
     LUA_CPATH="../lib/libbarrage.so" lua myFile.lua
+
+Keep in mind the lua executable version should match the lua version linked to build this project. This matters if you are using something like [LÖVE](https://love2d.org/), which uses luajit internally. To use Barrage with LÖVE you have to build libbarrage.so with luajit instead of lua.
 
 #### Example (pseudo-)code:
 
@@ -175,7 +184,7 @@ When you create a barrage, it automatically creates a `root` bullet that is link
     launchAtTarget(float s, func)
 
     -- Shoot (segments) number of bullets concentrically.
-    fireCircle(int segments, float s, const sol::function& funcName)
+    launchCircle(int segments, float s, const sol::function& funcName)
 
 #### Removing Bullets
 
