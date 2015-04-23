@@ -5,6 +5,7 @@ local b = nil
 
 function love.load(arg)
    bulletImg = love.graphics.newImage('assets/bullet.png')
+   barrage.setRngSeed()
    b = barrage.new(arg[2], 320.0, 120.0)
 end
 

@@ -165,6 +165,8 @@ void br_setPlayerPosition(struct Barrage* barrage, float x, float y)
 
 void br_tick(struct Barrage* barrage)
 {
+    // TODO: The order of events in this loop is very very delicate. Do something about it!
+
     // Make sure the lua interface knows which barrage is currently being updated.
     g_barrage = barrage;
 

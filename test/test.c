@@ -1,6 +1,7 @@
 #include <greatest.h>
 
 #include <barrage/Barrage.h>
+/* #include <barrage/RandCompat.h> */
 
 #include <math.h>
 
@@ -21,6 +22,7 @@ TEST BasicMovementTest()
         "    setVelocity(5.0, 5.0)\n"
         "end\n";
 
+    /* srand(timeSeed()); */
     struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
 
     ASSERT(barrage->bullets[0].x == 320.0f);
@@ -48,6 +50,7 @@ TEST VanishTest()
         "    vanish()\n"
         "end\n";
 
+    /* srand(timeSeed()); */
     struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
 
     printf("\n");
@@ -85,6 +88,7 @@ TEST LaunchTest()
         "    kill()\n"
         "end\n";
 
+    /* srand(timeSeed()); */
     struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
 
     ASSERT_EQ(barrage->activeCount, 1);
@@ -101,6 +105,7 @@ TEST LaunchTest()
 #if 0
 TEST FileTest()
 {
+    srand(timeSeed());
     struct Barrage* barrage = br_createBarrageFromFile("example/barrage/test.lua", 320.0f, 120.0f);
 
     for (int i = 0; i < 200; ++i)

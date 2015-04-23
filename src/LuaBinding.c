@@ -7,6 +7,7 @@
 
 // Lua < 5.2 compatibility functions
 #include <barrage/LuaCompat.h>
+#include <barrage/RandCompat.h>
 
 #include <stdlib.h>
 
@@ -124,22 +125,31 @@ static int ud_barrage_yield(lua_State* L)
     return 2;
 }
 
+static int ud_barrage_seedRng(lua_State* L)
+{
+    (void)L;
+
+    srand(timeSeed());
+    return 0;
+}
+
 static const struct luaL_Reg ud_barrage_methods[] =
 {
-    { "getActiveCount", &ud_barrage_getActiveCount },
-    { "setRank", &ud_barrage_setRank },
-    { "getRank", &ud_barrage_getRank },
-    { "setPlayerPosition", &ud_barrage_setPlayerPosition },
-    { "tick", &ud_barrage_tick },
-    { "hasNext", &ud_barrage_hasNext },
-    { "yield", &ud_barrage_yield },
-    { "__gc", &ud_barrage_destroy },
+    { "getActiveCount",     &ud_barrage_getActiveCount },
+    { "setRank",            &ud_barrage_setRank },
+    { "getRank",            &ud_barrage_getRank },
+    { "setPlayerPosition",  &ud_barrage_setPlayerPosition },
+    { "tick",               &ud_barrage_tick },
+    { "hasNext",            &ud_barrage_hasNext },
+    { "yield",              &ud_barrage_yield },
+    { "__gc",               &ud_barrage_destroy },
     { NULL, NULL }
 };
 
 static const struct luaL_Reg ud_barrage_functions[] =
 {
-    { "new", &ud_barrage_newBarrage },
+    { "new",                &ud_barrage_newBarrage },
+    { "setRngSeed",         &ud_barrage_seedRng },
     { NULL, NULL }
 };
 

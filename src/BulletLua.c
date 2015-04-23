@@ -46,10 +46,10 @@ void registerLuaFunctions(lua_State* L)
 
     lua_register(L, "getRank", &l_getRank);
 
-    lua_register(L, "randFloat", &l_randFloat);
-    lua_register(L, "randFloatRange", &l_randFloatRange);
-    lua_register(L, "randInt", &l_randInt);
-    lua_register(L, "randIntRange", &l_randIntRange);
+    /* lua_register(L, "randFloat", &l_randFloat); */
+    /* lua_register(L, "randFloatRange", &l_randFloatRange); */
+    /* lua_register(L, "randInt", &l_randInt); */
+    /* lua_register(L, "randIntRange", &l_randIntRange); */
 
     lua_register(L, "getTargetPosition", &l_getTargetPosition);
 
