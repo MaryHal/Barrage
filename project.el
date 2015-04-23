@@ -1,7 +1,8 @@
 (require 'projectile)
 
 (puthash (projectile-project-root)
-         "ninja && ninja -t compdb compile !> compile_commands.json"
+         ;; "ninja && ninja -t compdb compile !> compile_commands.json"
+         "ninja"
          projectile-compilation-cmd-map)
 
 (puthash (projectile-project-root)

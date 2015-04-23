@@ -28,6 +28,8 @@ int l_setSpeedRelative(lua_State* L);
 int l_getSpeed(lua_State* L);
 
 int l_setDirection(lua_State* L);
+int l_getDirection(lua_State* L);
+
 int l_setDirectionRelative(lua_State* L);
 
 int l_aimAtTarget(lua_State* L);
@@ -35,8 +37,6 @@ int l_aimAtPoint(lua_State* L);
 int l_getAimDirection(lua_State* L);
 
 int l_linearInterpolate(lua_State* L);
-
-int l_getDirection(lua_State* L);
 
 int l_vanish(lua_State* L);
 int l_kill(lua_State* L);
@@ -52,6 +52,13 @@ int l_setLuaFunction(lua_State* L);
 // Barrage functions
 
 int l_getRank(lua_State* L);
+
+// Random Numbers
+int l_randFloat(lua_State* L);
+int l_randFloatRange(lua_State* L);
+
+int l_randInt(lua_State* L);
+int l_randIntRange(lua_State* L);
 
 int l_getTargetPosition(lua_State* L);
 

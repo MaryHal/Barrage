@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include <barrage/MathUtils.h>
+#include <barrage/RandCompat.h>
 
 void registerLuaFunctions(lua_State* L)
 {
@@ -23,6 +24,7 @@ void registerLuaFunctions(lua_State* L)
     lua_register(L, "getSpeed", &l_getSpeed);
 
     lua_register(L, "setDirection", &l_setDirection);
+    lua_register(L, "getDirection", &l_getDirection);
     lua_register(L, "setDirectionRelative", &l_setDirectionRelative);
 
     lua_register(L, "aimAtTarget", &l_aimAtTarget);
@@ -30,8 +32,6 @@ void registerLuaFunctions(lua_State* L)
     lua_register(L, "getAimDirection", &l_getAimDirection);
 
     lua_register(L, "linearInterpolate", &l_linearInterpolate);
-
-    lua_register(L, "getDirection", &l_getDirection);
 
     lua_register(L, "vanish", &l_vanish);
     lua_register(L, "kill", &l_kill);
@@ -45,6 +45,11 @@ void registerLuaFunctions(lua_State* L)
     lua_register(L, "setFunction", &l_setLuaFunction);
 
     lua_register(L, "getRank", &l_getRank);
+
+    lua_register(L, "randFloat", &l_randFloat);
+    lua_register(L, "randFloatRange", &l_randFloatRange);
+    lua_register(L, "randInt", &l_randInt);
+    lua_register(L, "randIntRange", &l_randIntRange);
 
     lua_register(L, "getTargetPosition", &l_getTargetPosition);
 
@@ -135,6 +140,12 @@ int l_setDirection(lua_State* L)
     return 0;
 }
 
+int l_getDirection(lua_State* L)
+{
+    lua_pushnumber(L, radToDeg(bl_getDirection(g_bullet)));
+    return 1;
+}
+
 int l_setDirectionRelative(lua_State* L)
 {
     float dir = degToRad(luaL_checknumber(L, 1));
@@ -179,12 +190,6 @@ int l_linearInterpolate(lua_State* L)
     bl_linearInterpolate(g_bullet, targetX, targetY, steps);
 
     return 0;
-}
-
-int l_getDirection(lua_State* L)
-{
-    lua_pushnumber(L, radToDeg(bl_getDirection(g_bullet)));
-    return 1;
 }
 
 int l_vanish(lua_State* L)
@@ -246,6 +251,39 @@ int l_setLuaFunction(lua_State* L)
 int l_getRank(lua_State* L)
 {
     lua_pushnumber(L, g_barrage->rank);
+    return 1;
+}
+
+int l_randFloat(lua_State* L)
+{
+    lua_pushnumber(L, randFloatRange(0.0f, 1.0f));
+
+    return 1;
+}
+
+int l_randFloatRange(lua_State* L)
+{
+    float min = luaL_checknumber(L, 1);
+    float max = luaL_checknumber(L, 2);
+    lua_pushnumber(L, randFloatRange(min, max));
+
+    return 1;
+}
+
+int l_randInt(lua_State* L)
+{
+    int max = luaL_checkint(L, 1);
+    lua_pushinteger(L, randIntRange(0, max));
+
+    return 1;
+}
+
+int l_randIntRange(lua_State* L)
+{
+    int min = luaL_checkint(L, 1);
+    int max = luaL_checkint(L, 2);
+    lua_pushinteger(L, randIntRange(min, max));
+
     return 1;
 }
 
