@@ -57,7 +57,7 @@ TEST VanishTest()
 
     ASSERT_EQ(barrage->activeCount, 1);
 
-    for (int i = 0; i < 30; ++i)
+    for (int i = 0; i < 35; ++i)
     {
         br_tick(barrage);
     }
@@ -105,7 +105,7 @@ TEST LaunchTest()
 #if 0
 TEST FileTest()
 {
-    srand(timeSeed());
+    /* srand(timeSeed()); */
     struct Barrage* barrage = br_createBarrageFromFile("example/barrage/test.lua", 320.0f, 120.0f);
 
     for (int i = 0; i < 200; ++i)
