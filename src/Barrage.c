@@ -63,6 +63,23 @@ void br_deleteBarrage(struct Barrage* barrage)
     free(barrage);
 }
 
+void runOnLoadFunc(struct Barrage* barrage)
+{
+    // Run onLoad function (if it exists)
+    lua_getglobal(barrage->L, "onLoad");
+    if (lua_isfunction(barrage->L, -1))
+    {
+        if (lua_pcall(barrage->L, 0, 0, 0))
+        {
+            luaL_error(barrage->L, "[%s]", lua_tostring(barrage->L, -1));
+        }
+    }
+    else
+    {
+        lua_pop(barrage->L, 1);
+    }
+}
+
 struct Barrage* br_createBarrageFromFile(const char* filename,
                                          float originX, float originY)
 {
@@ -73,6 +90,8 @@ struct Barrage* br_createBarrageFromFile(const char* filename,
     {
         luaL_error(barrage->L, "%s", lua_tostring(barrage->L, -1));
     }
+
+    runOnLoadFunc(barrage);
 
     struct Bullet* b = br_getFreeBullet(barrage);
     bl_setPosition(b, originX, originY);
@@ -96,6 +115,8 @@ struct Barrage* br_createBarrageFromScript(const char* script,
     {
         luaL_error(barrage->L, "%s", lua_tostring(barrage->L, -1));
     }
+
+    runOnLoadFunc(barrage);
 
     struct Bullet* b = br_getFreeBullet(barrage);
     bl_setPosition(b, originX, originY);
@@ -189,6 +210,7 @@ void br_tick(struct Barrage* barrage)
         // Run lua function.
         if (!bl_isDead(&barrage->bullets[i]))
         {
+            // Push lua function ref to the top of the lua stack.
             lua_rawgeti(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef);
             if (lua_pcall(barrage->L, 0, 0, 0))
             {

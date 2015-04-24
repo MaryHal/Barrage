@@ -46,6 +46,8 @@ extern struct Barrage* g_barrage;
 struct Barrage* br_createBarrage();
 void br_deleteBarrage(struct Barrage* barrage);
 
+void runOnLoadFunc(struct Barrage* barrage);
+void setupInitialBullet(struct Barrage* barrage);
 struct Barrage* br_createBarrageFromFile(const char* filename,
                                          float originX, float originY);
 struct Barrage* br_createBarrageFromScript(const char* script,
