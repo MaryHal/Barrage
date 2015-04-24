@@ -224,6 +224,10 @@ void br_tick(struct Barrage* barrage)
 
             barrage->processedCount++;
         }
+        else
+        {
+            continue;
+        }
 
         // TODO: Check if out of bounds or bullet is dead
         if (bl_isDead(&barrage->bullets[i]))
