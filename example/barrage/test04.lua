@@ -10,18 +10,18 @@ function main()
 
    if (math.fmod(turn, 30) == 0) then
       setPosition(math.random(200, 440), 488)
-      launch(math.random(-20, 20), math.random() + 6.5, launch)
+      launch(math.random(-20, 20), math.random() + 6.5, shoot)
    end
 end
 
-function launch()
+function shoot()
    turn = getTurn()
    setSpeedRelative(-0.07)
    if (turn == 60) then
       for d = 0, 360, 360/30 do
-         launch(d, randFloatRange(2, 5), fade)
-         kill()
+         launch(d, 2 + math.random() * 3, fade)
       end
+      kill()
    end
 end
 
