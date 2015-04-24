@@ -29,7 +29,7 @@ function surround()
    -- setCollision(false)
    tx, ty = getTargetPosition()
 
-   nx = tx + radius * math.sin(theta);
+   nx = tx + radius * math.sin(theta)
    ny = ty + radius * math.cos(theta)
    theta = theta + 0.04
 
@@ -41,12 +41,12 @@ function freeze()
    if (getTurn() == travelTime) then
       -- setCollision(true)
       setSpeed(0)
-      aimTarget()
-      setFunction(launch)
+      aimAtTarget()
+      setFunction(blast)
    end
 end
 
-function launch()
+function blast()
    if (getTurn() == freezeTime) then
       setSpeed(8)
    end

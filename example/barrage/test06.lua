@@ -36,7 +36,7 @@ function burst()
    kill()
 end
 
-function launch()
+function shoot()
    turn = getTurn()
 
    if (turn < 60) then
@@ -62,6 +62,6 @@ function main()
       -- Cycle between directions
       direction = initialDirections[math.fmod(shotCount, #initialDirections) + 1]
       shotCount = shotCount + 1
-      launch(direction, 1.5, launch)
+      launch(direction, 1.5, shoot)
    end
 end
