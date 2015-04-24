@@ -102,10 +102,16 @@ Keep in mind the lua executable version should match the lua version linked to b
 
 ### Basics
 
-When you create a barrage, it automatically creates a `root` bullet that is linked to a `main` lua function. The capabilities of all bullets is that they can control themselves and they can launch new bullets.
+When you create a barrage, it automatically creates a `root` bullet that is linked to a _required_ `main` lua function. The capabilities of all bullets is that they can control themselves and they can launch new bullets.
 
     function main()
         -- Do things
+    end
+
+When you load a barrage it evaluates the script and runs the `onLoad' lua function, if it exists.
+
+    function onLoad()
+        math.randomseed(os.time())
     end
 
 ### Available bullet functions
