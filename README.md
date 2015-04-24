@@ -29,7 +29,7 @@ Simply run `ninja`
 
 ## Usage
 
-Currently you can access the C library directly or use Lua wrapper functions. More wrappers once this project is more stable.
+Currently you can link the C library or use Lua wrapper (named `BarrageC`). More wrappers once this project is more stable.
 
 ### C
 
@@ -67,7 +67,7 @@ First things first is that lua needs to be able to find libbarrage.so. Whether t
 
     LUA_CPATH="../lib/libbarrage.so" lua myFile.lua
 
-Keep in mind the lua executable version should match the lua version linked to build this project. This matters if you are using something like [LÖVE](https://love2d.org/), which uses luajit internally. To use Barrage with LÖVE you have to build libbarrage.so with luajit instead of lua.
+Keep in mind the lua executable version should match the lua version linked to build this project. This matters if you are using something like [LÖVE](https://love2d.org/), which uses luajit internally. To use Barrage with LÖVE you have to build libbarrage.so with luajit instead of lua. The module is named `barrageC`.
 
 #### Example (pseudo-)code:
 

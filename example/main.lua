@@ -42,9 +42,16 @@ end
 
 function love.draw(dt)
    love.graphics.setFont(font)
+   love.graphics.setColor(255, 255, 255)
    love.graphics.print(barrageFileList[barrageIndex], 8, 8)
+
    while b:hasNext() do
-      local x, y = b:yield()
-      love.graphics.draw(bulletImg, x, y, 0, 0.5, 0.5)
+      local x, y, vx, vy, frame = b:yield()
+      if frame < 0 then
+         love.graphics.setColor(255, 255, 255, 255 - (31 + frame) * 255 / 30)
+      else
+         love.graphics.setColor(255, 255, 255)
+      end
+      love.graphics.draw(bulletImg, x - 8, y - 8, 0, 0.5, 0.5)
    end
 end

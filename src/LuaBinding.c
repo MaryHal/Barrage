@@ -109,28 +109,15 @@ static int ud_barrage_yield(lua_State* L)
     struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
 
     struct Bullet* b = br_yield(ud->barrage);
-    if (b != NULL)
-    {
-        lua_pushnumber(L, b->x);
-        lua_pushnumber(L, b->y);
-    }
-    else
-    {
-        // TODO: Determine what should happen in NULL case. Current "solution" is pretty
-        // unreasonable.
-        lua_pushnumber(L, -100);
-        lua_pushnumber(L, -100);
-    }
+    lua_pushnumber(L, b->x);
+    lua_pushnumber(L, b->y);
 
-    return 2;
-}
+    lua_pushnumber(L, b->vx);
+    lua_pushnumber(L, b->vy);
 
-static int ud_barrage_seedRng(lua_State* L)
-{
-    (void)L;
+    lua_pushinteger(L, b->turn);
 
-    srand(timeSeed());
-    return 0;
+    return 5;
 }
 
 static const struct luaL_Reg ud_barrage_methods[] =
@@ -149,7 +136,6 @@ static const struct luaL_Reg ud_barrage_methods[] =
 static const struct luaL_Reg ud_barrage_functions[] =
 {
     { "new",                &ud_barrage_newBarrage },
-    { "setRngSeed",         &ud_barrage_seedRng },
     { NULL, NULL }
 };
 

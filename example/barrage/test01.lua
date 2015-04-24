@@ -29,7 +29,6 @@ function homeIn()
       aimAtTarget()
       setSpeed(10)
    elseif (turn == 50) then
-      -- vanish()
-      kill()
+      vanish()
    end
 end
