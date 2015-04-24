@@ -196,7 +196,16 @@ int l_vanish(lua_State* L)
 {
     (void)L;
 
-    bl_vanish(g_bullet);
+    int argc = lua_gettop(L);
+    if (argc == 0)
+    {
+        bl_vanish(g_bullet, DEFAULT_FRAMES_UNTIL_DEATH);
+    }
+    else
+    {
+        bl_vanish(g_bullet, luaL_checkinteger(L, 1));
+    }
+
     return 0;
 }
 

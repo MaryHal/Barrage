@@ -8,6 +8,8 @@
 
 #include <lauxlib.h>
 
+const int DEFAULT_FRAMES_UNTIL_DEATH = 30;
+
 void bl_resetBullet(struct Bullet* b)
 {
     bl_setBulletData(b, 0.0f, 0.0f, 0.0f, 0.0f);
@@ -141,13 +143,10 @@ float bl_getDirection(struct Bullet* b)
     return bl_PI - atan2(b->vx, b->vy);
 }
 
-void bl_vanish(struct Bullet* b)
+void bl_vanish(struct Bullet* b, int framesTilDeath)
 {
     if (!bl_isDying(b))
-        b->turn = DYING;
-
-    /* // TODO: consider whether this will leave hanging references. */
-    /* b->luaFuncRef = LUA_NOREF; */
+        b->turn = -framesTilDeath - 1;
 }
 
 void bl_kill(struct Bullet* b)

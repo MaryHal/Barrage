@@ -37,6 +37,8 @@ enum BulletState
     DEAD  = -1
 };
 
+extern const int DEFAULT_FRAMES_UNTIL_DEATH;
+
 void bl_resetBullet(struct Bullet* b);
 void bl_setBullet(struct Bullet* b);
 void bl_setBulletData(struct Bullet* b, float x, float y, float vx, float vy);
@@ -62,7 +64,7 @@ void bl_linearInterpolate(struct Bullet* b, float tx, float ty, int steps);
 
 float bl_getDirection(struct Bullet* b);
 
-void bl_vanish(struct Bullet* b);
+void bl_vanish(struct Bullet* b, int framesTilDeath);
 void bl_kill(struct Bullet* b);
 
 int bl_isDead(struct Bullet* b);
