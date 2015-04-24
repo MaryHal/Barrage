@@ -7,6 +7,14 @@ reactivateTime = 50
 travelTime = 4
 freezeTime = 60
 
+function randFloatRange(a, b)
+   return a + math.random() * (b - a)
+end
+
+function onLoad()
+   math.randomseed(os.time())
+end
+
 function main()
    if (math.fmod(getTurn() + 10, reactivateTime) == 0) then
       theta = randFloatRange(prevTheta + 1.6, prevTheta + 6.28 - 1.6)
@@ -18,7 +26,7 @@ function main()
 end
 
 function surround()
-   setCollision(false)
+   -- setCollision(false)
    tx, ty = getTargetPosition()
 
    nx = tx + radius * math.sin(theta);
@@ -31,7 +39,7 @@ end
 
 function freeze()
    if (getTurn() == travelTime) then
-      setCollision(true)
+      -- setCollision(true)
       setSpeed(0)
       aimTarget()
       setFunction(launch)

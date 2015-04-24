@@ -97,20 +97,28 @@ ninja.newline()
 
 ninja.build('build.ninja', 'bootstrap', implicit = 'bootstrap.py')
 
-libobjs = []
+libObjs = []
 for f in files_from('src/', '**.c'):
     obj = object_file(f)
-    libobjs.append(obj)
+    libObjs.append(obj)
     ninja.build(obj, 'compile', inputs = f)
 
-testobjs = []
-for f in files_from('test/', '*.c'):
+unitTestObjs = []
+for f in files_from('test/src/unit', '*.c'):
     obj = object_file(f)
-    testobjs.append(obj)
+    unitTestObjs.append(obj)
+    ninja.build(obj, 'compile', inputs = f)
+
+scriptTestObjs = []
+for f in files_from('test/src/scr', '*.c'):
+    obj = object_file(f)
+    scriptTestObjs.append(obj)
     ninja.build(obj, 'compile', inputs = f)
 
 ninja.newline()
 
-ninja.build('./lib/libbarrage.so', 'dynlink', inputs = libobjs)
+ninja.build('./lib/libbarrage.so', 'dynlink', inputs = libObjs)
 ninja.newline()
-ninja.build('./test/bin/btest', 'link', inputs = libobjs + testobjs)
+ninja.build('./test/bin/btest', 'link', inputs = libObjs + unitTestObjs)
+ninja.newline()
+ninja.build('./test/bin/scriptTest', 'link', inputs = libObjs + scriptTestObjs)

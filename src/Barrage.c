@@ -65,8 +65,10 @@ void br_deleteBarrage(struct Barrage* barrage)
 
 void runOnLoadFunc(struct Barrage* barrage)
 {
-    // Run onLoad function (if it exists)
-    lua_getglobal(barrage->L, "onLoad");
+    const char* funcName = "onLoad";
+
+    // Run function on load(if it exists)
+    lua_getglobal(barrage->L, funcName);
     if (lua_isfunction(barrage->L, -1))
     {
         if (lua_pcall(barrage->L, 0, 0, 0))
@@ -210,6 +212,9 @@ void br_tick(struct Barrage* barrage)
         // Run lua function.
         if (!bl_isDead(&barrage->bullets[i]))
         {
+            // Must be done early as Dead/Dying flags depends on value of turn.
+            barrage->bullets[i].turn++;
+
             // Push lua function ref to the top of the lua stack.
             lua_rawgeti(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef);
             if (lua_pcall(barrage->L, 0, 0, 0))
@@ -229,45 +234,14 @@ void br_tick(struct Barrage* barrage)
             bl_setNext(&barrage->bullets[i], barrage->firstAvailable);
             barrage->firstAvailable = &barrage->bullets[i];
 
-            /* // Kill this bullet again??? */
-            /* barrage->bullets[i].turn = DEAD; */
-
             barrage->killCount++;
 
-            // Don't update this bullet.
             continue;
         }
 
-        if (bl_isDying(&barrage->bullets[i]))
-        {
-            barrage->processedCount++;
-        }
-
-        /* bl_update(&barrage->bullets[i]); */
-
-        // Move current bullet
+        // Update Position
         barrage->bullets[i].x += barrage->bullets[i].vx;
         barrage->bullets[i].y += barrage->bullets[i].vy;
-
-        barrage->bullets[i].turn++;
-
-        if (bl_isDead(&barrage->bullets[i]))
-        {
-            // Remove function reference from bullet.
-            /* luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef); */
-
-            bl_setNext(&barrage->bullets[i], barrage->firstAvailable);
-            barrage->firstAvailable = &barrage->bullets[i];
-
-            /* // Kill this bullet again??? */
-            /* barrage->bullets[i].turn = DEAD; */
-
-            barrage->killCount++;
-            barrage->processedCount++;
-
-            // Don't update this bullet.
-            continue;
-        }
     }
 
     // TODO: Consider whether or not we should add new bullets after updating (here) or after

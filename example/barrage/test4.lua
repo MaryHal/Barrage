@@ -1,12 +1,16 @@
 -- BulletLua Test Script
 
+function onLoad()
+   math.randomseed(os.time())
+end
+
 function main()
    turn = getTurn()
    setDirection(0)
 
    if (math.fmod(turn, 30) == 0) then
-      setPosition(randIntRange(200, 440), 488)
-      launch(randIntRange(-20, 20), randFloat() + 6.5, launch)
+      setPosition(math.random(200, 440), 488)
+      launch(math.random(-20, 20), math.random() + 6.5, launch)
    end
 end
 

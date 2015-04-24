@@ -1,3 +1,8 @@
+
+function onLoad()
+   math.randomseed(os.time())
+end
+
 function bind(f,...)
    local args = {...}
    return function(...)
@@ -19,14 +24,14 @@ function trap(offset)
 
    setPosition(x, y)
 
-   if (randIntRange(0, 600) == 0) then
-      launchAtTarget(4, launch)
+   if (math.random(0, 600) == 0) then
+      launchAtTarget(4, shoot)
    end
 
    theta = theta + 0.01
 end
 
-function launch()
+function shoot()
    thisX, thisY = getPosition()
 
    dx = thisX - centerX
