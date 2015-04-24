@@ -223,23 +223,23 @@ void br_tick(struct Barrage* barrage)
             }
 
             barrage->processedCount++;
+
+            // TODO: Check if out of bounds or bullet is dead
+            if (bl_isDead(&barrage->bullets[i]))
+            {
+                // Remove function reference from bullet.
+                /* luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef); */
+
+                bl_setNext(&barrage->bullets[i], barrage->firstAvailable);
+                barrage->firstAvailable = &barrage->bullets[i];
+
+                barrage->killCount++;
+
+                continue;
+            }
         }
         else
         {
-            continue;
-        }
-
-        // TODO: Check if out of bounds or bullet is dead
-        if (bl_isDead(&barrage->bullets[i]))
-        {
-            // Remove function reference from bullet.
-            /* luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef); */
-
-            bl_setNext(&barrage->bullets[i], barrage->firstAvailable);
-            barrage->firstAvailable = &barrage->bullets[i];
-
-            barrage->killCount++;
-
             continue;
         }
 

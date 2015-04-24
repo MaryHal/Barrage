@@ -18,14 +18,14 @@ function love.load(arg)
 end
 
 function love.keypressed(key)
-   if key == ' ' then
+   if key == ' ' or key == 'return' then
       b = barrage.new('barrage/' .. barrageFileList[barrageIndex], 320.0, 120.0)
-   elseif key == 'left' then
+   elseif key == 'left' or key == 'a' then
       barrageIndex = barrageIndex - 1
       if barrageIndex < 1 then
          barrageIndex = #barrageFileList
       end
-   elseif key == 'right' then
+   elseif key == 'right' or key == 'd' then
       barrageIndex = barrageIndex + 1
       if barrageIndex > #barrageFileList then
          barrageIndex = 1
