@@ -93,8 +93,10 @@ Keep in mind the lua executable version should match the lua version linked to b
         while myBarrage:hasNext() do
             local x, y = myBarrage:yield()
 
-            -- Draw our bullet. Note that the center of the bullet is at (x, y).
-            draw(image, x, y, 0, 0.5, 0.5)
+            -- Draw our bullet.
+            -- Keep in mind the coordinate we are given from yield is defined
+            -- to be the center of the bullet.
+            drawImage(x, y)
         end
     end
 
@@ -118,7 +120,7 @@ When you load a barrage it evaluates the script and runs the `onLoad' lua functi
 
 #### Do nothing
 
-    nullfunc()
+    nullFunc()
 
 #### Position functions
 
@@ -170,16 +172,6 @@ When you load a barrage it evaluates the script and runs the `onLoad' lua functi
 
     -- Get the current barrage "difficulty", From [0.0, 1.0].
     getRank()
-
-#### Random numbers (currently missing)
-
-    -- Generate random floating point numbers
-    randFloat()
-    randFloatRange(float min, float max)
-
-    -- Generate random integers
-    randInt(int max)
-    randIntRange(int min, int max)
 
 #### Switch functions + creating new bullets
 
