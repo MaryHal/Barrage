@@ -295,7 +295,7 @@ void br_launchAtTarget(struct Barrage* barrage, struct Bullet* current,
 {
     if (!bl_isDying(current))
     {
-        float dir = radToDeg(bl_getAimDirection(current, barrage->playerX, barrage->playerY));
+        float dir = bl_getAimDirection(current, barrage->playerX, barrage->playerY);
         float vx =  speed * sin(dir);
         float vy = -speed * cos(dir);
 
