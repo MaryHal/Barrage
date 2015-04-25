@@ -16,12 +16,7 @@ struct Bullet
 
         /* int life; */
         int turn;
-
-        union
-        {
-                int luaFuncRef;
-                int (*CFuncName)();
-        };
+        int luaFuncRef;
 };
 
 /* struct BulletAttribute */
@@ -76,7 +71,6 @@ int bl_getTurn(struct Bullet* b);
 
 // Set function for bullet to run.
 void bl_setLuaFunction(struct Bullet* b, int luaFuncRef);
-void bl_setCFunction(struct Bullet* b, int (*function)());
 
 void bl_update(struct Bullet* b);
 

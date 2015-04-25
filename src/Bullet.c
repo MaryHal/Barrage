@@ -151,8 +151,14 @@ void bl_vanish(struct Bullet* b, int framesTilDeath)
 
 void bl_kill(struct Bullet* b)
 {
-    // turn is updated _after_ running luaFuncRef, so we need to subtract one from the dead
-    // flag so it becomes dead during the update loop.
+    // A bullet's frame counter needs to be updated _after_ running its Lua function to keep the mental
+    // model of the bullet consistent. For example, when we initially run a bullet, we expect the turn
+    // counter to start at 0 since technically, no frames have elapsed for that bullet.
+
+    // As such, since the frame counter determines bullet state, when we kill a bullet, we want the
+    // frame counter to be one behind the state we want it to be in. I.e. after the function is run,
+    // the turn counter is immediately updated and will be flagged as dead (or dying) at the correct
+    // time.
     b->turn = DEAD - 1;
 }
 
@@ -181,11 +187,6 @@ int bl_getTurn(struct Bullet* b)
 void bl_setLuaFunction(struct Bullet* b, int luaFuncRef)
 {
     b->luaFuncRef = luaFuncRef;
-}
-
-void bl_setCFunction(struct Bullet* b, int (*function)())
-{
-    b->CFuncName = function;
 }
 
 void bl_update(struct Bullet* b)
