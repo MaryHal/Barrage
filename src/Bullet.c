@@ -146,12 +146,14 @@ float bl_getDirection(struct Bullet* b)
 void bl_vanish(struct Bullet* b, int framesTilDeath)
 {
     if (!bl_isDying(b))
-        b->turn = -framesTilDeath - 1;
+        b->turn = -framesTilDeath - 1 - 1;
 }
 
 void bl_kill(struct Bullet* b)
 {
-    b->turn = DEAD;
+    // turn is updated _after_ running luaFuncRef, so we need to subtract one from the dead
+    // flag so it becomes dead during the update loop.
+    b->turn = DEAD - 1;
 }
 
 int bl_isDead(struct Bullet* b)

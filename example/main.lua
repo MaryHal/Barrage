@@ -1,7 +1,7 @@
 local barrage = require "barrageC"
 
 local bulletImg = love.graphics.newImage('assets/bullet.png')
-local bulletQuad = love.graphics.newQuad(0, 0, 32, 32, bulletImg:getDimensions())
+-- local bulletQuad = love.graphics.newQuad(0, 0, 32, 32, bulletImg:getDimensions())
 local barrageBatch = love.graphics.newSpriteBatch(bulletImg, 4096)
 
 local myBarrage = nil
@@ -47,7 +47,11 @@ function love.update(dt)
          else
             barrageBatch:setColor(255, 255, 255)
          end
-         barrageBatch:add(bulletQuad, x - 8, y - 8, 0, 0.5, 0.5)
+         -- -- Directed Bullets
+         -- barrageBatch:add(x, y, 3.14159 - math.atan2(vx, vy), 1, 1, 8, 8)
+
+         -- Static orientation
+         barrageBatch:add(x, y, 0, 0.5, 0.5, 16, 16)
       end
    end
    barrageBatch:unbind()
@@ -57,6 +61,11 @@ function love.draw(dt)
    love.graphics.setFont(font)
    love.graphics.setColor(255, 255, 255)
    love.graphics.print(barrageFileList[barrageIndex], 8, 8)
+   love.graphics.print("Press Space to Begin", 8, 460)
 
    love.graphics.draw(barrageBatch)
+
+   local x, y = love.mouse.getPosition()
+   love.graphics.setColor(0, 0, 255)
+   love.graphics.circle('fill', x, y, 2, 4)
 end

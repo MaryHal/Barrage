@@ -212,9 +212,6 @@ void br_tick(struct Barrage* barrage)
         // Run lua function.
         if (!bl_isDead(&barrage->bullets[i]))
         {
-            // Must be done early as Dead/Dying flags depends on value of turn.
-            barrage->bullets[i].turn++;
-
             // Push lua function ref to the top of the lua stack.
             lua_rawgeti(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef);
             if (lua_pcall(barrage->L, 0, 0, 0))
@@ -222,6 +219,7 @@ void br_tick(struct Barrage* barrage)
                 luaL_error(barrage->L, "[%s]", lua_tostring(barrage->L, -1));
             }
 
+            barrage->bullets[i].turn++;
             barrage->processedCount++;
 
             // TODO: Check if out of bounds or bullet is dead
