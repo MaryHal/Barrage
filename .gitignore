@@ -32,6 +32,7 @@
 *.dSYM/
 
 test/bin/btest
+test/bin/scriptTest
 __pycache__/
 
 compile_commands.json
