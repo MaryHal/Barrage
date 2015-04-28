@@ -43,10 +43,10 @@ struct Barrage
 extern struct Bullet*  g_bullet;
 extern struct Barrage* g_barrage;
 
-struct Barrage* br_createBarrage();
+struct Barrage* br_createBarrage_();
 void br_deleteBarrage(struct Barrage* barrage);
 
-void runOnLoadFunc(struct Barrage* barrage);
+void br_runOnLoadFunc_(struct Barrage* barrage);
 struct Barrage* br_createBarrageFromFile(const char* filename,
                                          float originX, float originY);
 struct Barrage* br_createBarrageFromScript(const char* script,
@@ -64,8 +64,6 @@ float br_getRank(struct Barrage* barrage);
 
 void br_setPlayerPosition(struct Barrage* barrage, float x, float y);
 void br_tick(struct Barrage* barrage);
-
-// TODO: Double check the logic of these two functions.
 
 // Return the next active bullet in the barrage.
 int br_hasNext(struct Barrage* barrage);

@@ -12,7 +12,7 @@
 struct Bullet*  g_bullet  = NULL;
 struct Barrage* g_barrage = NULL;
 
-struct Barrage* br_createBarrage()
+struct Barrage* br_createBarrage_()
 {
     struct Barrage* barrage = (struct Barrage*)malloc(sizeof(struct Barrage));
 
@@ -63,7 +63,7 @@ void br_deleteBarrage(struct Barrage* barrage)
     free(barrage);
 }
 
-void runOnLoadFunc(struct Barrage* barrage)
+void br_runOnLoadFunc_(struct Barrage* barrage)
 {
     const char* funcName = "onLoad";
 
@@ -85,7 +85,7 @@ void runOnLoadFunc(struct Barrage* barrage)
 struct Barrage* br_createBarrageFromFile(const char* filename,
                                          float originX, float originY)
 {
-    struct Barrage* barrage = br_createBarrage();
+    struct Barrage* barrage = br_createBarrage_();
 
     /* luaL_loadfile(barrage->L, filename); */
     if (luaL_dofile(barrage->L, filename))
@@ -93,7 +93,7 @@ struct Barrage* br_createBarrageFromFile(const char* filename,
         luaL_error(barrage->L, "%s", lua_tostring(barrage->L, -1));
     }
 
-    runOnLoadFunc(barrage);
+    br_runOnLoadFunc_(barrage);
 
     struct Bullet* b = br_getFreeBullet(barrage);
     bl_setPosition(b, originX, originY);
@@ -111,14 +111,14 @@ struct Barrage* br_createBarrageFromFile(const char* filename,
 struct Barrage* br_createBarrageFromScript(const char* script,
                                            float originX, float originY)
 {
-    struct Barrage* barrage = br_createBarrage();
+    struct Barrage* barrage = br_createBarrage_();
 
     if (luaL_dostring(barrage->L, script))
     {
         luaL_error(barrage->L, "%s", lua_tostring(barrage->L, -1));
     }
 
-    runOnLoadFunc(barrage);
+    br_runOnLoadFunc_(barrage);
 
     struct Bullet* b = br_getFreeBullet(barrage);
     bl_setPosition(b, originX, originY);
