@@ -214,10 +214,15 @@ void br_tick(struct Barrage* barrage)
         {
             // Push lua function ref to the top of the lua stack.
             lua_rawgeti(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef);
+
+#if NDEBUG
+            lua_call(barrage->L, 0, 0);
+#else
             if (lua_pcall(barrage->L, 0, 0, 0))
             {
                 luaL_error(barrage->L, "[%s]", lua_tostring(barrage->L, -1));
             }
+#endif
 
             barrage->bullets[i].turn++;
             barrage->processedCount++;

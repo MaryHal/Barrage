@@ -145,6 +145,7 @@ float bl_getDirection(struct Bullet* b)
 
 void bl_vanish(struct Bullet* b, int framesTilDeath)
 {
+    // Same logic as bl_kill.
     if (!bl_isDying(b))
         b->turn = -framesTilDeath - 1 - 1;
 }
