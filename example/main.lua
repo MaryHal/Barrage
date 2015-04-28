@@ -61,7 +61,7 @@ function love.draw(dt)
    love.graphics.setFont(font)
    love.graphics.setColor(255, 255, 255)
    love.graphics.print(barrageFileList[barrageIndex], 8, 8)
-   love.graphics.print("Press Space to Begin", 8, 460)
+   love.graphics.print("Use Left/Right to switch files.\nPress Space to Launch.", 8, 446)
 
    love.graphics.draw(barrageBatch)
 

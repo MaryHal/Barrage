@@ -102,36 +102,12 @@ TEST LaunchTest()
     PASS();
 }
 
-#if 0
-TEST FileTest()
-{
-    /* srand(timeSeed()); */
-    struct Barrage* barrage = br_createBarrageFromFile("example/barrage/test.lua", 320.0f, 120.0f);
-
-    for (int i = 0; i < 200; ++i)
-    {
-        br_tick(barrage);
-
-        while (br_hasNext(barrage))
-        {
-            br_yield(barrage);
-        }
-    }
-
-    br_deleteBarrage(barrage);
-
-    PASS();
-}
-#endif
-
 SUITE(Bullet_Functionality)
 {
     RUN_TEST(BasicMovementTest);
     RUN_TEST(LaunchTest);
 
     RUN_TEST(VanishTest);
-
-    /* RUN_TEST(FileTest); */
 }
 
 /* Add definitions that need to be in the test runner's main file. */

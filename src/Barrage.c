@@ -238,6 +238,9 @@ void br_tick(struct Barrage* barrage)
         }
         else
         {
+            // TODO: Profile this loop to see if saving memory hampers speed. Since bullet data is
+            // unioned with our a linked list node data, we need to skip updating this bullet's
+            // position if dead (or else we'll secretly be doing pointer arithmetic).
             continue;
         }
 
@@ -262,9 +265,12 @@ int br_hasNext(struct Barrage* barrage)
 
 struct Bullet* br_yield(struct Barrage* barrage)
 {
+    // Skip over all the dead bullets and pray we don't go out of bounds.
     while (bl_isDead(&barrage->bullets[barrage->currentIndex]))
     {
         barrage->currentIndex++;
+
+        assert(barrage->currentIndex < MAX_BULLETS);
     }
 
     barrage->processedCount++;
