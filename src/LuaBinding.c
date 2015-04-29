@@ -76,6 +76,17 @@ static int ud_barrage_getRank(lua_State* L)
     return 1;
 }
 
+static int ud_barrage_storeFloat(lua_State* L)
+{
+    struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
+    const char* key = luaL_checkstring(L, 1);
+    float value = luaL_checknumber(L, 2);
+
+    br_storeFloat(ud->barrage, key, value);
+
+    return 0;
+}
+
 static int ud_barrage_setPlayerPosition(lua_State* L)
 {
     struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
@@ -125,6 +136,7 @@ static const struct luaL_Reg ud_barrage_methods[] =
     { "getActiveCount",     &ud_barrage_getActiveCount },
     { "setRank",            &ud_barrage_setRank },
     { "getRank",            &ud_barrage_getRank },
+    { "storeFloat",         &ud_barrage_storeFloat },
     { "setPlayerPosition",  &ud_barrage_setPlayerPosition },
     { "tick",               &ud_barrage_tick },
     { "hasNext",            &ud_barrage_hasNext },
