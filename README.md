@@ -104,7 +104,7 @@ Keep in mind the lua executable version should match the lua version linked to b
 
 ### Basics
 
-When you create a barrage, it automatically creates a `root` bullet that is linked to a _required_ `main` lua function. The capabilities of all bullets is that they can control themselves and they can launch new bullets.
+When you create a barrage, it automatically creates a `root` bullet that is linked to a _required_ `main` lua function. Bullets run their associated function with them each frame (tick). The capabilities of all bullets is that they can control themselves and they can launch new bullets.
 
     function main()
         -- Do things
@@ -190,8 +190,8 @@ When you load a barrage it evaluates the script and runs the `onLoad' lua functi
 
 #### Removing Bullets
 
-    -- Fade out this bullet. Kill it slowly.
-    vanish()
+    -- Fade out this bullet. Kill it slowly (over n frames, n = 30 by default).
+    vanish(int n)
 
     -- Immediately destroy this bullet.
     kill()
