@@ -53,6 +53,8 @@ int l_setLuaFunction(lua_State* L);
 
 int l_getRank(lua_State* L);
 
+int l_getFloat(lua_State* L);
+
 // Random Numbers
 int l_randFloat(lua_State* L);
 int l_randFloatRange(lua_State* L);

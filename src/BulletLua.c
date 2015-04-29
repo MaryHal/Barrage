@@ -46,6 +46,8 @@ void registerLuaFunctions(lua_State* L)
 
     lua_register(L, "getRank", &l_getRank);
 
+    lua_register(L, "loadFloat", &l_getFloat);
+
     /* lua_register(L, "randFloat", &l_randFloat); */
     /* lua_register(L, "randFloatRange", &l_randFloatRange); */
     /* lua_register(L, "randInt", &l_randInt); */
@@ -263,35 +265,12 @@ int l_getRank(lua_State* L)
     return 1;
 }
 
-int l_randFloat(lua_State* L)
+int l_getFloat(lua_State* L)
 {
-    lua_pushnumber(L, randFloatRange(0.0f, 1.0f));
+    const char* key = luaL_checkstring(L, 1);
 
-    return 1;
-}
-
-int l_randFloatRange(lua_State* L)
-{
-    float min = luaL_checknumber(L, 1);
-    float max = luaL_checknumber(L, 2);
-    lua_pushnumber(L, randFloatRange(min, max));
-
-    return 1;
-}
-
-int l_randInt(lua_State* L)
-{
-    int max = luaL_checkint(L, 1);
-    lua_pushinteger(L, randIntRange(0, max));
-
-    return 1;
-}
-
-int l_randIntRange(lua_State* L)
-{
-    int min = luaL_checkint(L, 1);
-    int max = luaL_checkint(L, 2);
-    lua_pushinteger(L, randIntRange(min, max));
+    float value = br_getFloat(g_barrage, key);
+    lua_pushnumber(L, value);
 
     return 1;
 }

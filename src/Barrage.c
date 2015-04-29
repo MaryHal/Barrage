@@ -180,6 +180,24 @@ float br_getRank(struct Barrage* barrage)
     return barrage->rank;
 }
 
+void br_storeFloat(struct Barrage* barrage, const char* key, float value)
+{
+    (void)key;
+    lua_pushlightuserdata(barrage->L, (void*)"BarrageTestValue");
+    lua_pushnumber(barrage->L, value);
+    lua_settable(barrage->L, LUA_REGISTRYINDEX);
+}
+
+float br_getFloat(struct Barrage* barrage, const char* key)
+{
+    (void)key;
+    lua_pushlightuserdata(barrage->L, (void*)"BarrageTestValue");
+    lua_gettable(barrage->L, LUA_REGISTRYINDEX);
+    float value = lua_tonumber(barrage->L, -1);
+
+    return value;
+}
+
 void br_setPlayerPosition(struct Barrage* barrage, float x, float y)
 {
     barrage->playerX = x;

@@ -62,6 +62,9 @@ void br_addQueuedBullets(struct Barrage* barrage);
 void br_setRank(struct Barrage* barrage, float rank);
 float br_getRank(struct Barrage* barrage);
 
+void br_storeFloat(struct Barrage* barrage, const char* key, float value);
+float br_getFloat(struct Barrage* barrage, const char* key);
+
 void br_setPlayerPosition(struct Barrage* barrage, float x, float y);
 void br_tick(struct Barrage* barrage);
 
