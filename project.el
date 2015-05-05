@@ -12,7 +12,7 @@
 (global-set-key (kbd "<f5>") (lambda()
                                (interactive)
                                (cd (projectile-project-root))
-                               (shell-command "python bootstrap.py --cxx=clang")
+                               (shell-command "python bootstrap.py --cxx=clang --luajit")
                                ))
 
 (global-set-key (kbd "C-<f5>") (lambda()
@@ -23,5 +23,3 @@
 
 (global-set-key (kbd "<f6>") #'projectile-compile-project)
 (global-set-key (kbd "<f7>") #'projectile-test-project)
-
-(irony-cdb-autosetup-compile-options)

@@ -1,12 +1,12 @@
 ninja_required_version = 1.3
 ar = ar
 cxx = clang
-cxxflags = -Wall -Wextra -pedantic -pedantic-errors -std=c11 -g -O0 -DDEBUG $
+cxxflags = -Wall -Wextra -pedantic -pedantic-errors -std=c11 -DNDEBUG -O3 $
     -Iinclude -I./ext/greatest -I/usr/include/luajit-2.0
 ldflags = -lm -lluajit-5.1
 
 rule bootstrap
-  command = python bootstrap.py --debug --cxx=clang --luajit
+  command = python bootstrap.py --cxx=clang --luajit
   generator = 1
 rule compile
   command = $cxx -fpic -MMD -MF $out.d -c $cxxflags -Werror $in -o $out
@@ -30,18 +30,21 @@ build obj/src/Barrage.o: compile src/Barrage.c
 build obj/src/MathUtils.o: compile src/MathUtils.c
 build obj/src/LuaUtils.o: compile src/LuaUtils.c
 build obj/src/RandCompat.o: compile src/RandCompat.c
+build obj/src/SpacialPartition.o: compile src/SpacialPartition.c
 build obj/src/Bullet.o: compile src/Bullet.c
 build obj/test/src/unit/test.o: compile test/src/unit/test.c
 build obj/test/src/scr/main.o: compile test/src/scr/main.c
 
 build ./lib/libbarrage.so: dynlink obj/src/BulletLua.o obj/src/LuaBinding.o $
     obj/src/Barrage.o obj/src/MathUtils.o obj/src/LuaUtils.o $
-    obj/src/RandCompat.o obj/src/Bullet.o
+    obj/src/RandCompat.o obj/src/SpacialPartition.o obj/src/Bullet.o
 
 build ./test/bin/btest: link obj/src/BulletLua.o obj/src/LuaBinding.o $
     obj/src/Barrage.o obj/src/MathUtils.o obj/src/LuaUtils.o $
-    obj/src/RandCompat.o obj/src/Bullet.o obj/test/src/unit/test.o
+    obj/src/RandCompat.o obj/src/SpacialPartition.o obj/src/Bullet.o $
+    obj/test/src/unit/test.o
 
 build ./test/bin/scriptTest: link obj/src/BulletLua.o obj/src/LuaBinding.o $
     obj/src/Barrage.o obj/src/MathUtils.o obj/src/LuaUtils.o $
-    obj/src/RandCompat.o obj/src/Bullet.o obj/test/src/scr/main.o
+    obj/src/RandCompat.o obj/src/SpacialPartition.o obj/src/Bullet.o $
+    obj/test/src/scr/main.o
