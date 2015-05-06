@@ -71,6 +71,8 @@ float br_getFloat(struct Barrage* barrage, const char* key);
 void br_setPlayerPosition(struct Barrage* barrage, float x, float y);
 void br_tick(struct Barrage* barrage, struct SpacialPartition* sp);
 
+void br_vanishAll(struct Barrage* barrage);
+
 // Return the next active bullet in the barrage.
 int br_hasNext(struct Barrage* barrage);
 struct Bullet* br_yield(struct Barrage* barrage);

@@ -285,6 +285,17 @@ void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
     barrage->processedCount = 0;
 }
 
+void br_vanishAll(struct Barrage* barrage)
+{
+    br_resetHasNext(barrage);
+
+    while (br_hasNext(barrage))
+    {
+        struct Bullet* b = br_yield(barrage);
+        bl_vanish(b, DEFAULT_FRAMES_UNTIL_DEATH);
+    }
+}
+
 int br_hasNext(struct Barrage* barrage)
 {
     return barrage->processedCount < barrage->activeCount && barrage->currentIndex < MAX_BULLETS;
