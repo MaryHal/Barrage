@@ -21,7 +21,7 @@ end
 
 function love.keypressed(key)
    if key == ' ' or key == 'return' then
-      myBarrage = barrage.new('barrage/' .. barrageFileList[barrageIndex], 320.0, 120.0)
+      myBarrage = barrage.newBarrage('barrage/' .. barrageFileList[barrageIndex], 320.0, 120.0)
    elseif key == 'left' or key == 'a' then
       barrageIndex = barrageIndex - 1
       if barrageIndex < 1 then

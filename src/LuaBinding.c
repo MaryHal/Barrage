@@ -164,6 +164,12 @@ static int ud_spacial_partition_checkCollision(lua_State* L)
     return 1;
 }
 
+static int ud_spacial_partition_destroy(lua_State* L)
+{
+    (void)L;
+    return 0;
+}
+
 static const struct luaL_Reg ud_barrage_methods[] =
 {
     { "getActiveCount",      &ud_barrage_getActiveCount },
@@ -181,6 +187,7 @@ static const struct luaL_Reg ud_barrage_methods[] =
 static const struct luaL_Reg ud_spacial_partition_methods[] =
 {
     { "checkCollision",      &ud_spacial_partition_checkCollision },
+    { "__gc",                &ud_spacial_partition_destroy },
     { NULL, NULL }
 };
 
