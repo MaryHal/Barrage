@@ -1,7 +1,6 @@
 local barrage = require "barrageC"
 
 local bulletImg = love.graphics.newImage('assets/bullet.png')
--- local bulletQuad = love.graphics.newQuad(0, 0, 32, 32, bulletImg:getDimensions())
 local barrageBatch = love.graphics.newSpriteBatch(bulletImg, 4096)
 
 local myBarrage = nil
@@ -83,10 +82,6 @@ function love.update(dt)
 end
 
 function love.draw(dt)
-   if hitThisFrame then
-      love.graphics.print("Hit!", 8, 22)
-   end
-
    love.graphics.draw(barrageBatch)
 
    if viewCollisionBoxes then
@@ -111,4 +106,7 @@ function love.draw(dt)
    love.graphics.print("Use Left/Right to switch files.\nPress Space to Launch.\n.", 8, 480 - 34)
    love.graphics.print("Freeze (F)\nAdvance Frame (G)\nToggle Collision Boxes (C)", 470, 480 - 48)
 
+   if hitThisFrame then
+      love.graphics.print("Hit!", 8, 22)
+   end
 end

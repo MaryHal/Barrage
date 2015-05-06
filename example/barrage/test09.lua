@@ -17,18 +17,14 @@ radius = 200
 theta = 0
 
 function trap(offset)
-   -- tx, ty = getTargetPosition()
-
-   x = centerX + radius * math.sin(theta + math.rad(offset))
-   y = centerY + radius * math.cos(theta + math.rad(offset))
+   local x = centerX + radius * math.cos(theta + math.rad(offset))
+   local y = centerY + radius * math.sin(theta + math.rad(offset))
 
    setPosition(x, y)
 
    if (math.random(0, 600) == 0) then
       launchAtTarget(4, shoot)
    end
-
-   theta = theta + 0.01
 end
 
 function shoot()
@@ -47,12 +43,16 @@ function shoot()
 end
 
 function main()
-   turn = getTurn()
+   setPosition(320, 240)
 
-   for i = 1, 90 do
-      trapi = bind(trap, i * 4)
+   for i = 1, 360, 4 do
+      trapi = bind(trap, i)
       launch(0, 0, trapi)
    end
 
-   kill()
+   setFunction(increment)
+end
+
+function increment()
+   theta = theta + 0.015
 end
