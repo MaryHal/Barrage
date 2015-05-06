@@ -40,13 +40,26 @@ Link libbarrage.so and make sure your compiler can find the correct header files
 #### Example (pseudo-)code
 
     #include <barrage/Barrage.h>
+    #include <barrage/SpacialPartition.h>
 
     struct Barrage* barrage = br_createBarrageFromFile(my_file, 320.0f, 120.0f);
+
+    // Optional collision detection manager.
+    struct SpacialPartition* sp = br_create
 
     while (running)
     {
         // Update
-        br_tick(barrage);
+        br_tick(barrage, sp);
+
+        // or br_tick(barrage, NULL) if you don't want to register this barrage's bullets to
+        // the collision detection manager.
+
+        // Check collision between registered bullets and the rect defined by (x, y, w, h)
+        if (br_checkCollision(sp, x, y, w, h)
+        {
+            // You were hit!
+        }
 
         // Draw loop
         while (br_hasNext(barrage))
@@ -75,10 +88,14 @@ Keep in mind the lua executable version should match the lua version linked to b
     local barrage = require "barrageC"
 
     local myBarrage = nil
+    local spacialPartition = nil
 
     function load(arg)
         -- Load a barrage script from a file.
-        myBarrage = barrage.new("path/to/file.lua", 320.0, 120.0)
+        myBarrage = barrage.newBarrage("path/to/file.lua", 320.0, 120.0)
+
+        -- Create collision detection manager.
+        spacialPartition = barrage.newSpacialPartition()
     end
 
     function update(dt)
@@ -86,7 +103,12 @@ Keep in mind the lua executable version should match the lua version linked to b
         myBarrage:setPlayerPosition(x, y)
 
         -- Update barrage bullets.
-        myBarrage:tick()
+        myBarrage:tick(spacialPartition)
+
+        -- Check collision between registered bullets and the rect defined by (x, y, w, h)
+        if (spacialPartition:checkCollision(x, y, w, h)) then
+            -- Do something cool. Explode! Order a pizza!
+        end
     end
 
     function draw(dt)
