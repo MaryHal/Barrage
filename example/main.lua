@@ -5,6 +5,9 @@ local bulletImg = love.graphics.newImage('assets/bullet.png')
 local barrageBatch = love.graphics.newSpriteBatch(bulletImg, 4096)
 
 local myBarrage = nil
+local sp = nil
+
+local hitThisFrame = false
 
 local barrageIndex = 1
 local barrageFileList = love.filesystem.getDirectoryItems('barrage')
@@ -12,7 +15,8 @@ local barrageFileList = love.filesystem.getDirectoryItems('barrage')
 local font = love.graphics.newFont(12)
 
 function love.load(arg)
-   myBarrage = barrage.new('barrage/' .. barrageFileList[barrageIndex], 320.0, 120.0)
+   myBarrage = barrage.newBarrage('barrage/' .. barrageFileList[barrageIndex], 320.0, 120.0)
+   sp = barrage.newSpacialPartition()
 end
 
 function love.keypressed(key)
@@ -35,7 +39,12 @@ function love.update(dt)
    local x, y = love.mouse.getPosition()
    myBarrage:setPlayerPosition(x, y)
 
-   myBarrage:tick()
+   myBarrage:tick(sp)
+
+   hitThisFrame = false
+   if (sp:checkCollision(x, y, 4, 4)) then
+      hitThisFrame = true
+   end
 
    barrageBatch:clear()
    barrageBatch:bind()
@@ -62,6 +71,10 @@ function love.draw(dt)
    love.graphics.setColor(255, 255, 255)
    love.graphics.print(barrageFileList[barrageIndex], 8, 8)
    love.graphics.print("Use Left/Right to switch files.\nPress Space to Launch.", 8, 446)
+
+   if hitThisFrame then
+      love.graphics.print("Hit!", 8, 22)
+   end
 
    love.graphics.draw(barrageBatch)
 
