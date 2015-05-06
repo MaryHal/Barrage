@@ -86,7 +86,7 @@ function love.draw(dt)
    love.graphics.setFont(font)
    love.graphics.setColor(255, 255, 255)
    love.graphics.print(barrageFileList[barrageIndex], 8, 8)
-   love.graphics.print("Use Left/Right to switch files.\nPress Space to Launch.\nPress C to toggle collision boxes.", 8, 480 - 44)
+   love.graphics.print("Use Left/Right to switch files.\nPress Space to Launch.\nPress C to toggle collision boxes.", 8, 480 - 46)
 
    if hitThisFrame then
       love.graphics.print("Hit!", 8, 22)

@@ -259,9 +259,6 @@ void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
 
                 continue;
             }
-
-            if (sp != NULL)
-                br_addBullet(sp, &barrage->bullets[i]);
         }
         else
         {
@@ -274,6 +271,9 @@ void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
         // Update Position
         barrage->bullets[i].x += barrage->bullets[i].vx;
         barrage->bullets[i].y += barrage->bullets[i].vy;
+
+        if (sp != NULL)
+            br_addBullet(sp, &barrage->bullets[i]);
     }
 
     // TODO: Consider whether or not we should add new bullets after updating (here) or after
