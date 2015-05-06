@@ -1,7 +1,7 @@
 #include <greatest.h>
 
 #include <barrage/Barrage.h>
-/* #include <barrage/RandCompat.h> */
+#include <barrage/SpacialPartition.h>
 
 #include <math.h>
 
@@ -27,12 +27,12 @@ TEST BasicMovementTest()
     ASSERT(barrage->bullets[0].x == 320.0f);
     ASSERT(barrage->bullets[0].y == 120.0f);
 
-    br_tick(barrage);
+    br_tick(barrage, NULL);
 
     ASSERT(barrage->bullets[0].x == 330.0f);
     ASSERT(barrage->bullets[0].y == 130.0f);
 
-    br_tick(barrage);
+    br_tick(barrage, NULL);
 
     ASSERT(barrage->bullets[0].x == 335.0f);
     ASSERT(barrage->bullets[0].y == 135.0f);
@@ -57,14 +57,14 @@ TEST VanishTest()
 
     for (int i = 0; i < 35; ++i)
     {
-        br_tick(barrage);
+        br_tick(barrage, NULL);
     }
 
     ASSERT_EQ(barrage->activeCount, 0);
 
     for (int i = 0; i < 10; ++i)
     {
-        br_tick(barrage);
+        br_tick(barrage, NULL);
     }
 
     ASSERT_EQ(barrage->activeCount, 0);
@@ -89,9 +89,9 @@ TEST LaunchTest()
     struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
 
     ASSERT_EQ(barrage->activeCount, 1);
-    br_tick(barrage);
+    br_tick(barrage, NULL);
     ASSERT_EQ(barrage->activeCount, 5);
-    br_tick(barrage);
+    br_tick(barrage, NULL);
     ASSERT_EQ(barrage->activeCount, 0);
 
     br_deleteBarrage(barrage);
@@ -114,10 +114,32 @@ TEST StorageTest()
     const char* key = "BarrageTestValue";
     br_storeFloat(barrage, key, 20.0f);
 
-    br_tick(barrage);
+    br_tick(barrage, NULL);
 
     ASSERT(barrage->bullets[0].x == 20.0f);
     ASSERT(barrage->bullets[0].y == 10.0f);
+
+    br_deleteBarrage(barrage);
+
+    PASS();
+}
+
+TEST BasicCollisionTest()
+{
+    const char* script =
+        "function main()\n"
+        "    setPosition(20.0, 10.0)\n"
+        "end\n";
+
+    struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
+    struct SpacialPartition* sp = sp_createSpacialPartition();
+
+    ASSERT(sp_checkCollision(sp, 0.0f, 0.0f, 4.0f, 4.0f) == false);
+
+    br_tick(barrage, sp);
+
+    ASSERT(sp_checkCollision(sp, 20.0f, 10.0f, 4.0f, 4.0f) == true);
+    ASSERT(sp_checkCollision(sp, 15.0f, 10.0f, 4.0f, 4.0f) == false);
 
     br_deleteBarrage(barrage);
 
@@ -131,6 +153,8 @@ SUITE(Bullet_Functionality)
     RUN_TEST(LaunchTest);
 
     RUN_TEST(StorageTest);
+
+    RUN_TEST(BasicCollisionTest);
 }
 
 /* Add definitions that need to be in the test runner's main file. */

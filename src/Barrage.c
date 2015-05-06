@@ -3,11 +3,11 @@
 #include <barrage/LuaUtils.h>
 
 #include <stdlib.h>
-
 #include <math.h>
-#include <barrage/MathUtils.h>
-
 #include <assert.h>
+
+#include <barrage/MathUtils.h>
+#include <barrage/SpacialPartition.h>
 
 struct Bullet*  g_bullet  = NULL;
 struct Barrage* g_barrage = NULL;
@@ -204,9 +204,10 @@ void br_setPlayerPosition(struct Barrage* barrage, float x, float y)
     barrage->playerY = y;
 }
 
-void br_tick(struct Barrage* barrage)
+void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
 {
-    // TODO: The order of events in this loop is very very delicate. Do something about it!
+    if (sp != NULL)
+        sp_clear(sp);
 
     // Make sure the lua interface knows which barrage is currently being updated.
     g_barrage = barrage;
@@ -258,6 +259,9 @@ void br_tick(struct Barrage* barrage)
 
                 continue;
             }
+
+            if (sp != NULL)
+                sp_addBullet(sp, &barrage->bullets[i]);
         }
         else
         {

@@ -102,7 +102,7 @@ static int ud_barrage_tick(lua_State* L)
 {
     struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
 
-    br_tick(ud->barrage);
+    br_tick(ud->barrage, NULL);
 
     return 0;
 }

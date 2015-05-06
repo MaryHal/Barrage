@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < 200; ++i)
     {
-        br_tick(barrage);
+        br_tick(barrage, NULL);
 
         while (br_hasNext(barrage))
         {

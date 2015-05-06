@@ -16,9 +16,11 @@
 // Maximum bullets per bucket.
 #define BUCKET_LID   100
 
+// Cut an area into a grid and organize all bullets into each grid cell so during the collision
+// detection step we only need to compare bullets inside a single cell.
 struct SpacialPartition
 {
-        const struct Bullet bullets[HORI_BUCKETS][VERT_BUCKETS][BUCKET_LID];
+        struct Bullet buckets[HORI_BUCKETS][VERT_BUCKETS][BUCKET_LID];
         size_t bucketSize[HORI_BUCKETS][VERT_BUCKETS];
 };
 
@@ -26,12 +28,14 @@ struct SpacialPartition
 struct SpacialPartition* sp_createSpacialPartition();
 
 // Manage a bullet (for a frame).
-void sp_addBullet(struct SpacialPartition* sp, const struct Bullet* bullet);
+void sp_addBullet(struct SpacialPartition* sp, struct Bullet* bullet);
 
 // Reset buckets. Expected to be called once per frame since bullets are so unpredictable.
 void sp_clear(struct SpacialPartition* sp);
 
 // Returns true if the rect defined by the arguments intersects a bullet rect.
-bool sp_checkCollision(float playerX, float playerY, float playerWidth, float playerHeight);
+// playerX, playerY is defined to be the center of the player's hitbox.
+bool sp_checkCollision(struct SpacialPartition* sp,
+                       float playerX, float playerY, float playerWidth, float playerHeight);
 
 #endif /* SPACIALPARTITION_H */

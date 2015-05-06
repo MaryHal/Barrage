@@ -15,7 +15,7 @@ Dependencies: python, [ninja](https://martine.github.io/ninja/), [lua](http://ww
     git clone <this-repo>
     git submodule update --init --recursive
 
-### Generating a ninja build file
+### Generate the ninja build file
 
     python bootstrap.py (--debug) (--cxx=<compiler>) (--ci) (--luajit)
 
@@ -23,9 +23,9 @@ Arguments in parenthesis are optional. The default compiler is gcc and this proj
 
 The bootstrap script is python2/3 compatible.
 
-### Building the library and unit test
+### Build the library and unit test
 
-Simply run `ninja`
+Simply run `ninja`.
 
 ## Usage
 

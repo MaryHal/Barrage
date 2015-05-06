@@ -11,6 +11,9 @@
 #define QUEUE_SIZE  (1 << 8)
 #define MAX_BULLETS (1 << 12)
 
+// Forward declaration
+struct SpacialPartition;
+
 // Since we don't really know where in our `bullets` array a bullet will be added and we can add a
 // bullet at any time during the update loop, we won't know when that bullet will be updated for the
 // first time. To fix this problem, we'll queue up bullets added in the middle of the update loop
@@ -66,7 +69,7 @@ void br_storeFloat(struct Barrage* barrage, const char* key, float value);
 float br_getFloat(struct Barrage* barrage, const char* key);
 
 void br_setPlayerPosition(struct Barrage* barrage, float x, float y);
-void br_tick(struct Barrage* barrage);
+void br_tick(struct Barrage* barrage, struct SpacialPartition* sp);
 
 // Return the next active bullet in the barrage.
 int br_hasNext(struct Barrage* barrage);
