@@ -83,11 +83,6 @@ function love.update(dt)
 end
 
 function love.draw(dt)
-   love.graphics.setFont(font)
-   love.graphics.setColor(255, 255, 255)
-   love.graphics.print(barrageFileList[barrageIndex], 8, 8)
-   love.graphics.print("Use Left/Right to switch files.\nPress Space to Launch.\nPress C to toggle collision boxes.", 8, 480 - 46)
-
    if hitThisFrame then
       love.graphics.print("Hit!", 8, 22)
    end
@@ -109,4 +104,11 @@ function love.draw(dt)
    local x, y = love.mouse.getPosition()
    love.graphics.setColor(0, 255, 255, 255)
    love.graphics.rectangle('fill', x - 2, y - 2, 4, 4)
+
+   love.graphics.setFont(font)
+   love.graphics.setColor(255, 255, 255)
+   love.graphics.print(barrageFileList[barrageIndex], 8, 8)
+   love.graphics.print("Use Left/Right to switch files.\nPress Space to Launch.\n.", 8, 480 - 34)
+   love.graphics.print("Freeze (F)\nAdvance Frame (G)\nToggle Collision Boxes (C)", 470, 480 - 48)
+
 end
