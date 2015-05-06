@@ -33,7 +33,7 @@ build obj/src/RandCompat.o: compile src/RandCompat.c
 build obj/src/SpacialPartition.o: compile src/SpacialPartition.c
 build obj/src/Bullet.o: compile src/Bullet.c
 build obj/test/src/unit/test.o: compile test/src/unit/test.c
-build obj/test/src/scr/main.o: compile test/src/scr/main.c
+build obj/test/src/wrap/wrap.o: compile test/src/wrap/wrap.c
 
 build ./lib/libbarrage.so: dynlink obj/src/BulletLua.o obj/src/LuaBinding.o $
     obj/src/Barrage.o obj/src/MathUtils.o obj/src/LuaUtils.o $
@@ -47,4 +47,4 @@ build ./test/bin/btest: link obj/src/BulletLua.o obj/src/LuaBinding.o $
 build ./test/bin/scriptTest: link obj/src/BulletLua.o obj/src/LuaBinding.o $
     obj/src/Barrage.o obj/src/MathUtils.o obj/src/LuaUtils.o $
     obj/src/RandCompat.o obj/src/SpacialPartition.o obj/src/Bullet.o $
-    obj/test/src/scr/main.o
+    obj/test/src/wrap/wrap.o

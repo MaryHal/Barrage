@@ -137,6 +137,14 @@ static int ud_barrage_yield(lua_State* L)
     return 5;
 }
 
+static int ud_barrage_resetHasNext(lua_State* L)
+{
+    struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
+    br_resetHasNext(ud->barrage);
+
+    return 0;
+}
+
 static int ud_spacial_partition_create(lua_State* L)
 {
     // Have lua allocate some data for our Barrage struct.
@@ -179,6 +187,7 @@ static const struct luaL_Reg ud_barrage_methods[] =
     { "setPlayerPosition",   &ud_barrage_setPlayerPosition },
     { "tick",                &ud_barrage_tick },
     { "hasNext",             &ud_barrage_hasNext },
+    { "resetHasNext",        &ud_barrage_resetHasNext },
     { "yield",               &ud_barrage_yield },
     { "__gc",                &ud_barrage_destroy },
     { NULL, NULL }

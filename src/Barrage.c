@@ -305,6 +305,12 @@ struct Bullet* br_yield(struct Barrage* barrage)
     return &barrage->bullets[barrage->currentIndex - 1];
 }
 
+void br_resetHasNext(struct Barrage* barrage)
+{
+    barrage->currentIndex = 0;
+    barrage->processedCount = 0;
+}
+
 void br_aimAtTarget(struct Barrage* barrage, struct Bullet* current)
 {
     bl_aimAtPoint(current, barrage->playerX, barrage->playerY);

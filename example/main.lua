@@ -7,6 +7,9 @@ local barrageBatch = love.graphics.newSpriteBatch(bulletImg, 4096)
 local myBarrage = nil
 local sp = nil
 
+local viewCollisionBoxes = false
+local frameAdvanceMode = false
+local advanceFrame = false
 local hitThisFrame = false
 
 local barrageIndex = 1
@@ -15,6 +18,8 @@ local barrageFileList = love.filesystem.getDirectoryItems('barrage')
 local font = love.graphics.newFont(12)
 
 function love.load(arg)
+   love.mouse.setVisible(false)
+
    myBarrage = barrage.newBarrage('barrage/' .. barrageFileList[barrageIndex], 320.0, 120.0)
    sp = barrage.newSpacialPartition()
 end
@@ -32,6 +37,12 @@ function love.keypressed(key)
       if barrageIndex > #barrageFileList then
          barrageIndex = 1
       end
+   elseif key == 'c' then
+      viewCollisionBoxes = not viewCollisionBoxes
+   elseif key == 'f' then
+      frameAdvanceMode = not frameAdvanceMode
+   elseif key == 'g' then
+      advanceFrame = true
    end
 end
 
@@ -39,7 +50,10 @@ function love.update(dt)
    local x, y = love.mouse.getPosition()
    myBarrage:setPlayerPosition(x, y)
 
-   myBarrage:tick(sp)
+   if not frameAdvanceMode or advanceFrame then
+      myBarrage:tick(sp)
+      advanceFrame = false
+   end
 
    hitThisFrame = false
    if (sp:checkCollision(x, y, 4, 4)) then
@@ -49,6 +63,8 @@ function love.update(dt)
    barrageBatch:clear()
    barrageBatch:bind()
    do
+      myBarrage:resetHasNext()
+
       while myBarrage:hasNext() do
          local x, y, vx, vy, frame = myBarrage:yield()
          if frame < 0 then
@@ -70,7 +86,7 @@ function love.draw(dt)
    love.graphics.setFont(font)
    love.graphics.setColor(255, 255, 255)
    love.graphics.print(barrageFileList[barrageIndex], 8, 8)
-   love.graphics.print("Use Left/Right to switch files.\nPress Space to Launch.", 8, 446)
+   love.graphics.print("Use Left/Right to switch files.\nPress Space to Launch.\nPress C to toggle collision boxes.", 8, 480 - 44)
 
    if hitThisFrame then
       love.graphics.print("Hit!", 8, 22)
@@ -78,7 +94,19 @@ function love.draw(dt)
 
    love.graphics.draw(barrageBatch)
 
+   if viewCollisionBoxes then
+      love.graphics.setColor(0, 0, 255, 128)
+      myBarrage:resetHasNext()
+
+      while myBarrage:hasNext() do
+         local x, y, vx, vy, frame = myBarrage:yield()
+         if frame > 0 then
+            love.graphics.rectangle('fill', x - 2, y - 2, 4, 4)
+         end
+      end
+   end
+
    local x, y = love.mouse.getPosition()
-   love.graphics.setColor(0, 0, 255)
-   love.graphics.circle('fill', x, y, 2, 4)
+   love.graphics.setColor(0, 255, 255, 255)
+   love.graphics.rectangle('fill', x - 2, y - 2, 4, 4)
 end

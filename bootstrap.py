@@ -110,7 +110,7 @@ for f in files_from('test/src/unit', '*.c'):
     ninja.build(obj, 'compile', inputs = f)
 
 scriptTestObjs = []
-for f in files_from('test/src/scr', '*.c'):
+for f in files_from('test/src/wrap', '*.c'):
     obj = object_file(f)
     scriptTestObjs.append(obj)
     ninja.build(obj, 'compile', inputs = f)

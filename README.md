@@ -19,7 +19,7 @@ Dependencies: python, [ninja](https://martine.github.io/ninja/), [lua](http://ww
 
     python bootstrap.py (--debug) (--cxx=<compiler>) (--ci) (--luajit)
 
-Arguments in parenthesis are optional. The default compiler is gcc and this project assumes [C11](https://en.wikipedia.org/wiki/C11_(C_standard_revision)) support. The `ci` switch links `lua5.2` instead of `lua` if your system does not default to lua 5.2. The `luajit` switch links luajit in place of lua.
+Arguments in parenthesis are optional. The default compiler is [gcc](https://gcc.gnu.org/) and this project assumes [C11](https://en.wikipedia.org/wiki/C11_(C_standard_revision)) support. The `ci` switch links `lua5.2` instead of `lua` if your system does not default to lua 5.2. The `luajit` switch links luajit in place of lua.
 
 The bootstrap script is python2/3 compatible.
 
@@ -29,7 +29,7 @@ Simply run `ninja`.
 
 ## Usage
 
-Currently you can link the C library or use Lua wrapper (named `BarrageC`). More wrappers once this project is more stable.
+Currently you can link the C library or use Lua wrapper (named `barrageC`). More wrappers once this project is more stable.
 
 ### C
 
@@ -45,7 +45,7 @@ Link libbarrage.so and make sure your compiler can find the correct header files
     struct Barrage* barrage = br_createBarrageFromFile(my_file, 320.0f, 120.0f);
 
     // Optional collision detection manager.
-    struct SpacialPartition* sp = br_create
+    struct SpacialPartition* sp = br_createSpacialPartition
 
     while (running)
     {

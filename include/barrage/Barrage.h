@@ -75,6 +75,8 @@ void br_tick(struct Barrage* barrage, struct SpacialPartition* sp);
 int br_hasNext(struct Barrage* barrage);
 struct Bullet* br_yield(struct Barrage* barrage);
 
+void br_resetHasNext(struct Barrage* barrage);
+
 // "Meta"-functions used by the Lua-interface.
 void br_aimAtTarget(struct Barrage* barrage, struct Bullet* current);
 
