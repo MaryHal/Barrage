@@ -95,7 +95,7 @@ struct Barrage* br_createBarrageFromFile(const char* filename,
 
     br_runOnLoadFunc_(barrage);
 
-    struct Bullet* b = br_getFreeBullet(barrage);
+    struct Bullet* b = br_getFreeBullet_(barrage);
     bl_setPosition(b, originX, originY);
 
     // Set lua function
@@ -120,7 +120,7 @@ struct Barrage* br_createBarrageFromScript(const char* script,
 
     br_runOnLoadFunc_(barrage);
 
-    struct Bullet* b = br_getFreeBullet(barrage);
+    struct Bullet* b = br_getFreeBullet_(barrage);
     bl_setPosition(b, originX, originY);
 
     // Set lua function
@@ -145,7 +145,7 @@ void br_createBullet(struct Barrage* barrage,
     barrage->queue.size++;
 }
 
-struct Bullet* br_getFreeBullet(struct Barrage* barrage)
+struct Bullet* br_getFreeBullet_(struct Barrage* barrage)
 {
     assert(barrage->activeCount < MAX_BULLETS);
 
@@ -158,12 +158,12 @@ struct Bullet* br_getFreeBullet(struct Barrage* barrage)
     return b;
 }
 
-void br_addQueuedBullets(struct Barrage* barrage)
+void br_addQueuedBullets_(struct Barrage* barrage)
 {
     for (size_t i = 0; i <  barrage->queue.size; ++i)
     {
         // Copy data from queue
-        bl_copyBullet(br_getFreeBullet(barrage), &barrage->queue.bullets[i]);
+        bl_copyBullet(br_getFreeBullet_(barrage), &barrage->queue.bullets[i]);
     }
 
     barrage->activeCount += barrage->queue.size;
@@ -278,7 +278,7 @@ void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
 
     // TODO: Consider whether or not we should add new bullets after updating (here) or after
     // drawing.
-    br_addQueuedBullets(barrage);
+    br_addQueuedBullets_(barrage);
     barrage->activeCount -= barrage->killCount;
 
     barrage->currentIndex = 0;

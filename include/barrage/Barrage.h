@@ -59,8 +59,8 @@ void br_createBullet(struct Barrage* barrage,
                      float x, float y, float vx, float vy,
                      int luaFuncRef);
 
-struct Bullet* br_getFreeBullet(struct Barrage* barrage);
-void br_addQueuedBullets(struct Barrage* barrage);
+struct Bullet* br_getFreeBullet_(struct Barrage* barrage);
+void br_addQueuedBullets_(struct Barrage* barrage);
 
 void br_setRank(struct Barrage* barrage, float rank);
 float br_getRank(struct Barrage* barrage);
