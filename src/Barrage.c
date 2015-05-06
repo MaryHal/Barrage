@@ -207,7 +207,7 @@ void br_setPlayerPosition(struct Barrage* barrage, float x, float y)
 void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
 {
     if (sp != NULL)
-        sp_clear(sp);
+        br_clear(sp);
 
     // Make sure the lua interface knows which barrage is currently being updated.
     g_barrage = barrage;
@@ -261,7 +261,7 @@ void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
             }
 
             if (sp != NULL)
-                sp_addBullet(sp, &barrage->bullets[i]);
+                br_addBullet(sp, &barrage->bullets[i]);
         }
         else
         {

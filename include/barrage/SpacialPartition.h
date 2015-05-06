@@ -25,17 +25,17 @@ struct SpacialPartition
 };
 
 // Initialize a new spacial partition.
-struct SpacialPartition* sp_createSpacialPartition();
+struct SpacialPartition* br_createSpacialPartition();
 
 // Manage a bullet (for a frame).
-void sp_addBullet(struct SpacialPartition* sp, struct Bullet* bullet);
+void br_addBullet(struct SpacialPartition* sp, struct Bullet* bullet);
 
 // Reset buckets. Expected to be called once per frame since bullets are so unpredictable.
-void sp_clear(struct SpacialPartition* sp);
+void br_clear(struct SpacialPartition* sp);
 
 // Returns true if the rect defined by the arguments intersects a bullet rect.
 // playerX, playerY is defined to be the center of the player's hitbox.
-bool sp_checkCollision(struct SpacialPartition* sp,
+bool br_checkCollision(struct SpacialPartition* sp,
                        float playerX, float playerY, float playerWidth, float playerHeight);
 
 #endif /* SPACIALPARTITION_H */

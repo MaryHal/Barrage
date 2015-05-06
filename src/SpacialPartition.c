@@ -5,7 +5,7 @@
 
 #include <barrage/Rect.h>
 
-struct SpacialPartition* sp_createSpacialPartition()
+struct SpacialPartition* br_createSpacialPartition()
 {
     struct SpacialPartition* sp = (struct SpacialPartition*)malloc(sizeof(struct SpacialPartition));
     memset(sp->bucketSize, 0, sizeof(sp->bucketSize));
@@ -13,7 +13,7 @@ struct SpacialPartition* sp_createSpacialPartition()
     return sp;
 }
 
-void sp_addBullet(struct SpacialPartition* sp, struct Bullet* bullet)
+void br_addBullet(struct SpacialPartition* sp, struct Bullet* bullet)
 {
     if (bl_isDying(bullet))
     {
@@ -36,12 +36,12 @@ void sp_addBullet(struct SpacialPartition* sp, struct Bullet* bullet)
     }
 }
 
-void sp_clear(struct SpacialPartition* sp)
+void br_clear(struct SpacialPartition* sp)
 {
     memset(sp->bucketSize, 0, sizeof(sp->bucketSize));
 }
 
-bool sp_checkCollision(struct SpacialPartition* sp,
+bool br_checkCollision(struct SpacialPartition* sp,
                        float playerX, float playerY, float playerWidth, float playerHeight)
 {
     int x = playerX / TILE_SIZE;

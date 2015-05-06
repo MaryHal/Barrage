@@ -132,14 +132,14 @@ TEST BasicCollisionTest()
         "end\n";
 
     struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
-    struct SpacialPartition* sp = sp_createSpacialPartition();
+    struct SpacialPartition* sp = br_createSpacialPartition();
 
-    ASSERT(sp_checkCollision(sp, 0.0f, 0.0f, 4.0f, 4.0f) == false);
+    ASSERT(br_checkCollision(sp, 0.0f, 0.0f, 4.0f, 4.0f) == false);
 
     br_tick(barrage, sp);
 
-    ASSERT(sp_checkCollision(sp, 20.0f, 10.0f, 4.0f, 4.0f) == true);
-    ASSERT(sp_checkCollision(sp, 15.0f, 10.0f, 4.0f, 4.0f) == false);
+    ASSERT(br_checkCollision(sp, 20.0f, 10.0f, 4.0f, 4.0f) == true);
+    ASSERT(br_checkCollision(sp, 15.0f, 10.0f, 4.0f, 4.0f) == false);
 
     br_deleteBarrage(barrage);
 
