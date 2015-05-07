@@ -1,28 +1,33 @@
 -- BulletLua Test Script 2
 
-offset1 = 36.1
-offset2 = -36.4
+-- These variables are local to this file.
+local offset1 = 36.1
+local offset2 = -36.4
 
-dir1 = offset1
-dir2 = offset2
+local dir1 = offset1
+local dir2 = offset2
 
-function main()
-    local turn = getTurn()
-    local rank = getRank()
+local test02
+test02 = {
+   main = function ()
+      local turn = getTurn()
+      local rank = getRank()
 
-    launch(dir1, 0.8, fade)
-    launch(dir2, 0.8, fade)
-    dir1 = dir1 + offset1
-    dir2 = dir2 + offset2
+      launch(dir1, 0.8, test02.fade)
+      launch(dir2, 0.8, test02.fade)
+      dir1 = dir1 + offset1
+      dir2 = dir2 + offset2
 
-    if (turn == 600) then
-       kill()
-    end
-end
+      if (turn == 600) then
+         kill()
+      end
+   end,
 
-function fade()
-    local turn = getTurn()
-    if (turn == 130) then
-       vanish()
-    end
-end
+   fade = function ()
+      local turn = getTurn()
+      if (turn == 130) then
+         vanish()
+      end
+   end
+}
+return test02

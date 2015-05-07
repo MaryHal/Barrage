@@ -1,45 +1,50 @@
 -- BulletLua Test Script 5
 
-cycles = 0
-gwait = 20
-
-function bind(f,...)
+local function bind(f,...)
    local args = {...}
    return function(...)
       return f(unpack(args),...)
    end
 end
 
-function main()
-   circle = bind(launchCircle, 40)
-   setPosition(320, 240)
-   setFunction(bind(go, 10))
-end
+local cycles = 0
+local gwait = 20
 
-function go(wait)
-   local turn = getTurn()
-   if (math.fmod(turn, wait) == 0) then
-      circle(21 - gwait, curve)
+local test05
+test05 = {
+   main = function ()
+      circle = bind(launchCircle, 40)
+      setPosition(320, 240)
+      setFunction(bind(test05.go, 10))
+   end,
 
-      setFunction(bind(go, gwait))
-      gwait = gwait - 1
-      if gwait < 18 then
-         gwait = 20
+   go = function (wait)
+      local turn = getTurn()
+      if (math.fmod(turn, wait) == 0) then
+         circle(21 - gwait, test05.curve)
+
+         setFunction(bind(test05.go, gwait))
+         gwait = gwait - 1
+         if gwait < 18 then
+            gwait = 20
+         end
+
+         cycles = cycles + 1
       end
+      if (cycles == 15) then
+         vanish()
+      end
+   end,
 
-      cycles = cycles + 1
-   end
-   if (cycles == 15) then
-      vanish()
-   end
-end
+   curve = function ()
+      local turn = getTurn()
+      setDirectionRelative(5)
+      setSpeedRelative(0.1)
 
-function curve()
-   local turn = getTurn()
-   setDirectionRelative(5)
-   setSpeedRelative(0.1)
-
-   if (turn > 180) then
-      vanish()
+      if (turn > 180) then
+         vanish()
+      end
    end
-end
+}
+
+return test05

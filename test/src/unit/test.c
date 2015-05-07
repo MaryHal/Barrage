@@ -13,14 +13,17 @@ int isInRange(float value, float expected, float tolerance)
 TEST BasicMovementTest()
 {
     const char* script =
-        "function main()\n"
-        "    x, y = getPosition()\n"
-        "    setPosition(x + 10, y + 10)\n"
-        "    setFunction(move)\n"
-        "end\n"
-        "function move()\n"
-        "    setVelocity(5.0, 5.0)\n"
-        "end\n";
+        "basicMovement = {\n"
+        "   main = function ()\n"
+        "      x, y = getPosition()\n"
+        "      setPosition(x + 10, y + 10)\n"
+        "      setFunction(basicMovement.move)\n"
+        "   end,\n"
+        "   move = function ()\n"
+        "      setVelocity(5.0, 5.0)\n"
+        "   end\n"
+        "}\n"
+        "return basicMovement\n";
 
     struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
 
@@ -45,9 +48,12 @@ TEST BasicMovementTest()
 TEST NilFuncTest()
 {
     const char* script =
-        "function main()\n"
-        "    setFunction(nil)\n"
-        "end\n";
+        "nilFunc = {\n"
+        "   main = function ()\n"
+        "      setFunction(nil)\n"
+        "   end\n"
+        "}\n"
+        "return nilFunc\n";
 
     struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
 
@@ -64,9 +70,12 @@ TEST NilFuncTest()
 TEST VanishTest()
 {
     const char* script =
-        "function main()\n"
-        "    vanish()\n"
-        "end\n";
+        "vanishTest = {\n"
+        "   main = function ()\n"
+        "      vanish()\n"
+        "   end\n"
+        "}\n"
+        "return vanishTest\n";
 
     struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
 
@@ -94,14 +103,17 @@ TEST VanishTest()
 TEST LaunchTest()
 {
     const char* script =
-        "function main()\n"
-        "    launch(45, 1, kill)\n"
-        "    launch(45, 1, kill)\n"
-        "    launch(45, 1, kill)\n"
-        "    launch(45, 1, kill)\n"
-        "    launch(45, 1, kill)\n"
-        "    kill()\n"
-        "end\n";
+        "launchTest = {\n"
+        "   main = function ()\n"
+        "      launch(45, 1, kill)\n"
+        "      launch(45, 1, kill)\n"
+        "      launch(45, 1, kill)\n"
+        "      launch(45, 1, kill)\n"
+        "      launch(45, 1, kill)\n"
+        "      kill()\n"
+        "   end\n"
+        "}\n"
+        "return launchTest\n";
 
     struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
 
@@ -119,12 +131,15 @@ TEST LaunchTest()
 TEST StorageTest()
 {
     const char* script =
-        "function main()\n"
-        "    value = loadFloat('BarrageTestValue')\n"
-        "    if (value == 20.0) then\n"
+        "storageTest = {\n"
+        "   main = function ()\n"
+        "      value = loadFloat('BarrageTestValue')\n"
+        "      if (value == 20.0) then\n"
         "         setPosition(20.0, 10.0)\n"
-        "    end\n"
-        "end\n";
+        "      end\n"
+        "   end\n"
+        "}\n"
+        "return storageTest\n";
 
     struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
 
@@ -144,9 +159,12 @@ TEST StorageTest()
 TEST BasicCollisionTest()
 {
     const char* script =
-        "function main()\n"
-        "    setPosition(20.0, 10.0)\n"
-        "end\n";
+        "basicCollisionTest = {\n"
+        "   main = function ()\n"
+        "      setPosition(20.0, 10.0)\n"
+        "   end;\n"
+        "}\n"
+        "return basicCollisionTest\n";
 
     struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
     struct SpacialPartition* sp = br_createSpacialPartition();

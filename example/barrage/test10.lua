@@ -1,26 +1,30 @@
 
 -- BulletLua Test Script 10
 
-function bind(f,...)
+local function bind(f,...)
    local args = {...}
    return function(...)
       return f(unpack(args),...)
    end
 end
 
-function runTable(commands)
-   turn = getTurn()
-   cmd = commands[turn]
+local test10
+test10 = {
+   main = function ()
+      local commands = {}
+      commands[30] = bind(setSpeed, 2)
+      commands[60] = vanish
 
-   if cmd ~= nil then
-      cmd()
+      setFunction(bind(test10.runTable, commands))
+   end,
+
+   runTable = function (commands)
+      local turn = getTurn()
+      local cmd = commands[turn]
+
+      if cmd ~= nil then
+         cmd()
+      end
    end
-end
-
-function main()
-   commands = {}
-   commands[30] = bind(setSpeed, 2)
-   commands[60] = vanish
-
-   setFunction(bind(runTable, commands))
-end
+}
+return test10

@@ -1,29 +1,34 @@
-theta = 0
+local theta = 0
 
-function final()
-   if (getTurn() == 60) then
-      vanish()
-   end
-end
+local test07
+test07 = {
+   main = function ()
+      setPosition(320, 240)
+      turn = getTurn()
 
-function blue()
-   turn = getTurn()
-   if (turn == 30) then
-      currentDirection = getDirection()
-      launch(currentDirection - 110, 2, final)
+      if (math.fmod(turn, 6) == 0) then
+         for i = 0, 11 do
+            launch(theta + i * 30, 2, test07.blue)
+            theta = theta + 0.1
+         end
+      end
+   end,
 
-      setFunction(final)
-   end
-end
+   blue = function ()
+      turn = getTurn()
+      if (turn == 30) then
+         currentDirection = getDirection()
+         launch(currentDirection - 110, 2, test07.final)
 
-function main()
-   setPosition(320, 240)
-   turn = getTurn()
+         setFunction(test07.final)
+      end
+   end,
 
-   if (math.fmod(turn, 6) == 0) then
-      for i = 0, 11 do
-         launch(theta + i * 30, 2, blue)
-         theta = theta + 0.1
+   final = function ()
+      if (getTurn() == 60) then
+         vanish()
       end
    end
-end
+}
+
+return test07

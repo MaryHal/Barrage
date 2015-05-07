@@ -11,17 +11,30 @@
 
 struct Bullet*  g_bullet  = NULL;
 struct Barrage* g_barrage = NULL;
+lua_State* g_L = NULL;
+
+lua_State* br_initGlobalLuaState()
+{
+    if (g_L == NULL)
+    {
+        g_L = luaL_newstate();
+
+        // Register Bullet functions.
+        registerLuaFunctions(g_L);
+
+        //Open all lua standard libraries.
+        luaL_openlibs(g_L);
+    }
+
+    return g_L;
+}
 
 struct Barrage* br_createBarrage_()
 {
     struct Barrage* barrage = (struct Barrage*)malloc(sizeof(struct Barrage));
 
-    // Create a new lua state
-    barrage->L = luaL_newstate();
-    registerLuaFunctions(barrage->L);
-
-    // Open all lua standard libraries
-    luaL_openlibs(barrage->L);
+    // Create a new lua state (if it's the first one created), otherwise get the global lua state.
+    barrage->L = br_initGlobalLuaState();
 
     barrage->index = 0;
     barrage->processedCount = 0;
@@ -59,7 +72,16 @@ void br_deleteBarrage(struct Barrage* barrage)
         luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef);
     }
 
-    lua_close(barrage->L);
+    // Since we are using a global lua state, don't destroy it if a single barrage is destroyed.
+
+    // From the Lua documentation: "On several platforms, you may not need to call this function,
+    // because all resources are naturally released when the host program ends. On the other
+    // hand..."
+
+    // So we're all good, right?
+
+    /* lua_close(barrage->L); */
+
     free(barrage);
 }
 
@@ -87,19 +109,25 @@ struct Barrage* br_createBarrageFromFile(const char* filename,
 {
     struct Barrage* barrage = br_createBarrage_();
 
-    /* luaL_loadfile(barrage->L, filename); */
+    // Run the inline script.
     if (luaL_dofile(barrage->L, filename))
     {
         luaL_error(barrage->L, "%s", lua_tostring(barrage->L, -1));
     }
 
-    br_runOnLoadFunc_(barrage);
+    // We expect the script to return a table to us that contains an `onLoad` function and a `main`
+    // function.
+
+    /* br_runOnLoadFunc_(barrage); */
 
     struct Bullet* b = br_getFreeBullet_(barrage);
     bl_setPosition(b, originX, originY);
 
-    // Set lua function
-    lua_getglobal(barrage->L, "main");
+    // Get the function at table["main"].
+    lua_pushstring(barrage->L, "main");
+    lua_gettable(barrage->L, -2);
+
+    // Pop the function off the stack and create a reference to it.
     int ref = luaL_ref(barrage->L, LUA_REGISTRYINDEX);
     bl_setLuaFunction(b, ref);
 
@@ -113,18 +141,25 @@ struct Barrage* br_createBarrageFromScript(const char* script,
 {
     struct Barrage* barrage = br_createBarrage_();
 
+    // Run the inline script.
     if (luaL_dostring(barrage->L, script))
     {
         luaL_error(barrage->L, "%s", lua_tostring(barrage->L, -1));
     }
 
-    br_runOnLoadFunc_(barrage);
+    // We expect the script to return a table to us that contains an `onLoad` function and a `main`
+    // function.
+
+    /* br_runOnLoadFunc_(barrage); */
 
     struct Bullet* b = br_getFreeBullet_(barrage);
     bl_setPosition(b, originX, originY);
 
-    // Set lua function
-    lua_getglobal(barrage->L, "main");
+    // Get the function at table["main"].
+    lua_pushstring(barrage->L, "main");
+    lua_gettable(barrage->L, -2);
+
+    // Pop the function off the stack and create a reference to it.
     int ref = luaL_ref(barrage->L, LUA_REGISTRYINDEX);
     bl_setLuaFunction(b, ref);
 
@@ -259,9 +294,10 @@ void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
             // TODO: Check if out of bounds or bullet is dead
             if (bl_isDead(&barrage->bullets[barrage->index]))
             {
-                // Remove function reference from bullet.
+                // Remove function reference from bullet and Lua State.
                 /* luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[barrage->index].luaFuncRef); */
 
+                // Re-add this bullet to the free list.
                 bl_setNext(&barrage->bullets[barrage->index], barrage->firstAvailable);
                 barrage->firstAvailable = &barrage->bullets[barrage->index];
 
@@ -286,8 +322,6 @@ void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
             br_addBullet(sp, &barrage->bullets[barrage->index]);
     }
 
-    // TODO: Consider whether or not we should add new bullets after updating (here) or after
-    // drawing.
     br_addQueuedBullets_(barrage);
     barrage->activeCount -= barrage->killCount;
 
