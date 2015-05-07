@@ -126,17 +126,20 @@ Keep in mind the lua executable version should match the lua version linked to b
 
 ### Basics
 
-When you create a barrage, it automatically creates a `root` bullet that is linked to a _required_ `main` lua function. Bullets run their associated function with them each frame (tick). The capabilities of all bullets is that they can control themselves and they can launch new bullets.
+A bare-bones barrage script is structured like a lua module:
 
-    function main()
-        -- Do things
-    end
+    myBarrage = {
+        -- Optional
+        onLoad = function ()
+            -- Do some things
+        end
+        main = function ()
+            -- Do more things
+        end
+    }
+    return myBarrage
 
-When you load a barrage it evaluates the script and runs the `onLoad' lua function, if it exists.
-
-    function onLoad()
-        math.randomseed(os.time())
-    end
+When you create a barrage, it will immediately evaluate the file and run the `onLoad` function in your table if it exists. Next, it will create a bullet and associate the `main` function with it. What this means is that on each frame (tick), `main` will be run. Some documentation for bullet functions can be found below and a set of example scripts can be found in `example/barrage`
 
 ### Available bullet functions
 
