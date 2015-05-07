@@ -14,7 +14,7 @@ void registerLuaFunctions(lua_State* L);
 // Lua wrapper functions.
 
 // Bullet functions
-int l_nullFunc(lua_State* L);
+/* int l_nullFunc(lua_State* L); */
 
 int l_setPosition(lua_State* L);
 int l_getPosition(lua_State* L);

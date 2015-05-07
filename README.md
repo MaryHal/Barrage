@@ -140,10 +140,6 @@ When you load a barrage it evaluates the script and runs the `onLoad' lua functi
 
 ### Available bullet functions
 
-#### Do nothing
-
-    nullFunc()
-
 #### Position functions
 
     -- Set Bullet Position.
@@ -217,3 +213,7 @@ When you load a barrage it evaluates the script and runs the `onLoad' lua functi
 
     -- Immediately destroy this bullet.
     kill()
+
+#### Do nothing
+
+    Pass `nil` to setFunction or launch*. nullFunc was removed.

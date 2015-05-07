@@ -232,16 +232,26 @@ void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
         if (!bl_isDead(&barrage->bullets[barrage->index]))
         {
             // Push lua function ref to the top of the lua stack.
-            lua_rawgeti(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[barrage->index].luaFuncRef);
+            lua_rawgeti(barrage->L, LUA_REGISTRYINDEX,
+                        barrage->bullets[barrage->index].luaFuncRef);
 
-#if NDEBUG
-            lua_call(barrage->L, 0, 0);
-#else
-            if (lua_pcall(barrage->L, 0, 0, 0))
+            // Let's branch more! Retire nullFunc by allowing nil to be passed as a function
+            // reference.
+            if (!lua_isnil(barrage->L, -1))
             {
-                luaL_error(barrage->L, "[%s]", lua_tostring(barrage->L, -1));
-            }
+#if NDEBUG
+                lua_call(barrage->L, 0, 0);
+#else
+                if (lua_pcall(barrage->L, 0, 0, 0))
+                {
+                    luaL_error(barrage->L, "[%s]", lua_tostring(barrage->L, -1));
+                }
 #endif
+            }
+            else
+            {
+                lua_pop(barrage->L, 1);
+            }
 
             barrage->bullets[barrage->index].turn++;
             barrage->processedCount++;

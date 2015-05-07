@@ -42,6 +42,25 @@ TEST BasicMovementTest()
     PASS();
 }
 
+TEST NilFuncTest()
+{
+    const char* script =
+        "function main()\n"
+        "    setFunction(nil)\n"
+        "end\n";
+
+    struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
+
+    // Set LuaFuncRef to point to nil. I hope we don't segfault!
+    br_tick(barrage, NULL);
+    br_tick(barrage, NULL);
+    br_tick(barrage, NULL);
+
+    br_deleteBarrage(barrage);
+
+    PASS();
+}
+
 TEST VanishTest()
 {
     const char* script =
@@ -50,8 +69,6 @@ TEST VanishTest()
         "end\n";
 
     struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
-
-    printf("\n");
 
     ASSERT_EQ(barrage->activeCount, 1);
 
@@ -149,6 +166,7 @@ TEST BasicCollisionTest()
 SUITE(Bullet_Functionality)
 {
     RUN_TEST(BasicMovementTest);
+    RUN_TEST(NilFuncTest);
     RUN_TEST(VanishTest);
     RUN_TEST(LaunchTest);
 

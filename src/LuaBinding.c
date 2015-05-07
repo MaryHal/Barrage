@@ -27,8 +27,6 @@ static int ud_barrage_create(lua_State* L)
     float originX = luaL_checknumber(L, 2);
     float originY = luaL_checknumber(L, 3);
 
-    // TODO: Argument validation.
-
     // Have lua allocate some data for our Barrage struct.
     struct Barrage_user_data* ud = (struct Barrage_user_data*) lua_newuserdata(L, sizeof(*ud));
     ud->barrage = br_createBarrageFromFile(filename, originX, originY);
@@ -174,7 +172,7 @@ static int ud_spacial_partition_checkCollision(lua_State* L)
 
 static int ud_spacial_partition_destroy(lua_State* L)
 {
-    (void)L;
+    (void) L;
     return 0;
 }
 
@@ -219,9 +217,10 @@ int luaopen_barrageC(lua_State* L)
     // metatable for the table to itself. This is equivalent to the following in lua:
     lua_setfield(L, -2, "__index");
 
-    // Set the methods to the metatable that should be accessed via object:func
+    // Set the methods to the metatable that should be accessed via object:func (Barrage)
     luaL_setfuncs(L, ud_barrage_methods, 0);
 
+    // Do the above steps again for another metatable "object" (SpacialPartition)
     lua_pushvalue(L, -1);
     lua_setfield(L, -2, "__index");
     luaL_setfuncs(L, ud_spacial_partition_methods, 0);

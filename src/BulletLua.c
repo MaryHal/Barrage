@@ -10,7 +10,7 @@
 
 void registerLuaFunctions(lua_State* L)
 {
-    lua_register(L, "nullfunc", &l_nullFunc);
+    /* lua_register(L, "nullfunc", &l_nullFunc); */
 
     lua_register(L, "setPosition", &l_setPosition);
     lua_register(L, "getPosition", &l_getPosition);
@@ -60,11 +60,11 @@ void registerLuaFunctions(lua_State* L)
     lua_register(L, "launchCircle", &l_launchCircle);
 }
 
-int l_nullFunc(lua_State* L)
-{
-    (void)L;
-    return 0;
-}
+/* int l_nullFunc(lua_State* L) */
+/* { */
+/*     (void) L; */
+/*     return 0; */
+/* } */
 
 int l_setPosition(lua_State* L)
 {
@@ -158,7 +158,7 @@ int l_setDirectionRelative(lua_State* L)
 
 int l_aimAtTarget(lua_State* L)
 {
-    (void)L;
+    (void) L;
 
     br_aimAtTarget(g_barrage, g_bullet);
 
@@ -196,7 +196,7 @@ int l_linearInterpolate(lua_State* L)
 
 int l_vanish(lua_State* L)
 {
-    (void)L;
+    (void) L;
 
     int argc = lua_gettop(L);
     if (argc == 0)
@@ -213,7 +213,7 @@ int l_vanish(lua_State* L)
 
 int l_kill(lua_State* L)
 {
-    (void)L;
+    (void) L;
 
     bl_kill(g_bullet);
     return 0;
@@ -233,7 +233,7 @@ int l_isDying(lua_State* L)
 
 int l_resetTurns(lua_State* L)
 {
-    (void)L;
+    (void) L;
 
     bl_resetTurns(g_bullet);
     return 0;
