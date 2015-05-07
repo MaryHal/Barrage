@@ -1,12 +1,14 @@
 #ifndef BARRAGE_H
 #define BARRAGE_H
 
-#include <stddef.h>
 #include <barrage/Bullet.h>
 
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
+
+/* #include <stddef.h> */
+#include <stdbool.h>
 
 #define QUEUE_SIZE  (1 << 8)
 #define MAX_BULLETS (1 << 12)
@@ -36,6 +38,7 @@ struct Barrage
 
         struct Bullet* firstAvailable; // Implicit linked list of free bullets.
         struct Bullet bullets[MAX_BULLETS];
+
         struct BulletQueue queue; // Queue of new bullets to add at the end up update phase.
 
         float playerX, playerY;
@@ -72,7 +75,7 @@ void br_storeFloat(struct Barrage* barrage, const char* key, float value);
 float br_getFloat(struct Barrage* barrage, const char* key);
 
 void br_setPlayerPosition(struct Barrage* barrage, float x, float y);
-void br_tick(struct Barrage* barrage, struct SpacialPartition* sp);
+bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp);
 
 void br_vanishAll(struct Barrage* barrage);
 

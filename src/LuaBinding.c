@@ -10,6 +10,7 @@
 #include <barrage/LuaCompat.h>
 
 #include <stdlib.h>
+#include <stdbool.h>
 
 struct Barrage_user_data
 {
@@ -106,9 +107,9 @@ static int ud_barrage_tick(lua_State* L)
     struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
     struct SpacialPartition_user_data* udsp = (struct SpacialPartition_user_data*)luaL_checkudata(L, 2, "Barrage");
 
-    br_tick(ud->barrage, udsp->sp);
+    lua_pushboolean(L, br_tick(ud->barrage, udsp->sp));
 
-    return 0;
+    return 1;
 }
 
 static int ud_barrage_hasNext(lua_State* L)

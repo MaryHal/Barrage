@@ -251,7 +251,7 @@ void br_setPlayerPosition(struct Barrage* barrage, float x, float y)
     barrage->playerY = y;
 }
 
-void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
+bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
 {
     if (sp != NULL)
         br_clear(sp);
@@ -334,11 +334,15 @@ void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
             br_addBullet(sp, &barrage->bullets[barrage->index]);
     }
 
+    bool bulletLaunched = barrage->queue.size > 0;
+
     br_addQueuedBullets_(barrage);
     barrage->activeCount -= barrage->killCount;
 
     barrage->index = 0;
     barrage->processedCount = 0;
+
+    return bulletLaunched;
 }
 
 void br_vanishAll(struct Barrage* barrage)
