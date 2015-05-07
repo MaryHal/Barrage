@@ -28,7 +28,7 @@ struct Barrage
 {
         lua_State* L;
 
-        size_t currentIndex;
+        size_t index;
         size_t processedCount; // Internally keeps track of the number of bullets that still need to
                                // be processed (updated or yielded).
         size_t activeCount;    // Keeps track of the number of alive bullets.

@@ -23,7 +23,7 @@ struct Barrage* br_createBarrage_()
     // Open all lua standard libraries
     luaL_openlibs(barrage->L);
 
-    barrage->currentIndex = 0;
+    barrage->index = 0;
     barrage->processedCount = 0;
 
     barrage->activeCount = 0;
@@ -221,18 +221,18 @@ void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
 
     barrage->processedCount= 0;
 
-    for (size_t i = 0;
-         barrage->processedCount < barrage->activeCount && i < MAX_BULLETS;
-         ++i)
+    for (barrage->index = 0;
+         barrage->processedCount < barrage->activeCount && barrage->index < MAX_BULLETS;
+         barrage->index++)
     {
         // Make sure the lua interface knows which bullet is currently being updated.
-        g_bullet = &barrage->bullets[i];
+        g_bullet = &barrage->bullets[barrage->index];
 
         // Run lua function.
-        if (!bl_isDead(&barrage->bullets[i]))
+        if (!bl_isDead(&barrage->bullets[barrage->index]))
         {
             // Push lua function ref to the top of the lua stack.
-            lua_rawgeti(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef);
+            lua_rawgeti(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[barrage->index].luaFuncRef);
 
 #if NDEBUG
             lua_call(barrage->L, 0, 0);
@@ -243,17 +243,17 @@ void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
             }
 #endif
 
-            barrage->bullets[i].turn++;
+            barrage->bullets[barrage->index].turn++;
             barrage->processedCount++;
 
             // TODO: Check if out of bounds or bullet is dead
-            if (bl_isDead(&barrage->bullets[i]))
+            if (bl_isDead(&barrage->bullets[barrage->index]))
             {
                 // Remove function reference from bullet.
-                /* luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef); */
+                /* luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[barrage->index].luaFuncRef); */
 
-                bl_setNext(&barrage->bullets[i], barrage->firstAvailable);
-                barrage->firstAvailable = &barrage->bullets[i];
+                bl_setNext(&barrage->bullets[barrage->index], barrage->firstAvailable);
+                barrage->firstAvailable = &barrage->bullets[barrage->index];
 
                 barrage->killCount++;
 
@@ -269,11 +269,11 @@ void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
         }
 
         // Update Position
-        barrage->bullets[i].x += barrage->bullets[i].vx;
-        barrage->bullets[i].y += barrage->bullets[i].vy;
+        barrage->bullets[barrage->index].x += barrage->bullets[barrage->index].vx;
+        barrage->bullets[barrage->index].y += barrage->bullets[barrage->index].vy;
 
         if (sp != NULL)
-            br_addBullet(sp, &barrage->bullets[i]);
+            br_addBullet(sp, &barrage->bullets[barrage->index]);
     }
 
     // TODO: Consider whether or not we should add new bullets after updating (here) or after
@@ -281,7 +281,7 @@ void br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
     br_addQueuedBullets_(barrage);
     barrage->activeCount -= barrage->killCount;
 
-    barrage->currentIndex = 0;
+    barrage->index = 0;
     barrage->processedCount = 0;
 }
 
@@ -298,27 +298,27 @@ void br_vanishAll(struct Barrage* barrage)
 
 int br_hasNext(struct Barrage* barrage)
 {
-    return barrage->processedCount < barrage->activeCount && barrage->currentIndex < MAX_BULLETS;
+    return barrage->processedCount < barrage->activeCount && barrage->index < MAX_BULLETS;
 }
 
 struct Bullet* br_yield(struct Barrage* barrage)
 {
     // Skip over all the dead bullets and pray we don't go out of bounds.
-    while (bl_isDead(&barrage->bullets[barrage->currentIndex]))
+    while (bl_isDead(&barrage->bullets[barrage->index]))
     {
-        barrage->currentIndex++;
+        barrage->index++;
 
-        assert(barrage->currentIndex < MAX_BULLETS);
+        assert(barrage->index < MAX_BULLETS);
     }
 
     barrage->processedCount++;
-    barrage->currentIndex++;
-    return &barrage->bullets[barrage->currentIndex - 1];
+    barrage->index++;
+    return &barrage->bullets[barrage->index - 1];
 }
 
 void br_resetHasNext(struct Barrage* barrage)
 {
-    barrage->currentIndex = 0;
+    barrage->index = 0;
     barrage->processedCount = 0;
 }
 
