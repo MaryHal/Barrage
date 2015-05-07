@@ -1,6 +1,6 @@
 local barrage = require "barrageC"
 
-local bulletImg = love.graphics.newImage('assets/bullet.png')
+local bulletImg = love.graphics.newImage('assets/bullet2.png')
 local barrageBatch = love.graphics.newSpriteBatch(bulletImg, 4096)
 
 local myBarrage = nil
@@ -65,17 +65,13 @@ function love.update(dt)
       myBarrage:resetHasNext()
 
       while myBarrage:hasNext() do
-         local x, y, vx, vy, frame = myBarrage:yield()
-         if frame < 0 then
-            barrageBatch:setColor(255, 255, 255, 255 - (31 + frame) * 255 / 30)
-         else
-            barrageBatch:setColor(255, 255, 255)
-         end
-         -- -- Directed Bullets
-         -- barrageBatch:add(x, y, 3.14159 - math.atan2(vx, vy), 1, 1, 8, 8)
+         local x, y, vx, vy, alpha = myBarrage:yield()
+
+         barrageBatch:setColor(255, 255, 255, 255 * alpha)
+         barrageBatch:add(x, y, math.pi - math.atan2(vx, vy), 0.5, 0.5, 16, 16)
 
          -- Static orientation
-         barrageBatch:add(x, y, 0, 0.5, 0.5, 16, 16)
+         -- barrageBatch:add(x, y, 0, 0.5, 0.5, 16, 16)
       end
    end
    barrageBatch:unbind()
@@ -89,8 +85,8 @@ function love.draw(dt)
       myBarrage:resetHasNext()
 
       while myBarrage:hasNext() do
-         local x, y, vx, vy, frame = myBarrage:yield()
-         if frame > 0 then
+         local x, y, vx, vy, alpha = myBarrage:yield()
+         if alpha == 1.0 then
             love.graphics.rectangle('fill', x - 2, y - 2, 4, 4)
          end
       end

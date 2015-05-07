@@ -48,6 +48,8 @@ struct Barrage
 // Pointers to the bullet/barrage that is currently being processed.
 extern struct Bullet*  g_bullet;
 extern struct Barrage* g_barrage;
+
+// One state. Just one.
 extern lua_State* g_L;
 
 lua_State* br_initGlobalLuaState();
