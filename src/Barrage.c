@@ -89,8 +89,12 @@ void br_runOnLoadFunc_(struct Barrage* barrage)
 {
     const char* funcName = "onLoad";
 
+
+    // Get the function at table["onLoad"].
+    lua_pushstring(barrage->L, funcName);
+    lua_gettable(barrage->L, -2);
+
     // Run function on load(if it exists)
-    lua_getglobal(barrage->L, funcName);
     if (lua_isfunction(barrage->L, -1))
     {
         if (lua_pcall(barrage->L, 0, 0, 0))
@@ -118,7 +122,11 @@ struct Barrage* br_createBarrageFromFile(const char* filename,
     // We expect the script to return a table to us that contains an `onLoad` function and a `main`
     // function.
 
-    /* br_runOnLoadFunc_(barrage); */
+    // Create a copy of the script's table since we need to grab two things from it.
+    lua_pushvalue(barrage->L, -1);
+
+    // Check if onLoad function exists and run it.
+    br_runOnLoadFunc_(barrage);
 
     struct Bullet* b = br_getFreeBullet_(barrage);
     bl_setPosition(b, originX, originY);
@@ -150,7 +158,11 @@ struct Barrage* br_createBarrageFromScript(const char* script,
     // We expect the script to return a table to us that contains an `onLoad` function and a `main`
     // function.
 
-    /* br_runOnLoadFunc_(barrage); */
+    // Create a copy of the script's table since we need to grab two things from it.
+    lua_pushvalue(barrage->L, -1);
+
+    // Check if onLoad function exists and run it.
+    br_runOnLoadFunc_(barrage);
 
     struct Bullet* b = br_getFreeBullet_(barrage);
     bl_setPosition(b, originX, originY);
