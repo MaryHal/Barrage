@@ -37,6 +37,7 @@ test09 = {
       local y = centerY + radius * math.sin(theta + math.rad(offset))
 
       setPosition(x, y)
+      setDirection(math.deg(theta + math.rad(offset) + math.pi))
 
       if (math.random(0, 600) == 0) then
          launchAtTarget(4, test09.shoot)
