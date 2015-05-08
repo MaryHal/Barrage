@@ -40,6 +40,25 @@ static int ud_barrage_create(lua_State* L)
     return 1;
 }
 
+static int ud_barrage_createFromBuffer(lua_State* L)
+{
+    const char* buffer = luaL_checkstring(L, 1);
+    float originX = luaL_checknumber(L, 2);
+    float originY = luaL_checknumber(L, 3);
+
+    // Have lua allocate some data for our Barrage struct.
+    struct Barrage_user_data* ud = (struct Barrage_user_data*) lua_newuserdata(L, sizeof(*ud));
+    ud->barrage = br_createBarrageFromScript(buffer, originX, originY);
+
+    luaL_getmetatable(L, "Barrage");
+
+    // Set metatable on userdata
+    lua_setmetatable(L, -2);
+
+    return 1;
+}
+
+
 static int ud_barrage_destroy(lua_State* L)
 {
     struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
@@ -186,30 +205,31 @@ static int ud_spacial_partition_destroy(lua_State* L)
 
 static const struct luaL_Reg ud_barrage_methods[] =
 {
-    { "getActiveCount",      &ud_barrage_getActiveCount },
-    { "setRank",             &ud_barrage_setRank },
-    { "getRank",             &ud_barrage_getRank },
-    { "storeFloat",          &ud_barrage_storeFloat },
-    { "setPlayerPosition",   &ud_barrage_setPlayerPosition },
-    { "tick",                &ud_barrage_tick },
-    { "hasNext",             &ud_barrage_hasNext },
-    { "resetHasNext",        &ud_barrage_resetHasNext },
-    { "yield",               &ud_barrage_yield },
-    { "__gc",                &ud_barrage_destroy },
+    { "getActiveCount",       &ud_barrage_getActiveCount },
+    { "setRank",              &ud_barrage_setRank },
+    { "getRank",              &ud_barrage_getRank },
+    { "storeFloat",           &ud_barrage_storeFloat },
+    { "setPlayerPosition",    &ud_barrage_setPlayerPosition },
+    { "tick",                 &ud_barrage_tick },
+    { "hasNext",              &ud_barrage_hasNext },
+    { "resetHasNext",         &ud_barrage_resetHasNext },
+    { "yield",                &ud_barrage_yield },
+    { "__gc",                 &ud_barrage_destroy },
     { NULL, NULL }
 };
 
 static const struct luaL_Reg ud_spacial_partition_methods[] =
 {
-    { "checkCollision",      &ud_spacial_partition_checkCollision },
-    { "__gc",                &ud_spacial_partition_destroy },
+    { "checkCollision",       &ud_spacial_partition_checkCollision },
+    { "__gc",                 &ud_spacial_partition_destroy },
     { NULL, NULL }
 };
 
 static const struct luaL_Reg ud_barrage_functions[] =
 {
-    { "newBarrage",          &ud_barrage_create },
-    { "newSpacialPartition", &ud_spacial_partition_create },
+    { "newBarrage",           &ud_barrage_create },
+    { "newBarrageFromBuffer", &ud_barrage_createFromBuffer },
+    { "newSpacialPartition",  &ud_spacial_partition_create },
     { NULL, NULL }
 };
 

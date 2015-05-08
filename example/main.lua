@@ -1,6 +1,6 @@
 local barrage = require "barrageC"
 
-local bulletImg = love.graphics.newImage('assets/bullet2.png')
+local bulletImg = love.graphics.newImage('assets/bullet.png')
 local barrageBatch = love.graphics.newSpriteBatch(bulletImg, 4096)
 
 local myBarrage = nil
