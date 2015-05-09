@@ -177,6 +177,7 @@ TEST BasicCollisionTest()
     ASSERT(br_checkCollision(sp, 15.0f, 10.0f, 4.0f, 4.0f) == false);
 
     br_deleteBarrage(barrage);
+    br_deleteSpacialPartition(sp);
 
     PASS();
 }

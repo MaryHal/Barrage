@@ -71,6 +71,7 @@ Link libbarrage.so and make sure your compiler can find the correct header files
 
     // Cleanup
     br_deleteBarrage(barrage);
+    br_deleteSpacialPartition(sp);
 
 ### Lua
 

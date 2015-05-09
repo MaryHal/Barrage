@@ -13,6 +13,11 @@ struct SpacialPartition* br_createSpacialPartition()
     return sp;
 }
 
+void br_deleteSpacialPartition(struct SpacialPartition* sp)
+{
+    free(sp);
+}
+
 void br_addBullet(struct SpacialPartition* sp, struct Bullet* bullet)
 {
     if (bl_isDying(bullet))

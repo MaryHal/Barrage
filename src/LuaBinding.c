@@ -199,7 +199,9 @@ static int ud_spacial_partition_checkCollision(lua_State* L)
 
 static int ud_spacial_partition_destroy(lua_State* L)
 {
-    (void) L;
+    struct SpacialPartition_user_data* ud = (struct SpacialPartition_user_data*)luaL_checkudata(L, 1, "Barrage");
+    br_deleteSpacialPartition(ud->sp);
+
     return 0;
 }
 
