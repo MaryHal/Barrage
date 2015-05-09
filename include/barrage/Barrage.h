@@ -54,11 +54,8 @@ extern lua_State* g_L;
 
 lua_State* br_initGlobalLuaState_();
 
-struct Barrage* br_initBarrage(struct Barrage* barrage);
-struct Barrage* br_createBarrage();
-
-void br_deinitBarrage(struct Barrage* barrage);
-void br_deleteBarrage(struct Barrage* barrage);
+struct Barrage* br_createBarrage(struct Barrage* barrage);
+void br_deleteBarrage(struct Barrage* barrage, bool onHeap);
 
 void br_runOnLoadFunc_(struct Barrage* barrage);
 void br_createBulletFromFile(struct Barrage* barrage,
@@ -91,6 +88,8 @@ int br_hasNext(struct Barrage* barrage);
 struct Bullet* br_yield(struct Barrage* barrage);
 
 void br_resetHasNext(struct Barrage* barrage);
+
+size_t br_countAlive(struct Barrage* barrage);
 
 // "Meta"-functions used by the Lua-interface.
 void br_aimAtTarget(struct Barrage* barrage, struct Bullet* current);

@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     }
 
     struct Barrage barrage;
-    br_initBarrage(&barrage);
+    br_createBarrage(&barrage);
     br_createBulletFromScript(&barrage, argv[1], 320.0f, 120.0f);
 
     for (int i = 0; i < 200; ++i)
@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    br_deleteBarrage(&barrage);
+    br_deleteBarrage(&barrage, false);
 
     return 0;
 }

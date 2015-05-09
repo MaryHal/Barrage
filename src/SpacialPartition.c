@@ -5,17 +5,23 @@
 
 #include <barrage/Rect.h>
 
-struct SpacialPartition* br_createSpacialPartition()
+struct SpacialPartition* br_createSpacialPartition(struct SpacialPartition* sp)
 {
-    struct SpacialPartition* sp = (struct SpacialPartition*)malloc(sizeof(struct SpacialPartition));
+    if (sp == NULL)
+    {
+        sp = (struct SpacialPartition*)malloc(sizeof(struct SpacialPartition));
+    }
     memset(sp->bucketSize, 0, sizeof(sp->bucketSize));
 
     return sp;
 }
 
-void br_deleteSpacialPartition(struct SpacialPartition* sp)
+void br_deleteSpacialPartition(struct SpacialPartition* sp, bool doFree)
 {
-    free(sp);
+    if (doFree)
+    {
+        free(sp);
+    }
 }
 
 void br_addBullet(struct SpacialPartition* sp, struct Bullet* bullet)

@@ -26,7 +26,7 @@ TEST BasicMovementTest()
         "return basicMovement\n";
 
     struct Barrage barrage;
-    br_initBarrage(&barrage);
+    br_createBarrage(&barrage);
     br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
 
     ASSERT(barrage.bullets[0].x == 320.0f);
@@ -42,7 +42,7 @@ TEST BasicMovementTest()
     ASSERT(barrage.bullets[0].x == 335.0f);
     ASSERT(barrage.bullets[0].y == 135.0f);
 
-    br_deinitBarrage(&barrage);
+    br_deleteBarrage(&barrage, false);
 
     PASS();
 }
@@ -58,7 +58,7 @@ TEST NilFuncTest()
         "return nilFunc\n";
 
     struct Barrage barrage;
-    br_initBarrage(&barrage);
+    br_createBarrage(&barrage);
     br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
 
     // Set LuaFuncRef to point to nil. I hope we don't segfault!
@@ -66,7 +66,7 @@ TEST NilFuncTest()
     br_tick(&barrage, NULL);
     br_tick(&barrage, NULL);
 
-    br_deinitBarrage(&barrage);
+    br_deleteBarrage(&barrage, false);
 
     PASS();
 }
@@ -82,7 +82,7 @@ TEST VanishTest()
         "return vanishTest\n";
 
     struct Barrage barrage;
-    br_initBarrage(&barrage);
+    br_createBarrage(&barrage);
     br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
 
     ASSERT_EQ(barrage.activeCount, 1);
@@ -101,7 +101,7 @@ TEST VanishTest()
 
     ASSERT_EQ(barrage.activeCount, 0);
 
-    br_deinitBarrage(&barrage);
+    br_deleteBarrage(&barrage, false);
 
     PASS();
 }
@@ -122,7 +122,7 @@ TEST LaunchTest()
         "return launchTest\n";
 
     struct Barrage barrage;
-    br_initBarrage(&barrage);
+    br_createBarrage(&barrage);
     br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
 
     ASSERT_EQ(barrage.activeCount, 1);
@@ -131,7 +131,7 @@ TEST LaunchTest()
     br_tick(&barrage, NULL);
     ASSERT_EQ(barrage.activeCount, 0);
 
-    br_deinitBarrage(&barrage);
+    br_deleteBarrage(&barrage, false);
 
     PASS();
 }
@@ -150,7 +150,7 @@ TEST StorageTest()
         "return storageTest\n";
 
     struct Barrage barrage;
-    br_initBarrage(&barrage);
+    br_createBarrage(&barrage);
     br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
 
     const char* key = "BarrageTestValue";
@@ -161,7 +161,7 @@ TEST StorageTest()
     ASSERT(barrage.bullets[0].x == 20.0f);
     ASSERT(barrage.bullets[0].y == 10.0f);
 
-    br_deinitBarrage(&barrage);
+    br_deleteBarrage(&barrage, false);
 
     PASS();
 }
@@ -177,19 +177,21 @@ TEST BasicCollisionTest()
         "return basicCollisionTest\n";
 
     struct Barrage barrage;
-    br_initBarrage(&barrage);
+    br_createBarrage(&barrage);
     br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
-    struct SpacialPartition* sp = br_createSpacialPartition();
 
-    ASSERT(br_checkCollision(sp, 0.0f, 0.0f, 4.0f, 4.0f) == false);
+    struct SpacialPartition sp;
+    br_createSpacialPartition(&sp);
 
-    br_tick(&barrage, sp);
+    ASSERT(br_checkCollision(&sp, 0.0f, 0.0f, 4.0f, 4.0f) == false);
 
-    ASSERT(br_checkCollision(sp, 20.0f, 10.0f, 4.0f, 4.0f) == true);
-    ASSERT(br_checkCollision(sp, 15.0f, 10.0f, 4.0f, 4.0f) == false);
+    br_tick(&barrage, &sp);
 
-    br_deinitBarrage(&barrage);
-    br_deleteSpacialPartition(sp);
+    ASSERT(br_checkCollision(&sp, 20.0f, 10.0f, 4.0f, 4.0f) == true);
+    ASSERT(br_checkCollision(&sp, 15.0f, 10.0f, 4.0f, 4.0f) == false);
+
+    br_deleteBarrage(&barrage, false);
+    br_deleteSpacialPartition(&sp, false);
 
     PASS();
 }
@@ -206,12 +208,12 @@ SUITE(Bullet_Functionality)
     RUN_TEST(BasicCollisionTest);
 }
 
-/* Add definitions that need to be in the test runner's main file. */
+/* Add defcreateions that need to be in the test runner's main file. */
 GREATEST_MAIN_DEFS();
 
 int main(int argc, char **argv)
 {
-    GREATEST_MAIN_BEGIN(); /* command-line arguments, initialization. */
+    GREATEST_MAIN_BEGIN(); /* command-line arguments, createialization. */
     {
         RUN_SUITE(Bullet_Functionality);
     }

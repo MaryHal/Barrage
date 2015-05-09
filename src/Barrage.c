@@ -30,8 +30,13 @@ lua_State* br_initGlobalLuaState_()
     return g_L;
 }
 
-struct Barrage* br_initBarrage(struct Barrage* barrage)
+struct Barrage* br_createBarrage(struct Barrage* barrage)
 {
+    if (barrage == NULL)
+    {
+        barrage = (struct Barrage*)malloc(sizeof(struct Barrage));
+    }
+
 #if NDEBUG
     // Initialize all our data -- hush valgrind
     memset(barrage, 0, sizeof(struct Barrage));
@@ -68,14 +73,7 @@ struct Barrage* br_initBarrage(struct Barrage* barrage)
     return barrage;
 }
 
-struct Barrage* br_createBarrage()
-{
-    struct Barrage* barrage = (struct Barrage*)malloc(sizeof(struct Barrage));
-
-    return br_initBarrage(barrage);
-}
-
-void br_deinitBarrage(struct Barrage* barrage)
+void br_deleteBarrage(struct Barrage* barrage, bool doFree)
 {
     // TODO: Determine which function references to unref.
     for (int i = 0; i < MAX_BULLETS; ++i)
@@ -92,12 +90,11 @@ void br_deinitBarrage(struct Barrage* barrage)
     // So we're all good, right?
 
     /* lua_close(barrage->L); */
-}
 
-void br_deleteBarrage(struct Barrage* barrage)
-{
-    br_deinitBarrage(barrage);
-    free(barrage);
+    if (doFree)
+    {
+        free(barrage);
+    }
 }
 
 void br_runOnLoadFunc_(struct Barrage* barrage)
@@ -388,6 +385,20 @@ void br_resetHasNext(struct Barrage* barrage)
 {
     barrage->index = 0;
     barrage->processedCount = 0;
+}
+
+size_t br_countAlive(struct Barrage* barrage)
+{
+    size_t count = 0;
+    for (size_t i = 0; i < MAX_BULLETS; ++i)
+    {
+        if (bl_isDead(&barrage->bullets[i]))
+        {
+            count++;
+        }
+    }
+
+    return count;
 }
 
 void br_aimAtTarget(struct Barrage* barrage, struct Bullet* current)

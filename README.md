@@ -42,36 +42,40 @@ Link libbarrage.so and make sure your compiler can find the correct header files
     #include <barrage/Barrage.h>
     #include <barrage/SpacialPartition.h>
 
-    struct Barrage* barrage = br_createBarrageFromFile(my_file, 320.0f, 120.0f);
+
+    struct Barrage barrage;
+    br_createBarrage(&barrage);
+    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
 
     // Optional collision detection manager.
-    struct SpacialPartition* sp = br_createSpacialPartition
+    struct SpacialPartition sp;
+    br_createSpacialPartition(&sp)
 
     while (running)
     {
         // Update
-        br_tick(barrage, sp);
+        br_tick(&barrage, &sp);
 
-        // or br_tick(barrage, NULL) if you don't want to register this barrage's bullets to
+        // or br_tick(&barrage, NULL) if you don't want to register this barrage's bullets to
         // the collision detection manager.
 
         // Check collision between registered bullets and the rect defined by (x, y, w, h)
-        if (br_checkCollision(sp, x, y, w, h)
+        if (br_checkCollision(&sp, x, y, w, h)
         {
             // You were hit!
         }
 
         // Draw loop
-        while (br_hasNext(barrage))
+        while (br_hasNext(&barrage))
         {
-            struct Bullet* b = br_yield(barrage);
+            struct Bullet* b = br_yield(&barrage);
             drawImage(b->x, b->y);
         }
     }
 
-    // Cleanup
-    br_deleteBarrage(barrage);
-    br_deleteSpacialPartition(sp);
+    // Cleanup, Pass false as we didn't allocate data on heap.
+    br_deleteBarrage(barrage, false);
+    br_deleteSpacialPartition(sp, false);
 
 ### Lua
 
@@ -93,7 +97,8 @@ Keep in mind the lua executable version should match the lua version linked to b
 
     function load(arg)
         -- Load a barrage script from a file.
-        myBarrage = barrage.newBarrage("path/to/file.lua", 320.0, 120.0)
+        myBarrage = barrage.newBarrage()
+        myBarrage:launchFile("path/to/file.lua", 320.0, 120.0)
 
         -- Create collision detection manager.
         spacialPartition = barrage.newSpacialPartition()

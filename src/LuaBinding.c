@@ -26,7 +26,7 @@ static int ud_barrage_create(lua_State* L)
 {
     // Have lua allocate some data for our Barrage struct.
     struct Barrage_user_data* ud = (struct Barrage_user_data*) lua_newuserdata(L, sizeof(*ud));
-    ud->barrage = br_createBarrage();
+    ud->barrage = br_createBarrage(NULL);
 
     luaL_getmetatable(L, "Barrage");
 
@@ -68,7 +68,7 @@ static int ud_barrage_destroy(lua_State* L)
 
     if (ud->barrage != NULL)
     {
-        br_deleteBarrage(ud->barrage);
+        br_deleteBarrage(ud->barrage, true);
     }
     ud->barrage = NULL;
 
@@ -185,7 +185,7 @@ static int ud_spacial_partition_create(lua_State* L)
 {
     // Have lua allocate some data for our Barrage struct.
     struct SpacialPartition_user_data* ud = (struct SpacialPartition_user_data*) lua_newuserdata(L, sizeof(*ud));
-    ud->sp = br_createSpacialPartition();
+    ud->sp = br_createSpacialPartition(NULL);
 
     luaL_getmetatable(L, "Barrage");
 
@@ -211,7 +211,7 @@ static int ud_spacial_partition_checkCollision(lua_State* L)
 static int ud_spacial_partition_destroy(lua_State* L)
 {
     struct SpacialPartition_user_data* ud = (struct SpacialPartition_user_data*)luaL_checkudata(L, 1, "Barrage");
-    br_deleteSpacialPartition(ud->sp);
+    br_deleteSpacialPartition(ud->sp, true);
 
     return 0;
 }

@@ -25,8 +25,8 @@ struct SpacialPartition
 };
 
 // Initialize a new spacial partition.
-struct SpacialPartition* br_createSpacialPartition();
-void br_deleteSpacialPartition(struct SpacialPartition* sp);
+struct SpacialPartition* br_createSpacialPartition(struct SpacialPartition* sp);
+void br_deleteSpacialPartition(struct SpacialPartition* sp, bool onHeap);
 
 // Manage a bullet (for a frame).
 void br_addBullet(struct SpacialPartition* sp, struct Bullet* bullet);
