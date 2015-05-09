@@ -2,6 +2,7 @@
 #include <barrage/BulletLua.h>
 #include <barrage/LuaUtils.h>
 
+#include <string.h>
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
@@ -13,7 +14,7 @@ struct Bullet*  g_bullet  = NULL;
 struct Barrage* g_barrage = NULL;
 lua_State* g_L = NULL;
 
-lua_State* br_initGlobalLuaState()
+lua_State* br_initGlobalLuaState_()
 {
     if (g_L == NULL)
     {
@@ -29,12 +30,15 @@ lua_State* br_initGlobalLuaState()
     return g_L;
 }
 
-struct Barrage* br_createBarrage_()
+struct Barrage* br_initBarrage(struct Barrage* barrage)
 {
-    struct Barrage* barrage = (struct Barrage*)malloc(sizeof(struct Barrage));
+#if NDEBUG
+    // Initialize all our data -- hush valgrind
+    memset(barrage, 0, sizeof(struct Barrage));
+#endif
 
     // Create a new lua state (if it's the first one created), otherwise get the global lua state.
-    barrage->L = br_initGlobalLuaState();
+    barrage->L = br_initGlobalLuaState_();
 
     barrage->index = 0;
     barrage->processedCount = 0;
@@ -64,7 +68,14 @@ struct Barrage* br_createBarrage_()
     return barrage;
 }
 
-void br_deleteBarrage(struct Barrage* barrage)
+struct Barrage* br_createBarrage()
+{
+    struct Barrage* barrage = (struct Barrage*)malloc(sizeof(struct Barrage));
+
+    return br_initBarrage(barrage);
+}
+
+void br_deinitBarrage(struct Barrage* barrage)
 {
     // TODO: Determine which function references to unref.
     for (int i = 0; i < MAX_BULLETS; ++i)
@@ -81,14 +92,17 @@ void br_deleteBarrage(struct Barrage* barrage)
     // So we're all good, right?
 
     /* lua_close(barrage->L); */
+}
 
+void br_deleteBarrage(struct Barrage* barrage)
+{
+    br_deinitBarrage(barrage);
     free(barrage);
 }
 
 void br_runOnLoadFunc_(struct Barrage* barrage)
 {
     const char* funcName = "onLoad";
-
 
     // Get the function at table["onLoad"].
     lua_pushstring(barrage->L, funcName);
@@ -108,12 +122,11 @@ void br_runOnLoadFunc_(struct Barrage* barrage)
     }
 }
 
-struct Barrage* br_createBarrageFromFile(const char* filename,
-                                         float originX, float originY)
+void br_createBulletFromFile(struct Barrage* barrage,
+                             const char* filename,
+                             float originX, float originY)
 {
-    struct Barrage* barrage = br_createBarrage_();
-
-    // Run the inline script.
+    // Eval file
     if (luaL_dofile(barrage->L, filename))
     {
         luaL_error(barrage->L, "%s", lua_tostring(barrage->L, -1));
@@ -140,15 +153,12 @@ struct Barrage* br_createBarrageFromFile(const char* filename,
     bl_setLuaFunction(b, ref);
 
     barrage->activeCount++;
-
-    return barrage;
 }
 
-struct Barrage* br_createBarrageFromScript(const char* script,
-                                           float originX, float originY)
+void br_createBulletFromScript(struct Barrage* barrage,
+                               const char* script,
+                               float originX, float originY)
 {
-    struct Barrage* barrage = br_createBarrage_();
-
     // Run the inline script.
     if (luaL_dostring(barrage->L, script))
     {
@@ -176,8 +186,6 @@ struct Barrage* br_createBarrageFromScript(const char* script,
     bl_setLuaFunction(b, ref);
 
     barrage->activeCount++;
-
-    return barrage;
 }
 
 void br_createBullet(struct Barrage* barrage,

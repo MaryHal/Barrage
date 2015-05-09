@@ -52,16 +52,21 @@ extern struct Barrage* g_barrage;
 // One state. Just one.
 extern lua_State* g_L;
 
-lua_State* br_initGlobalLuaState();
+lua_State* br_initGlobalLuaState_();
 
-struct Barrage* br_createBarrage_();
+struct Barrage* br_initBarrage(struct Barrage* barrage);
+struct Barrage* br_createBarrage();
+
+void br_deinitBarrage(struct Barrage* barrage);
 void br_deleteBarrage(struct Barrage* barrage);
 
 void br_runOnLoadFunc_(struct Barrage* barrage);
-struct Barrage* br_createBarrageFromFile(const char* filename,
-                                         float originX, float originY);
-struct Barrage* br_createBarrageFromScript(const char* script,
-                                           float originX, float originY);
+void br_createBulletFromFile(struct Barrage* barrage,
+                             const char* filename,
+                             float originX, float originY);
+void br_createBulletFromScript(struct Barrage* barrage,
+                               const char* script,
+                               float originX, float originY);
 
 void br_createBullet(struct Barrage* barrage,
                      float x, float y, float vx, float vy,

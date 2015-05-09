@@ -24,13 +24,9 @@ struct SpacialPartition_user_data
 
 static int ud_barrage_create(lua_State* L)
 {
-    const char* filename = luaL_checkstring(L, 1);
-    float originX = luaL_checknumber(L, 2);
-    float originY = luaL_checknumber(L, 3);
-
     // Have lua allocate some data for our Barrage struct.
     struct Barrage_user_data* ud = (struct Barrage_user_data*) lua_newuserdata(L, sizeof(*ud));
-    ud->barrage = br_createBarrageFromFile(filename, originX, originY);
+    ud->barrage = br_createBarrage();
 
     luaL_getmetatable(L, "Barrage");
 
@@ -38,26 +34,33 @@ static int ud_barrage_create(lua_State* L)
     lua_setmetatable(L, -2);
 
     return 1;
+}
+
+static int ud_barrage_createFromFile(lua_State* L)
+{
+    struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
+
+    const char* filename = luaL_checkstring(L, 2);
+    float originX = luaL_checknumber(L, 3);
+    float originY = luaL_checknumber(L, 4);
+
+    br_createBulletFromFile(ud->barrage, filename, originX, originY);
+
+    return 0;
 }
 
 static int ud_barrage_createFromBuffer(lua_State* L)
 {
-    const char* buffer = luaL_checkstring(L, 1);
-    float originX = luaL_checknumber(L, 2);
-    float originY = luaL_checknumber(L, 3);
+    struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
 
-    // Have lua allocate some data for our Barrage struct.
-    struct Barrage_user_data* ud = (struct Barrage_user_data*) lua_newuserdata(L, sizeof(*ud));
-    ud->barrage = br_createBarrageFromScript(buffer, originX, originY);
+    const char* buffer = luaL_checkstring(L, 2);
+    float originX = luaL_checknumber(L, 3);
+    float originY = luaL_checknumber(L, 4);
 
-    luaL_getmetatable(L, "Barrage");
+    br_createBulletFromScript(ud->barrage, buffer, originX, originY);
 
-    // Set metatable on userdata
-    lua_setmetatable(L, -2);
-
-    return 1;
+    return 0;
 }
-
 
 static int ud_barrage_destroy(lua_State* L)
 {
@@ -129,6 +132,14 @@ static int ud_barrage_tick(lua_State* L)
     lua_pushboolean(L, br_tick(ud->barrage, udsp->sp));
 
     return 1;
+}
+
+static int ud_barrage_vanishAll(lua_State* L)
+{
+    struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
+    br_vanishAll(ud->barrage);
+
+    return 0;
 }
 
 static int ud_barrage_hasNext(lua_State* L)
@@ -207,12 +218,16 @@ static int ud_spacial_partition_destroy(lua_State* L)
 
 static const struct luaL_Reg ud_barrage_methods[] =
 {
+    { "launchFile",           &ud_barrage_createFromFile },
+    { "launchBuffer",         &ud_barrage_createFromBuffer },
+
     { "getActiveCount",       &ud_barrage_getActiveCount },
     { "setRank",              &ud_barrage_setRank },
     { "getRank",              &ud_barrage_getRank },
     { "storeFloat",           &ud_barrage_storeFloat },
     { "setPlayerPosition",    &ud_barrage_setPlayerPosition },
     { "tick",                 &ud_barrage_tick },
+    { "vanishAll",            &ud_barrage_vanishAll },
     { "hasNext",              &ud_barrage_hasNext },
     { "resetHasNext",         &ud_barrage_resetHasNext },
     { "yield",                &ud_barrage_yield },
@@ -230,7 +245,6 @@ static const struct luaL_Reg ud_spacial_partition_methods[] =
 static const struct luaL_Reg ud_barrage_functions[] =
 {
     { "newBarrage",           &ud_barrage_create },
-    { "newBarrageFromBuffer", &ud_barrage_createFromBuffer },
     { "newSpacialPartition",  &ud_spacial_partition_create },
     { NULL, NULL }
 };

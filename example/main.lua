@@ -19,13 +19,13 @@ local font = love.graphics.newFont(12)
 function love.load(arg)
    love.mouse.setVisible(false)
 
-   myBarrage = barrage.newBarrage('barrage/' .. barrageFileList[barrageIndex], 320.0, 120.0)
+   myBarrage = barrage.newBarrage()
    sp = barrage.newSpacialPartition()
 end
 
 function love.keypressed(key)
    if key == ' ' or key == 'return' then
-      myBarrage = barrage.newBarrage('barrage/' .. barrageFileList[barrageIndex], 320.0, 120.0)
+      myBarrage:launchFile('barrage/' .. barrageFileList[barrageIndex], 320.0, 120.0)
    elseif key == 'left' or key == 'a' then
       barrageIndex = barrageIndex - 1
       if barrageIndex < 1 then
@@ -36,6 +36,8 @@ function love.keypressed(key)
       if barrageIndex > #barrageFileList then
          barrageIndex = 1
       end
+   elseif key == 'v' then
+      myBarrage:vanishAll()
    elseif key == 'c' then
       viewCollisionBoxes = not viewCollisionBoxes
    elseif key == 'f' then

@@ -25,22 +25,24 @@ TEST BasicMovementTest()
         "}\n"
         "return basicMovement\n";
 
-    struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
+    struct Barrage barrage;
+    br_initBarrage(&barrage);
+    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
 
-    ASSERT(barrage->bullets[0].x == 320.0f);
-    ASSERT(barrage->bullets[0].y == 120.0f);
+    ASSERT(barrage.bullets[0].x == 320.0f);
+    ASSERT(barrage.bullets[0].y == 120.0f);
 
-    br_tick(barrage, NULL);
+    br_tick(&barrage, NULL);
 
-    ASSERT(barrage->bullets[0].x == 330.0f);
-    ASSERT(barrage->bullets[0].y == 130.0f);
+    ASSERT(barrage.bullets[0].x == 330.0f);
+    ASSERT(barrage.bullets[0].y == 130.0f);
 
-    br_tick(barrage, NULL);
+    br_tick(&barrage, NULL);
 
-    ASSERT(barrage->bullets[0].x == 335.0f);
-    ASSERT(barrage->bullets[0].y == 135.0f);
+    ASSERT(barrage.bullets[0].x == 335.0f);
+    ASSERT(barrage.bullets[0].y == 135.0f);
 
-    br_deleteBarrage(barrage);
+    br_deinitBarrage(&barrage);
 
     PASS();
 }
@@ -55,14 +57,16 @@ TEST NilFuncTest()
         "}\n"
         "return nilFunc\n";
 
-    struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
+    struct Barrage barrage;
+    br_initBarrage(&barrage);
+    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
 
     // Set LuaFuncRef to point to nil. I hope we don't segfault!
-    br_tick(barrage, NULL);
-    br_tick(barrage, NULL);
-    br_tick(barrage, NULL);
+    br_tick(&barrage, NULL);
+    br_tick(&barrage, NULL);
+    br_tick(&barrage, NULL);
 
-    br_deleteBarrage(barrage);
+    br_deinitBarrage(&barrage);
 
     PASS();
 }
@@ -77,25 +81,27 @@ TEST VanishTest()
         "}\n"
         "return vanishTest\n";
 
-    struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
+    struct Barrage barrage;
+    br_initBarrage(&barrage);
+    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
 
-    ASSERT_EQ(barrage->activeCount, 1);
+    ASSERT_EQ(barrage.activeCount, 1);
 
     for (int i = 0; i < 35; ++i)
     {
-        br_tick(barrage, NULL);
+        br_tick(&barrage, NULL);
     }
 
-    ASSERT_EQ(barrage->activeCount, 0);
+    ASSERT_EQ(barrage.activeCount, 0);
 
     for (int i = 0; i < 10; ++i)
     {
-        br_tick(barrage, NULL);
+        br_tick(&barrage, NULL);
     }
 
-    ASSERT_EQ(barrage->activeCount, 0);
+    ASSERT_EQ(barrage.activeCount, 0);
 
-    br_deleteBarrage(barrage);
+    br_deinitBarrage(&barrage);
 
     PASS();
 }
@@ -115,15 +121,17 @@ TEST LaunchTest()
         "}\n"
         "return launchTest\n";
 
-    struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
+    struct Barrage barrage;
+    br_initBarrage(&barrage);
+    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
 
-    ASSERT_EQ(barrage->activeCount, 1);
-    br_tick(barrage, NULL);
-    ASSERT_EQ(barrage->activeCount, 5);
-    br_tick(barrage, NULL);
-    ASSERT_EQ(barrage->activeCount, 0);
+    ASSERT_EQ(barrage.activeCount, 1);
+    br_tick(&barrage, NULL);
+    ASSERT_EQ(barrage.activeCount, 5);
+    br_tick(&barrage, NULL);
+    ASSERT_EQ(barrage.activeCount, 0);
 
-    br_deleteBarrage(barrage);
+    br_deinitBarrage(&barrage);
 
     PASS();
 }
@@ -141,17 +149,19 @@ TEST StorageTest()
         "}\n"
         "return storageTest\n";
 
-    struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
+    struct Barrage barrage;
+    br_initBarrage(&barrage);
+    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
 
     const char* key = "BarrageTestValue";
-    br_storeFloat(barrage, key, 20.0f);
+    br_storeFloat(&barrage, key, 20.0f);
 
-    br_tick(barrage, NULL);
+    br_tick(&barrage, NULL);
 
-    ASSERT(barrage->bullets[0].x == 20.0f);
-    ASSERT(barrage->bullets[0].y == 10.0f);
+    ASSERT(barrage.bullets[0].x == 20.0f);
+    ASSERT(barrage.bullets[0].y == 10.0f);
 
-    br_deleteBarrage(barrage);
+    br_deinitBarrage(&barrage);
 
     PASS();
 }
@@ -166,17 +176,19 @@ TEST BasicCollisionTest()
         "}\n"
         "return basicCollisionTest\n";
 
-    struct Barrage* barrage = br_createBarrageFromScript(script, 320.0f, 120.0f);
+    struct Barrage barrage;
+    br_initBarrage(&barrage);
+    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
     struct SpacialPartition* sp = br_createSpacialPartition();
 
     ASSERT(br_checkCollision(sp, 0.0f, 0.0f, 4.0f, 4.0f) == false);
 
-    br_tick(barrage, sp);
+    br_tick(&barrage, sp);
 
     ASSERT(br_checkCollision(sp, 20.0f, 10.0f, 4.0f, 4.0f) == true);
     ASSERT(br_checkCollision(sp, 15.0f, 10.0f, 4.0f, 4.0f) == false);
 
-    br_deleteBarrage(barrage);
+    br_deinitBarrage(&barrage);
     br_deleteSpacialPartition(sp);
 
     PASS();
