@@ -121,7 +121,7 @@ void br_runOnLoadFunc_(struct Barrage* barrage)
 
 void br_createBulletFromFile(struct Barrage* barrage,
                              const char* filename,
-                             float originX, float originY)
+                             float originX, float originY, int type)
 {
     // Eval file
     if (luaL_dofile(barrage->L, filename))
@@ -149,12 +149,14 @@ void br_createBulletFromFile(struct Barrage* barrage,
     int ref = luaL_ref(barrage->L, LUA_REGISTRYINDEX);
     bl_setLuaFunction(b, ref);
 
+    bl_setType(b, type);
+
     barrage->activeCount++;
 }
 
 void br_createBulletFromScript(struct Barrage* barrage,
                                const char* script,
-                               float originX, float originY)
+                               float originX, float originY, int type)
 {
     // Run the inline script.
     if (luaL_dostring(barrage->L, script))
@@ -182,17 +184,21 @@ void br_createBulletFromScript(struct Barrage* barrage,
     int ref = luaL_ref(barrage->L, LUA_REGISTRYINDEX);
     bl_setLuaFunction(b, ref);
 
+    bl_setType(b, type);
+
     barrage->activeCount++;
 }
 
 void br_createBullet(struct Barrage* barrage,
                      float x, float y, float vx, float vy,
-                     int luaFuncRef)
+                     int luaFuncRef, int type)
 {
     struct Bullet* b = &barrage->queue.bullets[barrage->queue.size];
 
     bl_setBulletData(b, x, y, vx, vy);
     bl_setLuaFunction(b, luaFuncRef);
+
+    bl_setType(b, type);
 
     barrage->queue.size++;
 }
@@ -407,18 +413,18 @@ void br_aimAtTarget(struct Barrage* barrage, struct Bullet* current)
 }
 
 void br_launch(struct Barrage* barrage, struct Bullet* current,
-               float dir, float speed, int luaFuncRef)
+               float dir, float speed, int luaFuncRef, int type)
 {
     if (!bl_isDying(current))
     {
         float vx =  speed * sin(dir);
         float vy = -speed * cos(dir);
-        br_createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
+        br_createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef, type);
     }
 }
 
 void br_launchAtTarget(struct Barrage* barrage, struct Bullet* current,
-                       float speed, int luaFuncRef)
+                       float speed, int luaFuncRef, int type)
 {
     if (!bl_isDying(current))
     {
@@ -426,12 +432,12 @@ void br_launchAtTarget(struct Barrage* barrage, struct Bullet* current,
         float vx =  speed * sin(dir);
         float vy = -speed * cos(dir);
 
-        br_createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
+        br_createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef, type);
     }
 }
 
 void br_launchCircle(struct Barrage* barrage, struct Bullet* current,
-                     int segments, float speed, int luaFuncRef)
+                     int segments, float speed, int luaFuncRef, int type)
 {
     if (!bl_isDying(current))
     {
@@ -442,7 +448,7 @@ void br_launchCircle(struct Barrage* barrage, struct Bullet* current,
             float vx =  speed * sin(segRad * i);
             float vy = -speed * cos(segRad * i);
 
-            br_createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef);
+            br_createBullet(barrage, current->x, current->y, vx, vy, luaFuncRef, type);
         }
     }
 }

@@ -27,7 +27,7 @@ TEST BasicMovementTest()
 
     struct Barrage barrage;
     br_createBarrage(&barrage);
-    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
+    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f, 0);
 
     ASSERT(barrage.bullets[0].x == 320.0f);
     ASSERT(barrage.bullets[0].y == 120.0f);
@@ -59,7 +59,7 @@ TEST NilFuncTest()
 
     struct Barrage barrage;
     br_createBarrage(&barrage);
-    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
+    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f, 0);
 
     // Set LuaFuncRef to point to nil. I hope we don't segfault!
     br_tick(&barrage, NULL);
@@ -83,7 +83,7 @@ TEST VanishTest()
 
     struct Barrage barrage;
     br_createBarrage(&barrage);
-    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
+    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f, 0);
 
     ASSERT_EQ(barrage.activeCount, 1);
 
@@ -123,7 +123,7 @@ TEST LaunchTest()
 
     struct Barrage barrage;
     br_createBarrage(&barrage);
-    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
+    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f, 0);
 
     ASSERT_EQ(barrage.activeCount, 1);
     br_tick(&barrage, NULL);
@@ -151,7 +151,7 @@ TEST StorageTest()
 
     struct Barrage barrage;
     br_createBarrage(&barrage);
-    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
+    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f, 0);
 
     const char* key = "BarrageTestValue";
     br_storeFloat(&barrage, key, 20.0f);
@@ -178,7 +178,7 @@ TEST BasicCollisionTest()
 
     struct Barrage barrage;
     br_createBarrage(&barrage);
-    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
+    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f, 0);
 
     struct SpacialPartition sp;
     br_createSpacialPartition(&sp);

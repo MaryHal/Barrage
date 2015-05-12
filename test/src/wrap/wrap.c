@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
     struct Barrage barrage;
     br_createBarrage(&barrage);
-    br_createBulletFromScript(&barrage, argv[1], 320.0f, 120.0f);
+    br_createBulletFromScript(&barrage, argv[1], 320.0f, 120.0f, 0);
 
     for (int i = 0; i < 200; ++i)
     {

@@ -7,7 +7,7 @@
 #include <stdbool.h>
 
 // How many pixels (squared) to govern per bucket.
-#define TILE_SIZE    50
+#define TILE_SIZE    80
 
 // How many buckets do we need?
 #define HORI_BUCKETS (640 / TILE_SIZE)

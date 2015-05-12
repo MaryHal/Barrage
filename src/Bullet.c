@@ -14,9 +14,8 @@ void bl_resetBullet(struct Bullet* b)
 {
     bl_setBulletData(b, 0.0f, 0.0f, 0.0f, 0.0f);
 
-    /* b->life = 0; */
+    b->type = 0;
     b->turn = 0;
-
     b->luaFuncRef = LUA_NOREF;
 }
 
@@ -43,7 +42,7 @@ void bl_copyBullet(struct Bullet* to, struct Bullet* from)
     to->vx = from->vx;
     to->vy = from->vy;
 
-    /* to->life = from->life; */
+    to->type = from->type;
     to->turn = from->turn;
 
     to->luaFuncRef = from->luaFuncRef;
@@ -171,6 +170,16 @@ int bl_isDead(struct Bullet* b)
 int bl_isDying(struct Bullet* b)
 {
     return b->turn < 0;
+}
+
+void bl_setType(struct Bullet* b, int i)
+{
+    b->type = i;
+}
+
+int bl_getType(struct Bullet* b)
+{
+    return b->type;
 }
 
 void bl_resetTurns(struct Bullet* b)

@@ -44,6 +44,8 @@ Link libbarrage.so and make sure your compiler can find the correct header files
 
 
     struct Barrage barrage;
+
+    // Passing NULL to createBarrage will return a pointer to a heap-allocated barrage.
     br_createBarrage(&barrage);
     br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
 

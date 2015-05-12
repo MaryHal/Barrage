@@ -11,7 +11,7 @@
 #include <stdbool.h>
 
 #define QUEUE_SIZE  (1 << 8)
-#define MAX_BULLETS (1 << 12)
+#define MAX_BULLETS (1 << 10)
 
 // Forward declaration
 struct SpacialPartition;
@@ -60,14 +60,14 @@ void br_deleteBarrage(struct Barrage* barrage, bool onHeap);
 void br_runOnLoadFunc_(struct Barrage* barrage);
 void br_createBulletFromFile(struct Barrage* barrage,
                              const char* filename,
-                             float originX, float originY);
+                             float originX, float originY, int type);
 void br_createBulletFromScript(struct Barrage* barrage,
                                const char* script,
-                               float originX, float originY);
+                               float originX, float originY, int type);
 
 void br_createBullet(struct Barrage* barrage,
                      float x, float y, float vx, float vy,
-                     int luaFuncRef);
+                     int luaFuncRef, int type);
 
 struct Bullet* br_getFreeBullet_(struct Barrage* barrage);
 void br_addQueuedBullets_(struct Barrage* barrage);
@@ -95,10 +95,10 @@ size_t br_countAlive(struct Barrage* barrage);
 void br_aimAtTarget(struct Barrage* barrage, struct Bullet* current);
 
 void br_launch(struct Barrage* barrage, struct Bullet* current,
-               float dir, float speed, int luaFuncRef);
+               float dir, float speed, int luaFuncRef, int type);
 void br_launchAtTarget(struct Barrage* barrage, struct Bullet* current,
-                       float speed, int luaFuncRef);
+                       float speed, int luaFuncRef, int type);
 void br_launchCircle(struct Barrage* barrage, struct Bullet* current,
-                     int segments, float speed, int luaFuncRef);
+                     int segments, float speed, int luaFuncRef, int type);
 
 #endif /* BARRAGE_H */

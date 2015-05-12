@@ -14,15 +14,10 @@ struct Bullet
                 struct Bullet* next;
         };
 
-        /* int life; */
+        int type;
         int turn;
         int luaFuncRef;
 };
-
-/* struct BulletAttribute */
-/* { */
-/*         float r, g, b; */
-/* }; */
 
 // TODO: Reconsider implication of Dying vs Dead
 enum BulletState
@@ -64,6 +59,9 @@ void bl_kill(struct Bullet* b);
 
 int bl_isDead(struct Bullet* b);
 int bl_isDying(struct Bullet* b);
+
+void bl_setType(struct Bullet* b, int i);
+int bl_getType(struct Bullet* b);
 
 void bl_resetTurns(struct Bullet* b);
 int bl_getTurn(struct Bullet* b);

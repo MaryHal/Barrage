@@ -44,7 +44,15 @@ static int ud_barrage_createFromFile(lua_State* L)
     float originX = luaL_checknumber(L, 3);
     float originY = luaL_checknumber(L, 4);
 
-    br_createBulletFromFile(ud->barrage, filename, originX, originY);
+    // Fourth argument is bullet "type".
+    int type = 0;
+    if (lua_gettop(L) > 5)
+    {
+        type = luaL_checkinteger(L, 5);
+    }
+
+
+    br_createBulletFromFile(ud->barrage, filename, originX, originY, type);
 
     return 0;
 }
@@ -57,7 +65,14 @@ static int ud_barrage_createFromBuffer(lua_State* L)
     float originX = luaL_checknumber(L, 3);
     float originY = luaL_checknumber(L, 4);
 
-    br_createBulletFromScript(ud->barrage, buffer, originX, originY);
+    // Fourth argument is bullet "type".
+    int type = 0;
+    if (lua_gettop(L) > 5)
+    {
+        type = luaL_checkinteger(L, 5);
+    }
+
+    br_createBulletFromScript(ud->barrage, buffer, originX, originY, type);
 
     return 0;
 }
@@ -66,10 +81,7 @@ static int ud_barrage_destroy(lua_State* L)
 {
     struct Barrage_user_data* ud = (struct Barrage_user_data*)luaL_checkudata(L, 1, "Barrage");
 
-    if (ud->barrage != NULL)
-    {
-        br_deleteBarrage(ud->barrage, true);
-    }
+    br_deleteBarrage(ud->barrage, true);
     ud->barrage = NULL;
 
     return 0;

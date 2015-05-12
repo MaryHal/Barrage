@@ -39,6 +39,9 @@ void registerLuaFunctions(lua_State* L)
     lua_register(L, "isDead", &l_isDead);
     lua_register(L, "isDying", &l_isDying);
 
+    lua_register(L, "setType", &l_setType);
+    lua_register(L, "getType", &l_getType);
+
     lua_register(L, "resetTurns", &l_resetTurns);
     lua_register(L, "getTurn", &l_getTurn);
 
@@ -231,6 +234,19 @@ int l_isDying(lua_State* L)
     return 1;
 }
 
+int l_setType(lua_State* L)
+{
+    int type = luaL_checkinteger(L, 1);
+    bl_setType(g_bullet, type);
+    return 0;
+}
+
+int l_getType(lua_State* L)
+{
+    lua_pushinteger(L, bl_getType(g_bullet));
+    return 1;
+}
+
 int l_resetTurns(lua_State* L)
 {
     (void) L;
@@ -291,7 +307,14 @@ int l_launch(lua_State* L)
     // Third argument is a function handle.
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    br_launch(g_barrage, g_bullet, dir, speed, ref);
+    // Fourth argument is bullet "type".
+    int type = 0;
+    if (lua_gettop(L) > 4)
+    {
+        type = luaL_checkinteger(L, 4);
+    }
+
+    br_launch(g_barrage, g_bullet, dir, speed, ref, type);
 
     return 0;
 }
@@ -303,7 +326,14 @@ int l_launchAtTarget(lua_State* L)
     // Second argument is a function handle.
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    br_launchAtTarget(g_barrage, g_bullet, speed, ref);
+    // Third argument is bullet "type".
+    int type = 0;
+    if (lua_gettop(L) > 3)
+    {
+        type = luaL_checkinteger(L, 3);
+    }
+
+    br_launchAtTarget(g_barrage, g_bullet, speed, ref, type);
 
     return 0;
 }
@@ -316,7 +346,14 @@ int l_launchCircle(lua_State* L)
     // Third argument is a function handle.
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    br_launchCircle(g_barrage, g_bullet, segments, speed, ref);
+    // Fourth argument is bullet "type".
+    int type = 0;
+    if (lua_gettop(L) > 4)
+    {
+        type = luaL_checkinteger(L, 4);
+    }
+
+    br_launchCircle(g_barrage, g_bullet, segments, speed, ref, type);
 
     return 0;
 }
