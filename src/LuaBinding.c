@@ -182,7 +182,9 @@ static int ud_barrage_yield(lua_State* L)
         lua_pushnumber(L, 1.0f);
     }
 
-    return 5;
+    lua_pushinteger(L, b->type);
+
+    return 6;
 }
 
 static int ud_barrage_resetHasNext(lua_State* L)
