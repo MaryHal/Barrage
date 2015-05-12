@@ -4,7 +4,11 @@
 #include <barrage/Bullet.h>
 #include <barrage/Barrage.h>
 
+#include <barrage/Rect.h>
+
 #include <stdbool.h>
+
+#define MAX_MODELS   16
 
 // How many pixels (squared) to govern per bucket.
 #define TILE_SIZE    80
@@ -22,11 +26,17 @@ struct SpacialPartition
 {
         struct Bullet buckets[HORI_BUCKETS][VERT_BUCKETS][BUCKET_LID];
         size_t bucketSize[HORI_BUCKETS][VERT_BUCKETS];
+
+        struct Rect models[MAX_MODELS];
+        size_t modelCount;
 };
 
 // Initialize a new spacial partition.
 struct SpacialPartition* br_createSpacialPartition(struct SpacialPartition* sp);
 void br_deleteSpacialPartition(struct SpacialPartition* sp, bool onHeap);
+
+// Add collision models
+void br_addModel(struct SpacialPartition* sp, struct Rect r);
 
 // Manage a bullet (for a frame).
 void br_addBullet(struct SpacialPartition* sp, struct Bullet* bullet);
@@ -34,9 +44,10 @@ void br_addBullet(struct SpacialPartition* sp, struct Bullet* bullet);
 // Reset buckets. Expected to be called once per frame since bullets are so unpredictable.
 void br_clear(struct SpacialPartition* sp);
 
-// Returns true if the rect defined by the arguments intersects a bullet rect.
-// playerX, playerY is defined to be the center of the player's hitbox.
-bool br_checkCollision(struct SpacialPartition* sp,
-                       float playerX, float playerY, float playerWidth, float playerHeight);
+// Returns true if playerRect overlaps a bullet's rect. (playerRect.x, playerRect.y) is defined to
+// be the center of the player's hitbox.
+bool br_checkCollision(struct SpacialPartition* sp, struct Rect playerRect);
+bool br_checkCollision2(struct SpacialPartition* sp,
+                        float playerX, float playerY, float playerWidth, float playerHeight);
 
 #endif /* SPACIALPARTITION_H */

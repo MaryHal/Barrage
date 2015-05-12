@@ -183,12 +183,12 @@ TEST BasicCollisionTest()
     struct SpacialPartition sp;
     br_createSpacialPartition(&sp);
 
-    ASSERT(br_checkCollision(&sp, 0.0f, 0.0f, 4.0f, 4.0f) == false);
+    ASSERT(br_checkCollision(&sp, (struct Rect){0.0f, 0.0f, 4.0f, 4.0f}) == false);
 
     br_tick(&barrage, &sp);
 
-    ASSERT(br_checkCollision(&sp, 20.0f, 10.0f, 4.0f, 4.0f) == true);
-    ASSERT(br_checkCollision(&sp, 15.0f, 10.0f, 4.0f, 4.0f) == false);
+    ASSERT(br_checkCollision(&sp, (struct Rect){18.0f, 8.0f, 4.0f, 4.0f}) == true);
+    ASSERT(br_checkCollision(&sp, (struct Rect){13.0f, 8.0f, 4.0f, 4.0f}) == false);
 
     br_deleteBarrage(&barrage, false);
     br_deleteSpacialPartition(&sp, false);

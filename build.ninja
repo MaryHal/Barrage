@@ -25,6 +25,7 @@ rule ar
 
 build build.ninja: bootstrap | bootstrap.py
 build obj/src/BulletLua.o: compile src/BulletLua.c
+build obj/src/Rect.o: compile src/Rect.c
 build obj/src/LuaBinding.o: compile src/LuaBinding.c
 build obj/src/Barrage.o: compile src/Barrage.c
 build obj/src/MathUtils.o: compile src/MathUtils.c
@@ -35,16 +36,17 @@ build obj/src/Bullet.o: compile src/Bullet.c
 build obj/test/src/unit/test.o: compile test/src/unit/test.c
 build obj/test/src/wrap/wrap.o: compile test/src/wrap/wrap.c
 
-build ./lib/libbarrage.so: dynlink obj/src/BulletLua.o obj/src/LuaBinding.o $
-    obj/src/Barrage.o obj/src/MathUtils.o obj/src/LuaUtils.o $
-    obj/src/RandCompat.o obj/src/SpacialPartition.o obj/src/Bullet.o
+build ./lib/libbarrage.so: dynlink obj/src/BulletLua.o obj/src/Rect.o $
+    obj/src/LuaBinding.o obj/src/Barrage.o obj/src/MathUtils.o $
+    obj/src/LuaUtils.o obj/src/RandCompat.o obj/src/SpacialPartition.o $
+    obj/src/Bullet.o
 
-build ./test/bin/btest: link obj/src/BulletLua.o obj/src/LuaBinding.o $
-    obj/src/Barrage.o obj/src/MathUtils.o obj/src/LuaUtils.o $
-    obj/src/RandCompat.o obj/src/SpacialPartition.o obj/src/Bullet.o $
-    obj/test/src/unit/test.o
+build ./test/bin/btest: link obj/src/BulletLua.o obj/src/Rect.o $
+    obj/src/LuaBinding.o obj/src/Barrage.o obj/src/MathUtils.o $
+    obj/src/LuaUtils.o obj/src/RandCompat.o obj/src/SpacialPartition.o $
+    obj/src/Bullet.o obj/test/src/unit/test.o
 
-build ./test/bin/scriptTest: link obj/src/BulletLua.o obj/src/LuaBinding.o $
-    obj/src/Barrage.o obj/src/MathUtils.o obj/src/LuaUtils.o $
-    obj/src/RandCompat.o obj/src/SpacialPartition.o obj/src/Bullet.o $
-    obj/test/src/wrap/wrap.o
+build ./test/bin/scriptTest: link obj/src/BulletLua.o obj/src/Rect.o $
+    obj/src/LuaBinding.o obj/src/Barrage.o obj/src/MathUtils.o $
+    obj/src/LuaUtils.o obj/src/RandCompat.o obj/src/SpacialPartition.o $
+    obj/src/Bullet.o obj/test/src/wrap/wrap.o

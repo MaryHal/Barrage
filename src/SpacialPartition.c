@@ -11,7 +11,21 @@ struct SpacialPartition* br_createSpacialPartition(struct SpacialPartition* sp)
     {
         sp = (struct SpacialPartition*)malloc(sizeof(struct SpacialPartition));
     }
+
     memset(sp->bucketSize, 0, sizeof(sp->bucketSize));
+    /* memset(sp->buckets, 0, sizeof(sp->buckets)); */
+
+    memset(sp->models, 0, sizeof(sp->models));
+    sp->modelCount = 0;
+
+    // Add default collision model.
+    struct Rect defaultCollsionRect = {
+        .x      = 0,
+        .y      = 0,
+        .width  = 4,
+        .height = 4
+    };
+    br_addModel(sp, defaultCollsionRect);
 
     return sp;
 }
@@ -22,6 +36,11 @@ void br_deleteSpacialPartition(struct SpacialPartition* sp, bool doFree)
     {
         free(sp);
     }
+}
+
+void br_addModel(struct SpacialPartition* sp, struct Rect r)
+{
+    sp->models[sp->modelCount++] = r;
 }
 
 void br_addBullet(struct SpacialPartition* sp, struct Bullet* bullet)
@@ -52,37 +71,23 @@ void br_clear(struct SpacialPartition* sp)
     memset(sp->bucketSize, 0, sizeof(sp->bucketSize));
 }
 
-bool br_checkCollision(struct SpacialPartition* sp,
-                       float playerX, float playerY, float playerWidth, float playerHeight)
+bool br_checkCollision(struct SpacialPartition* sp, struct Rect playerRect)
 {
-    int x = playerX / TILE_SIZE;
-    int y = playerY / TILE_SIZE;
+    int x = playerRect.x / TILE_SIZE;
+    int y = playerRect.y / TILE_SIZE;
 
     if (x < 0 || x >= HORI_BUCKETS || y < 0 || y >= VERT_BUCKETS)
     {
         return false;
     }
 
-    struct Rect playerRect =
-        {
-            .x      = playerX - 2,
-            .y      = playerY - 2,
-            .width  = playerWidth * 0 + 4,
-            .height = playerHeight * 0 + 4
-        };
-
     for (size_t i = 0; i < sp->bucketSize[x][y]; i++)
     {
         const struct Bullet* b = &sp->buckets[x][y][i];
 
-        // Default bullet collision box metrics.
-        struct Rect bulletRect =
-            {
-                .x      = b->x - 2,
-                .y      = b->y - 2,
-                .width  = 4,
-                .height = 4
-            };
+        struct Rect bulletRect = sp->models[b->type];
+        bulletRect.x = b->x - bulletRect.width  / 2;
+        bulletRect.y = b->y - bulletRect.height / 2;
 
         if (rectOverlap(playerRect, bulletRect))
         {
@@ -91,4 +96,10 @@ bool br_checkCollision(struct SpacialPartition* sp,
     }
 
     return false;
+}
+
+bool br_checkCollision2(struct SpacialPartition* sp,
+                        float playerX, float playerY, float playerWidth, float playerHeight)
+{
+    return br_checkCollision(sp, (struct Rect){ playerX, playerY, playerWidth, playerHeight });
 }
