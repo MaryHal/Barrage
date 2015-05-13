@@ -10,7 +10,7 @@ local dir2 = offset2
 local test02
 test02 = {
    main = function ()
-      local turn = getTurn()
+      local frame = getFrameCount()
       local rank = getRank()
 
       launch(1, dir1, 0.8, test02.fade)
@@ -18,14 +18,14 @@ test02 = {
       dir1 = dir1 + offset1
       dir2 = dir2 + offset2
 
-      if (turn == 600) then
+      if (frame == 600) then
          kill()
       end
    end,
 
    fade = function ()
-      local turn = getTurn()
-      if (turn == 130) then
+      local frame = getFrameCount()
+      if (frame == 130) then
          vanish()
       end
    end

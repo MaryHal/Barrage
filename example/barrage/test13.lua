@@ -25,10 +25,10 @@ test13 = {
    end,
 
    doSomething = function()
-      local turn = getTurn()
+      local frame = getFrameCount()
       setSpeedRelative(0.02)
 
-      if (turn == 10) then
+      if (frame == 10) then
          vanish()
       end
    end

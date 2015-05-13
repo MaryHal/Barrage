@@ -19,8 +19,8 @@ test05 = {
    end,
 
    go = function (wait)
-      local turn = getTurn()
-      if (math.fmod(turn, wait) == 0) then
+      local frame = getFrameCount()
+      if (frame == wait) then
          circle(21 - gwait, test05.curve)
 
          setFunction(bind(test05.go, gwait))
@@ -37,11 +37,11 @@ test05 = {
    end,
 
    curve = function ()
-      local turn = getTurn()
+      local frame = getFrameCount()
       setDirectionRelative(5)
       setSpeedRelative(0.1)
 
-      if (turn > 180) then
+      if (frame > 180) then
          vanish()
       end
    end

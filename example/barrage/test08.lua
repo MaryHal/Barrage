@@ -3,18 +3,18 @@ local theta = 0
 local test08
 test08 = {
    main = function ()
-      turn = getTurn()
+      frame = getFrameCount()
 
       launch(1, theta, 10, test08.shoot)
       theta = theta + 27
 
-      if (turn >= 600) then
+      if (frame >= 600) then
          vanish()
       end
    end,
 
    shoot = function ()
-      turn = getTurn()
+      frame = getFrameCount()
       rank = getRank()
 
       dir = getDirection()
@@ -28,10 +28,10 @@ test08 = {
    end,
 
    turnaround = function ()
-      turn = getTurn()
-      if (turn == 30) then
+      frame = getFrameCount()
+      if (frame == 30) then
          setDirection(getDirection() + 180)
-      elseif (turn > 60) then
+      elseif (frame > 60) then
          vanish()
       end
    end

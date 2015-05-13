@@ -197,6 +197,7 @@ int bl_getFrameCount(struct Bullet* b)
 void bl_setLuaFunction(struct Bullet* b, int luaFuncRef)
 {
     b->luaFuncRef = luaFuncRef;
+    b->frame = 0;
 }
 
 void bl_update(struct Bullet* b)

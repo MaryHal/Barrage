@@ -19,8 +19,8 @@ test10 = {
    end,
 
    runTable = function (commands)
-      local turn = getTurn()
-      local cmd = commands[turn]
+      local frame = getFrameCount()
+      local cmd = commands[frame]
 
       if cmd ~= nil then
          cmd()

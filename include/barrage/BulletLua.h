@@ -44,8 +44,8 @@ int l_kill(lua_State* L);
 int l_isDead(lua_State* L);
 int l_isDying(lua_State* L);
 
-int l_setType(lua_State* L);
-int l_getType(lua_State* L);
+int l_setModel(lua_State* L);
+int l_getModel(lua_State* L);
 
 int l_resetFrameCount(lua_State* L);
 int l_getFrameCount(lua_State* L);

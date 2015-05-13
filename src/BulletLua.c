@@ -39,11 +39,11 @@ void registerLuaFunctions(lua_State* L)
     lua_register(L, "isDead", &l_isDead);
     lua_register(L, "isDying", &l_isDying);
 
-    lua_register(L, "setType", &l_setType);
-    lua_register(L, "getType", &l_getType);
+    lua_register(L, "setModel", &l_setModel);
+    lua_register(L, "getModel", &l_getModel);
 
-    lua_register(L, "resetTurns", &l_resetFrameCount);
-    lua_register(L, "getTurn", &l_getFrameCount);
+    lua_register(L, "resetFrameCount", &l_resetFrameCount);
+    lua_register(L, "getFrameCount", &l_getFrameCount);
 
     lua_register(L, "setFunction", &l_setLuaFunction);
 
@@ -234,14 +234,14 @@ int l_isDying(lua_State* L)
     return 1;
 }
 
-int l_setType(lua_State* L)
+int l_setModel(lua_State* L)
 {
     int modelIndex = luaL_checkinteger(L, 1);
     bl_setModel(g_bullet, modelIndex - 1);
     return 0;
 }
 
-int l_getType(lua_State* L)
+int l_getModel(lua_State* L)
 {
     lua_pushinteger(L, bl_getModel(g_bullet) + 1);
     return 1;

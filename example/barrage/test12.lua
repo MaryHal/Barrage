@@ -2,9 +2,9 @@
 local test12
 test12 = {
    main = function ()
-      turn = getTurn()
+      frame = getFrameCount()
       rank = getRank()
-      if (math.fmod(turn, math.floor(120 * (1.2 - rank))) == 0) then
+      if (math.fmod(frame, math.floor(120 * (1.2 - rank))) == 0) then
          launch(1, 180, 4, test12.shoot)
          -- launch(1, 160, 3.5, shoot)
          -- launch(1, 200, 4.5, shoot)
@@ -13,7 +13,7 @@ test12 = {
 
    shoot = function ()
       aimAtTarget()
-      if (getTurn() == 40) then
+      if (getFrameCount() == 40) then
          launchCircle(1, 40, 8, test12.blaze)
          kill()
       end
@@ -22,7 +22,7 @@ test12 = {
    blaze = function ()
       setDirectionRelative(8)
 
-      if (getTurn() == 20) then
+      if (getFrameCount() == 20) then
          vanish()
       end
    end

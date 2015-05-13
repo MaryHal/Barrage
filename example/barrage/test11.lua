@@ -18,7 +18,7 @@ test11 = {
    end,
 
    main = function ()
-      if (math.fmod(getTurn() + 10, reactivateTime) == 0) then
+      if (math.fmod(getFrameCount() + 10, reactivateTime) == 0) then
          theta = randFloatRange(prevTheta + 1.6, prevTheta + 6.28 - 1.6)
          prevTheta = theta
          for i = 0, 40 do
@@ -40,7 +40,7 @@ test11 = {
    end,
 
    freeze = function ()
-      if (getTurn() == travelTime) then
+      if (getFrameCount() == travelTime) then
          -- setCollision(true)
          setSpeed(0)
          aimAtTarget()
@@ -49,10 +49,10 @@ test11 = {
    end,
 
    blast = function ()
-      local turn = getTurn()
-      if (turn == freezeTime) then
+      local frame = getFrameCount()
+      if (frame == freezeTime) then
          setSpeed(8)
-      elseif (turn == 120) then
+      elseif (frame == 120) then
          vanish()
       end
    end

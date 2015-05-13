@@ -13,9 +13,9 @@ local initialDirections = {0, 40, 80, 120, 160}
 local test06
 test06 = {
    main = function ()
-      turn = getTurn()
+      frame = getFrameCount()
 
-      if (math.fmod(turn, 120) == 0) then
+      if (math.fmod(frame, 120) == 0) then
          -- Cycle between directions
          direction = initialDirections[math.fmod(shotCount, #initialDirections) + 1]
          shotCount = shotCount + 1
@@ -24,17 +24,17 @@ test06 = {
    end,
 
    shoot = function ()
-      local turn = getTurn()
+      local frame = getFrameCount()
 
-      if (turn < 60) then
+      if (frame < 60) then
          setDirectionRelative(3)
          setSpeedRelative(0.05)
 
          -- vx, vy = getVelocity()
          -- s = getSpeed()
          -- d = getDirection()
-         -- print (turn, vx, vy, s, d)
-      elseif (turn == 60) then
+         -- print (frame, vx, vy, s, d)
+      elseif (frame == 60) then
          test06.burst()
       end
    end,
@@ -58,12 +58,12 @@ test06 = {
    end,
 
    twirl = function (dir)
-      local turn = getTurn()
+      local frame = getFrameCount()
 
       setDirectionRelative(dir * 2)
       setSpeedRelative(0.08)
 
-      if (turn == 90) then
+      if (frame == 90) then
          vanish()
       end
    end

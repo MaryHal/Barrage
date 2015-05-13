@@ -4,9 +4,9 @@ local test07
 test07 = {
    main = function ()
       setPosition(320, 240)
-      turn = getTurn()
+      frame = getFrameCount()
 
-      if (math.fmod(turn, 6) == 0) then
+      if (math.fmod(frame, 6) == 0) then
          for i = 0, 11 do
             launch(1, theta + i * 30, 2, test07.blue)
             theta = theta + 0.1
@@ -15,8 +15,8 @@ test07 = {
    end,
 
    blue = function ()
-      turn = getTurn()
-      if (turn == 30) then
+      frame = getFrameCount()
+      if (frame == 30) then
          currentDirection = getDirection()
          launch(1, currentDirection - 110, 2, test07.final)
 
@@ -25,7 +25,7 @@ test07 = {
    end,
 
    final = function ()
-      if (getTurn() == 60) then
+      if (getFrameCount() == 60) then
          vanish()
       end
    end
