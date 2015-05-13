@@ -36,7 +36,7 @@ struct SpacialPartition* br_createSpacialPartition(struct SpacialPartition* sp);
 void br_deleteSpacialPartition(struct SpacialPartition* sp, bool onHeap);
 
 // Add collision models
-void br_addModel(struct SpacialPartition* sp, struct Rect r);
+size_t br_addModel(struct SpacialPartition* sp, struct Rect r);
 struct Rect br_getModel(struct SpacialPartition* sp, int modelIndex);
 
 // Manage a bullet (for a frame).
@@ -47,8 +47,8 @@ void br_clear(struct SpacialPartition* sp);
 
 // Returns true if playerRect overlaps a bullet's rect. (playerRect.x, playerRect.y) is defined to
 // be the center of the player's hitbox.
-bool br_checkCollision(struct SpacialPartition* sp, struct Rect playerRect);
-bool br_checkCollision2(struct SpacialPartition* sp,
+bool br_checkCollision_(struct SpacialPartition* sp, struct Rect playerRect);
+bool br_checkCollision(struct SpacialPartition* sp,
                         float playerX, float playerY, float playerWidth, float playerHeight);
 
 #endif /* SPACIALPARTITION_H */

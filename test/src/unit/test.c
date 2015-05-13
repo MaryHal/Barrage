@@ -154,7 +154,7 @@ TEST ModelTest()
     br_addModel(&sp, (struct Rect){0, 0, 100, 100});
 
     br_tick(&barrage, &sp);
-    ASSERT(br_checkCollision2(&sp, 30.0f, 30.0f, 4.0f, 4.0f) == true);
+    ASSERT(br_checkCollision(&sp, 30.0f, 30.0f, 4.0f, 4.0f) == true);
 
     br_deleteBarrage(&barrage, false);
     br_deleteSpacialPartition(&sp, false);
@@ -209,12 +209,12 @@ TEST BasicCollisionTest()
     struct SpacialPartition sp;
     br_createSpacialPartition(&sp);
 
-    ASSERT(br_checkCollision(&sp, (struct Rect){0.0f, 0.0f, 4.0f, 4.0f}) == false);
+    ASSERT(br_checkCollision(&sp, 0.0f, 0.0f, 4.0f, 4.0f) == false);
 
     br_tick(&barrage, &sp);
 
-    ASSERT(br_checkCollision(&sp, (struct Rect){18.0f, 8.0f, 4.0f, 4.0f}) == true);
-    ASSERT(br_checkCollision(&sp, (struct Rect){13.0f, 8.0f, 4.0f, 4.0f}) == false);
+    ASSERT(br_checkCollision(&sp, 18.0f, 8.0f, 4.0f, 4.0f) == true);
+    ASSERT(br_checkCollision(&sp, 13.0f, 8.0f, 4.0f, 4.0f) == false);
 
     br_deleteBarrage(&barrage, false);
     br_deleteSpacialPartition(&sp, false);

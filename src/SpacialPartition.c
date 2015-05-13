@@ -38,9 +38,11 @@ void br_deleteSpacialPartition(struct SpacialPartition* sp, bool doFree)
     }
 }
 
-void br_addModel(struct SpacialPartition* sp, struct Rect r)
+size_t br_addModel(struct SpacialPartition* sp, struct Rect r)
 {
     sp->models[sp->modelCount++] = r;
+
+    return sp->modelCount;
 }
 
 struct Rect br_getModel(struct SpacialPartition* sp, int modelIndex)
@@ -76,7 +78,7 @@ void br_clear(struct SpacialPartition* sp)
     memset(sp->bucketSize, 0, sizeof(sp->bucketSize));
 }
 
-bool br_checkCollision(struct SpacialPartition* sp, struct Rect playerRect)
+bool br_checkCollision_(struct SpacialPartition* sp, struct Rect playerRect)
 {
     int x = playerRect.x / TILE_SIZE;
     int y = playerRect.y / TILE_SIZE;
@@ -103,8 +105,16 @@ bool br_checkCollision(struct SpacialPartition* sp, struct Rect playerRect)
     return false;
 }
 
-bool br_checkCollision2(struct SpacialPartition* sp,
+bool br_checkCollision(struct SpacialPartition* sp,
                         float playerX, float playerY, float playerWidth, float playerHeight)
 {
-    return br_checkCollision(sp, (struct Rect){ playerX, playerY, playerWidth, playerHeight });
+    struct Rect player =
+        {
+            playerX - playerWidth / 2,
+            playerY - playerHeight / 2,
+            playerWidth,
+            playerHeight
+        };
+
+    return br_checkCollision_(sp, player);
 }

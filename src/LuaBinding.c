@@ -226,8 +226,7 @@ static int ud_spacial_partition_checkCollision(lua_State* L)
     float playerW = luaL_checknumber(L, 4);
     float playerH = luaL_checknumber(L, 5);
 
-    lua_pushboolean(L, br_checkCollision(ud->sp,
-                                         (struct Rect){ playerX, playerY, playerW, playerH }));
+    lua_pushboolean(L, br_checkCollision(ud->sp, playerX, playerY, playerW, playerH));
 
     return 1;
 }
