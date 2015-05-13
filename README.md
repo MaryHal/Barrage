@@ -42,16 +42,20 @@ Link libbarrage.so and make sure your compiler can find the correct header files
     #include <barrage/Barrage.h>
     #include <barrage/SpacialPartition.h>
 
-
     struct Barrage barrage;
 
     // Passing NULL to createBarrage will return a pointer to a heap-allocated barrage.
     br_createBarrage(&barrage);
-    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f);
 
     // Optional collision detection manager.
     struct SpacialPartition sp;
     br_createSpacialPartition(&sp)
+
+    // Add a new collision model (currently only different sized rectangles)
+    int newModelIndex = br_addModel(&sp, (struct Rect){0, 0, 100, 100});
+
+    // Launch a bullet with the default collision hitbox (0)
+    br_createBulletFromScript(&barrage, script, 320.0f, 120.0f, 0);
 
     while (running)
     {
@@ -100,10 +104,15 @@ Keep in mind the lua executable version should match the lua version linked to b
     function load(arg)
         -- Load a barrage script from a file.
         myBarrage = barrage.newBarrage()
-        myBarrage:launchFile("path/to/file.lua", 320.0, 120.0)
 
         -- Create collision detection manager.
         spacialPartition = barrage.newSpacialPartition()
+
+        -- Add a new collision model (currently only different sized rectangles)
+        local newModelIndex = barrage:addModel(100, 100);
+
+        -- Create a bullet from a script file with the default collision hitbox.
+        myBarrage:launchFile("path/to/file.lua", 320.0, 120.0, 0)
     end
 
     function update(dt)
@@ -121,14 +130,23 @@ Keep in mind the lua executable version should match the lua version linked to b
 
     function draw(dt)
         while myBarrage:hasNext() do
-            local x, y = myBarrage:yield()
+            -- yield will give us plenty of variables to play with.
+            --    x, y is the position of the center of this bullet.
+            --    vx, vy is the velocity of the this bullet.
+            --    `alpha` is a range [0.0, 1.0] describing the current state of this bullet.
+            --        0.0 = Dead, 1.0 = Alive, (0.0, 1.0) = Dying (vanishing, no hitbox)
+            --    `model` is the model index of this bullet.
+            local x, y, vx, vy, alpha, model = myBarrage:yield()
 
             -- Draw our bullet.
             -- Keep in mind the coordinate we are given from yield is defined
             -- to be the center of the bullet.
+            setDrawColor(255, 255, 255, alpha)
             drawImage(x, y)
         end
     end
+
+A more involved example can be found [here](https://github.com/sanford1/flaming-octo-avenger)
 
 ## Barrage Scripting
 
@@ -191,11 +209,11 @@ When you create a barrage, it will immediately evaluate the file and run the `on
 
 #### Frame counting
 
-    -- Get the amount of frames since this bullet's creation.
-    getTurn()
+    -- Get the amount of frames since this bullet's creation or most recent function switch.
+    getFrameCount()
 
     -- Reset this bullet's frame counter
-    resetTurns()
+    resetFrameCount()
 
 #### Barrage difficulty
 
@@ -209,13 +227,13 @@ When you create a barrage, it will immediately evaluate the file and run the `on
 
     -- Shoot a bullet from current bullet's position moving in direction (d) at speed (s) running function (func).
 
-    launch(float d, float s, func)
+    launch(int modelIndex, float d, float s, func)
 
     -- Shoot a bullet and aim it at the "player"
-    launchAtTarget(float s, func)
+    launchAtTarget(int modelIndex, float s, func)
 
     -- Shoot (segments) number of bullets concentrically.
-    launchCircle(int segments, float s, const sol::function& funcName)
+    launchCircle(int modelIndex, int segments, float s, func)
 
 #### Removing Bullets
 
@@ -224,6 +242,29 @@ When you create a barrage, it will immediately evaluate the file and run the `on
 
     -- Immediately destroy this bullet.
     kill()
+
+#### Getting Bullet State
+
+    -- Returns true if bullet is dead.
+    dead = isDead()
+
+    -- Returns true if bullet is dying. Dying = not dead AND not alive.
+    -- Dead bullets have no hitbox and have been marked to die in the future.
+    dying = isDying()
+
+#### Setting Bullet collision models
+
+    -- A `model` is simply an integer attached to a bullet denoting which collision rectangle
+    -- to use during the collision detection phase. This may also be used by a higher level
+    -- program to decide, for example, how to draw this bullet.
+    setModel(int modelIndex)
+    modelIndex = getModel()
+
+#### Passing data to Barrage scripts
+    -- Experimental and not fully functional. There exists a storeFloat function within the
+    -- Barrage interface which can store a single value for scripts to use and this function
+    -- can retrieve that value.
+    value = loadFloat()
 
 #### Do nothing
 
