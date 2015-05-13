@@ -239,7 +239,9 @@ static int ud_spacial_partition_addModel(lua_State* L)
 
     br_addModel(ud->sp, (struct Rect){ 0, 0, width, height });
 
-    return 0;
+    lua_pushinteger(L, ud->sp->modelCount);
+
+    return 1;
 }
 
 static int ud_spacial_partition_getModel(lua_State* L)
