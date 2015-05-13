@@ -51,7 +51,6 @@ static int ud_barrage_createFromFile(lua_State* L)
         type = luaL_checkinteger(L, 5);
     }
 
-
     br_createBulletFromFile(ud->barrage, filename, originX, originY, type);
 
     return 0;
@@ -182,7 +181,9 @@ static int ud_barrage_yield(lua_State* L)
         lua_pushnumber(L, 1.0f);
     }
 
-    lua_pushinteger(L, b->type);
+    // Since we are we are technically referring to an array from lua, let's start our
+    // indices at 1.
+    lua_pushinteger(L, b->type + 1);
 
     return 6;
 }
@@ -209,6 +210,14 @@ static int ud_spacial_partition_create(lua_State* L)
     return 1;
 }
 
+static int ud_spacial_partition_destroy(lua_State* L)
+{
+    struct SpacialPartition_user_data* ud = (struct SpacialPartition_user_data*)luaL_checkudata(L, 1, "Barrage");
+    br_deleteSpacialPartition(ud->sp, true);
+
+    return 0;
+}
+
 static int ud_spacial_partition_checkCollision(lua_State* L)
 {
     struct SpacialPartition_user_data* ud = (struct SpacialPartition_user_data*)luaL_checkudata(L, 1, "Barrage");
@@ -223,12 +232,27 @@ static int ud_spacial_partition_checkCollision(lua_State* L)
     return 1;
 }
 
-static int ud_spacial_partition_destroy(lua_State* L)
+static int ud_spacial_partition_addModel(lua_State* L)
 {
     struct SpacialPartition_user_data* ud = (struct SpacialPartition_user_data*)luaL_checkudata(L, 1, "Barrage");
-    br_deleteSpacialPartition(ud->sp, true);
+    int width  = luaL_checkinteger(L, 2);
+    int height = luaL_checkinteger(L, 3);
+
+    br_addModel(ud->sp, (struct Rect){ 0, 0, width, height });
 
     return 0;
+}
+
+static int ud_spacial_partition_getModel(lua_State* L)
+{
+    struct SpacialPartition_user_data* ud = (struct SpacialPartition_user_data*)luaL_checkudata(L, 1, "Barrage");
+    int modelIndex = luaL_checkinteger(L, 2);
+
+    struct Rect collisionRect = br_getModel(ud->sp, modelIndex - 1);
+    lua_pushinteger(L, collisionRect.width);
+    lua_pushinteger(L, collisionRect.height);
+
+    return 2;
 }
 
 static const struct luaL_Reg ud_barrage_methods[] =
@@ -253,6 +277,8 @@ static const struct luaL_Reg ud_barrage_methods[] =
 static const struct luaL_Reg ud_spacial_partition_methods[] =
 {
     { "checkCollision",       &ud_spacial_partition_checkCollision },
+    { "addModel",             &ud_spacial_partition_addModel },
+    { "getModel",             &ud_spacial_partition_getModel },
     { "__gc",                 &ud_spacial_partition_destroy },
     { NULL, NULL }
 };

@@ -19,7 +19,7 @@ test06 = {
          -- Cycle between directions
          direction = initialDirections[math.fmod(shotCount, #initialDirections) + 1]
          shotCount = shotCount + 1
-         launch(direction, 1.5, test06.shoot)
+         launch(1, direction, 1.5, test06.shoot)
       end
    end,
 
@@ -45,14 +45,14 @@ test06 = {
 
       local divs = 15
       for initialDirection = 1, 360/divs do
-         launch(initialDirection * divs, 3.7, twirlcw)
-         launch(initialDirection * divs, 3.7, twirlccw)
+         launch(1, initialDirection * divs, 3.7, twirlcw)
+         launch(1, initialDirection * divs, 3.7, twirlccw)
 
-         launch(initialDirection * divs, 3.0, twirlcw)
-         launch(initialDirection * divs, 3.0, twirlccw)
+         launch(1, initialDirection * divs, 3.0, twirlcw)
+         launch(1, initialDirection * divs, 3.0, twirlccw)
 
-         launch(initialDirection * divs, 2.3, twirlcw)
-         launch(initialDirection * divs, 2.3, twirlccw)
+         launch(1, initialDirection * divs, 2.3, twirlcw)
+         launch(1, initialDirection * divs, 2.3, twirlccw)
       end
       kill()
    end,

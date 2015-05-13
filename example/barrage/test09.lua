@@ -20,9 +20,9 @@ test09 = {
    main = function ()
       setPosition(320, 240)
 
-      for i = 1, 360, 4 do
+      for i = 0, 360, 4 do
          trapi = bind(test09.trap, i)
-         launch(0, 0, trapi)
+         launch(1, 0, 0, trapi)
       end
 
       setFunction(test09.increment)
@@ -40,7 +40,7 @@ test09 = {
       setDirection(math.deg(theta + math.rad(offset) + math.pi))
 
       if (math.random(0, 600) == 0) then
-         launchAtTarget(4, test09.shoot)
+         launchAtTarget(1, 4, test09.shoot)
       end
    end,
 

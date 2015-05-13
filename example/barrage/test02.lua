@@ -13,8 +13,8 @@ test02 = {
       local turn = getTurn()
       local rank = getRank()
 
-      launch(dir1, 0.8, test02.fade)
-      launch(dir2, 0.8, test02.fade)
+      launch(1, dir1, 0.8, test02.fade)
+      launch(1, dir2, 0.8, test02.fade)
       dir1 = dir1 + offset1
       dir2 = dir2 + offset2
 

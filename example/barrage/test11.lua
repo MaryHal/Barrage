@@ -22,7 +22,7 @@ test11 = {
          theta = randFloatRange(prevTheta + 1.6, prevTheta + 6.28 - 1.6)
          prevTheta = theta
          for i = 0, 40 do
-            launch(0, 0, test11.surround)
+            launch(1, 0, 0, test11.surround)
          end
       end
    end,
@@ -49,8 +49,11 @@ test11 = {
    end,
 
    blast = function ()
-      if (getTurn() == freezeTime) then
+      local turn = getTurn()
+      if (turn == freezeTime) then
          setSpeed(8)
+      elseif (turn == 120) then
+         vanish()
       end
    end
 }

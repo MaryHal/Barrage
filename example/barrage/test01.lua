@@ -8,7 +8,7 @@ test01 = {
       local rank = getRank()
 
       if (math.fmod(turn, 15) == 0) then
-         launch(dir, 1.5, test01.explode)
+         launch(1, dir, 1.5, test01.explode)
          dir = dir + 34
       end
    end,
@@ -16,7 +16,7 @@ test01 = {
    explode = function ()
       local turn = getTurn()
       if (turn == 60) then
-         launchCircle(40, 4.0, test01.homeIn)
+         launchCircle(1, 40, 4.0, test01.homeIn)
 
          kill()
       end

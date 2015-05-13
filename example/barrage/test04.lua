@@ -12,7 +12,7 @@ test04 = {
 
       if (math.fmod(turn, 30) == 0) then
          setPosition(math.random(200, 440), 488)
-         launch(math.random(-20, 20), math.random() + 6.5, test04.shoot)
+         launch(1, math.random(-20, 20), math.random() + 6.5, test04.shoot)
       end
    end,
 
@@ -21,7 +21,7 @@ test04 = {
       setSpeedRelative(-0.07)
       if (turn == 60) then
          for d = 0, 360, 360/30 do
-            launch(d, 2 + math.random() * 3, test04.fade)
+            launch(1, d, 2 + math.random() * 3, test04.fade)
          end
          kill()
       end

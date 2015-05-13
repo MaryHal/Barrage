@@ -111,11 +111,11 @@ TEST LaunchTest()
     const char* script =
         "launchTest = {\n"
         "   main = function ()\n"
-        "      launch(45, 1, kill)\n"
-        "      launch(45, 1, kill)\n"
-        "      launch(45, 1, kill)\n"
-        "      launch(45, 1, kill)\n"
-        "      launch(45, 1, kill)\n"
+        "      launch(1, 45, 1, kill)\n"
+        "      launch(1, 45, 1, kill)\n"
+        "      launch(1, 45, 1, kill)\n"
+        "      launch(1, 45, 1, kill)\n"
+        "      launch(1, 45, 1, kill)\n"
         "      kill()\n"
         "   end\n"
         "}\n"
@@ -132,6 +132,32 @@ TEST LaunchTest()
     ASSERT_EQ(barrage.activeCount, 0);
 
     br_deleteBarrage(&barrage, false);
+
+    PASS();
+}
+
+TEST ModelTest()
+{
+    const char* script =
+        "modelTest = {\n"
+        "   main = function ()\n"
+        "   end\n"
+        "}\n"
+        "return modelTest\n";
+
+    struct Barrage barrage;
+    br_createBarrage(&barrage);
+    br_createBulletFromScript(&barrage, script, 4.0f, 4.0f, 1);
+
+    struct SpacialPartition sp;
+    br_createSpacialPartition(&sp);
+    br_addModel(&sp, (struct Rect){0, 0, 100, 100});
+
+    br_tick(&barrage, &sp);
+    ASSERT(br_checkCollision2(&sp, 30.0f, 30.0f, 4.0f, 4.0f) == true);
+
+    br_deleteBarrage(&barrage, false);
+    br_deleteSpacialPartition(&sp, false);
 
     PASS();
 }
@@ -202,6 +228,8 @@ SUITE(Bullet_Functionality)
     RUN_TEST(NilFuncTest);
     RUN_TEST(VanishTest);
     RUN_TEST(LaunchTest);
+
+    RUN_TEST(ModelTest);
 
     RUN_TEST(StorageTest);
 

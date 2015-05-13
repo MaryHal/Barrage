@@ -5,7 +5,7 @@ test08 = {
    main = function ()
       turn = getTurn()
 
-      launch(theta, 10, test08.shoot)
+      launch(1, theta, 10, test08.shoot)
       theta = theta + 27
 
       if (turn >= 600) then
@@ -19,10 +19,10 @@ test08 = {
 
       dir = getDirection()
       for i = 0, 10 do
-         launch(dir + i * 30, 3.0 + 0.4 * rank, test08.turnaround)
+         launch(1, dir + i * 30, 3.0 + 0.4 * rank, test08.turnaround)
       end
 
-      -- launch(dir + 180, 6, nullfunc)
+      -- launch(1, dir + 180, 6, nullfunc)
 
       kill()
    end,

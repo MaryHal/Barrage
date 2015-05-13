@@ -237,13 +237,13 @@ int l_isDying(lua_State* L)
 int l_setType(lua_State* L)
 {
     int type = luaL_checkinteger(L, 1);
-    bl_setType(g_bullet, type);
+    bl_setType(g_bullet, type - 1);
     return 0;
 }
 
 int l_getType(lua_State* L)
 {
-    lua_pushinteger(L, bl_getType(g_bullet));
+    lua_pushinteger(L, bl_getType(g_bullet) + 1);
     return 1;
 }
 
@@ -301,59 +301,41 @@ int l_getTargetPosition(lua_State* L)
 
 int l_launch(lua_State* L)
 {
-    float dir   = degToRad(luaL_checknumber(L, 1));
-    float speed = luaL_checknumber(L, 2);
+    int type    = luaL_checkinteger(L, 1);
+    float dir   = degToRad(luaL_checknumber(L, 2));
+    float speed = luaL_checknumber(L, 3);
 
     // Third argument is a function handle.
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    // Fourth argument is bullet "type".
-    int type = 0;
-    if (lua_gettop(L) > 4)
-    {
-        type = luaL_checkinteger(L, 4);
-    }
-
-    br_launch(g_barrage, g_bullet, dir, speed, ref, type);
+    br_launch(g_barrage, g_bullet, dir, speed, ref, type - 1);
 
     return 0;
 }
 
 int l_launchAtTarget(lua_State* L)
 {
-    float speed = luaL_checknumber(L, 1);
+    int type    = luaL_checkinteger(L, 1);
+    float speed = luaL_checknumber(L, 2);
 
     // Second argument is a function handle.
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    // Third argument is bullet "type".
-    int type = 0;
-    if (lua_gettop(L) > 3)
-    {
-        type = luaL_checkinteger(L, 3);
-    }
-
-    br_launchAtTarget(g_barrage, g_bullet, speed, ref, type);
+    br_launchAtTarget(g_barrage, g_bullet, speed, ref, type - 1);
 
     return 0;
 }
 
 int l_launchCircle(lua_State* L)
 {
-    int segments = luaL_checkint(L, 1);
-    float speed  = luaL_checknumber(L, 2);
+    int type     = luaL_checkinteger(L, 1);
+    int segments = luaL_checkint(L, 2);
+    float speed  = luaL_checknumber(L, 3);
 
     // Third argument is a function handle.
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    // Fourth argument is bullet "type".
-    int type = 0;
-    if (lua_gettop(L) > 4)
-    {
-        type = luaL_checkinteger(L, 4);
-    }
-
-    br_launchCircle(g_barrage, g_bullet, segments, speed, ref, type);
+    br_launchCircle(g_barrage, g_bullet, segments, speed, ref, type - 1);
 
     return 0;
 }

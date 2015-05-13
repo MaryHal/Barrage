@@ -9,15 +9,15 @@ test03 = {
 
       d = math.fmod(turn, 6)
       if (d == 0) then
-         launch(0, 1, test03.curve)
-         launch(90, 1, test03.curve)
-         launch(180, 1, test03.curve)
-         launch(270, 1, test03.curve)
+         launch(1, 0, 1, test03.curve)
+         launch(1, 90, 1, test03.curve)
+         launch(1, 180, 1, test03.curve)
+         launch(1, 270, 1, test03.curve)
 
-         launch(0, 3, test03.curve2)
-         launch(90, 3, test03.curve2)
-         launch(180, 3, test03.curve2)
-         launch(270, 3, test03.curve2)
+         launch(1, 0, 3, test03.curve2)
+         launch(1, 90, 3, test03.curve2)
+         launch(1, 180, 3, test03.curve2)
+         launch(1, 270, 3, test03.curve2)
       end
 
       if (turn >= 120) then

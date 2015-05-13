@@ -37,6 +37,7 @@ void br_deleteSpacialPartition(struct SpacialPartition* sp, bool onHeap);
 
 // Add collision models
 void br_addModel(struct SpacialPartition* sp, struct Rect r);
+struct Rect br_getModel(struct SpacialPartition* sp, int modelIndex);
 
 // Manage a bullet (for a frame).
 void br_addBullet(struct SpacialPartition* sp, struct Bullet* bullet);

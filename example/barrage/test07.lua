@@ -8,7 +8,7 @@ test07 = {
 
       if (math.fmod(turn, 6) == 0) then
          for i = 0, 11 do
-            launch(theta + i * 30, 2, test07.blue)
+            launch(1, theta + i * 30, 2, test07.blue)
             theta = theta + 0.1
          end
       end
@@ -18,7 +18,7 @@ test07 = {
       turn = getTurn()
       if (turn == 30) then
          currentDirection = getDirection()
-         launch(currentDirection - 110, 2, test07.final)
+         launch(1, currentDirection - 110, 2, test07.final)
 
          setFunction(test07.final)
       end

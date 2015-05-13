@@ -43,6 +43,11 @@ void br_addModel(struct SpacialPartition* sp, struct Rect r)
     sp->models[sp->modelCount++] = r;
 }
 
+struct Rect br_getModel(struct SpacialPartition* sp, int modelIndex)
+{
+    return sp->models[modelIndex];
+}
+
 void br_addBullet(struct SpacialPartition* sp, struct Bullet* bullet)
 {
     if (bl_isDying(bullet))

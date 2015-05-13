@@ -13,7 +13,7 @@ local gwait = 20
 local test05
 test05 = {
    main = function ()
-      circle = bind(launchCircle, 40)
+      circle = bind(bind(launchCircle, 1), 40)
       setPosition(320, 240)
       setFunction(bind(test05.go, 10))
    end,
