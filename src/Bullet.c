@@ -15,7 +15,7 @@ void bl_resetBullet(struct Bullet* b)
     bl_setBulletData(b, 0.0f, 0.0f, 0.0f, 0.0f);
 
     b->type = 0;
-    b->turn = 0;
+    b->frame = 0;
     b->luaFuncRef = LUA_NOREF;
 }
 
@@ -43,7 +43,7 @@ void bl_copyBullet(struct Bullet* to, struct Bullet* from)
     to->vy = from->vy;
 
     to->type = from->type;
-    to->turn = from->turn;
+    to->frame = from->frame;
 
     to->luaFuncRef = from->luaFuncRef;
 }
@@ -146,7 +146,7 @@ void bl_vanish(struct Bullet* b, int framesTilDeath)
 {
     // Same logic as bl_kill.
     if (!bl_isDying(b))
-        b->turn = -framesTilDeath - 1 - 1;
+        b->frame = -framesTilDeath - 1 - 1;
 }
 
 void bl_kill(struct Bullet* b)
@@ -159,17 +159,17 @@ void bl_kill(struct Bullet* b)
     // frame counter to be one behind the state we want it to be in. I.e. after the function is run,
     // the turn counter is immediately updated and will be flagged as dead (or dying) at the correct
     // time.
-    b->turn = DEAD - 1;
+    b->frame = DEAD - 1;
 }
 
 int bl_isDead(struct Bullet* b)
 {
-    return b->turn == DEAD;
+    return b->frame == DEAD;
 }
 
 int bl_isDying(struct Bullet* b)
 {
-    return b->turn < 0;
+    return b->frame < 0;
 }
 
 void bl_setType(struct Bullet* b, int i)
@@ -182,14 +182,14 @@ int bl_getType(struct Bullet* b)
     return b->type;
 }
 
-void bl_resetTurns(struct Bullet* b)
+void bl_resetFrameCount(struct Bullet* b)
 {
-    b->turn = 0;
+    b->frame = 0;
 }
 
-int bl_getTurn(struct Bullet* b)
+int bl_getFrameCount(struct Bullet* b)
 {
-    return b->turn;
+    return b->frame;
 }
 
 // void setColor(unsigned char newR, unsigned char newG, unsigned char newB);
@@ -204,7 +204,7 @@ void bl_update(struct Bullet* b)
     b->x += b->vx;
     b->y += b->vy;
 
-    b->turn++;
+    b->frame++;
 }
 
 // Adjust speed if near zero as setDirection depends on at least one component

@@ -15,7 +15,7 @@ struct Bullet
         };
 
         int type;
-        int turn;
+        int frame;
         int luaFuncRef;
 };
 
@@ -63,8 +63,8 @@ int bl_isDying(struct Bullet* b);
 void bl_setType(struct Bullet* b, int i);
 int bl_getType(struct Bullet* b);
 
-void bl_resetTurns(struct Bullet* b);
-int bl_getTurn(struct Bullet* b);
+void bl_resetFrameCount(struct Bullet* b);
+int bl_getFrameCount(struct Bullet* b);
 // void setColor(unsigned char newR, unsigned char newG, unsigned char newB);
 
 // Set function for bullet to run.

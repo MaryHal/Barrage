@@ -47,8 +47,8 @@ int l_isDying(lua_State* L);
 int l_setType(lua_State* L);
 int l_getType(lua_State* L);
 
-int l_resetTurns(lua_State* L);
-int l_getTurn(lua_State* L);
+int l_resetFrameCount(lua_State* L);
+int l_getFrameCount(lua_State* L);
 
 int l_setLuaFunction(lua_State* L);
 

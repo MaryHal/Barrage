@@ -1,10 +1,36 @@
+local function bind(f,...)
+   local args = {...}
+   return function(...)
+      return f(unpack(args),...)
+   end
+end
+
+local theta = 0
 
 local test13
 test13 = {
    main = function()
-      launch(1, 90, 3, nil)
-      launch(2, -90, 3, nil)
-      kill()
+      setPosition(320, 240)
+
+      launch(1,  theta + 00, 3, test13.doSomething)
+      launch(2, -theta + 10, 6, test13.doSomething)
+
+      launch(1,  theta + 120, 3, test13.doSomething)
+      launch(2, -theta + 120, 6, test13.doSomething)
+
+      launch(1,  theta + 240, 3, test13.doSomething)
+      launch(2, -theta + 240, 6, test13.doSomething)
+
+      theta = theta + 6
+   end,
+
+   doSomething = function()
+      local turn = getTurn()
+      setSpeedRelative(0.02)
+
+      if (turn == 10) then
+         vanish()
+      end
    end
 }
 

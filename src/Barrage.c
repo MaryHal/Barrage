@@ -311,7 +311,7 @@ bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
                 lua_pop(barrage->L, 1);
             }
 
-            barrage->bullets[barrage->index].turn++;
+            barrage->bullets[barrage->index].frame++;
             barrage->processedCount++;
 
             // TODO: Check if out of bounds or bullet is dead

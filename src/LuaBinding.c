@@ -174,7 +174,7 @@ static int ud_barrage_yield(lua_State* L)
 
     if (bl_isDying(b))
     {
-        lua_pushnumber(L, 1 - ((b->turn + 1) / 30.0f));
+        lua_pushnumber(L, 1 - ((b->frame + 1) / 30.0f));
     }
     else
     {

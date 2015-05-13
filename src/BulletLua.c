@@ -42,8 +42,8 @@ void registerLuaFunctions(lua_State* L)
     lua_register(L, "setType", &l_setType);
     lua_register(L, "getType", &l_getType);
 
-    lua_register(L, "resetTurns", &l_resetTurns);
-    lua_register(L, "getTurn", &l_getTurn);
+    lua_register(L, "resetTurns", &l_resetFrameCount);
+    lua_register(L, "getTurn", &l_getFrameCount);
 
     lua_register(L, "setFunction", &l_setLuaFunction);
 
@@ -247,17 +247,16 @@ int l_getType(lua_State* L)
     return 1;
 }
 
-int l_resetTurns(lua_State* L)
-{
-    (void) L;
+int l_resetFrameCount(lua_State* L)
+{    (void) L;
 
-    bl_resetTurns(g_bullet);
+    bl_resetFrameCount(g_bullet);
     return 0;
 }
 
-int l_getTurn(lua_State* L)
+int l_getFrameCount(lua_State* L)
 {
-    lua_pushinteger(L, bl_getTurn(g_bullet));
+    lua_pushinteger(L, bl_getFrameCount(g_bullet));
     return 1;
 }
 
