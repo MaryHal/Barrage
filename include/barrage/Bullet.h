@@ -14,7 +14,7 @@ struct Bullet
                 struct Bullet* next;
         };
 
-        int type;
+        int model;
         int frame;
         int luaFuncRef;
 };
@@ -60,8 +60,8 @@ void bl_kill(struct Bullet* b);
 int bl_isDead(struct Bullet* b);
 int bl_isDying(struct Bullet* b);
 
-void bl_setType(struct Bullet* b, int i);
-int bl_getType(struct Bullet* b);
+void bl_setModel(struct Bullet* b, int i);
+int bl_getModel(struct Bullet* b);
 
 void bl_resetFrameCount(struct Bullet* b);
 int bl_getFrameCount(struct Bullet* b);

@@ -92,7 +92,7 @@ bool br_checkCollision_(struct SpacialPartition* sp, struct Rect playerRect)
     {
         const struct Bullet* b = &sp->buckets[x][y][i];
 
-        struct Rect bulletRect = sp->models[b->type];
+        struct Rect bulletRect = sp->models[b->model];
         bulletRect.x = b->x - bulletRect.width  / 2;
         bulletRect.y = b->y - bulletRect.height / 2;
 

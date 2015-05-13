@@ -44,14 +44,14 @@ static int ud_barrage_createFromFile(lua_State* L)
     float originX = luaL_checknumber(L, 3);
     float originY = luaL_checknumber(L, 4);
 
-    // Fourth argument is bullet "type".
-    int type = 0;
+    // Fourth argument is bullet "model".
+    int model = 0;
     if (lua_gettop(L) > 5)
     {
-        type = luaL_checkinteger(L, 5);
+        model = luaL_checkinteger(L, 5);
     }
 
-    br_createBulletFromFile(ud->barrage, filename, originX, originY, type);
+    br_createBulletFromFile(ud->barrage, filename, originX, originY, model);
 
     return 0;
 }
@@ -64,14 +64,14 @@ static int ud_barrage_createFromBuffer(lua_State* L)
     float originX = luaL_checknumber(L, 3);
     float originY = luaL_checknumber(L, 4);
 
-    // Fourth argument is bullet "type".
-    int type = 0;
+    // Fourth argument is bullet "model".
+    int model = 0;
     if (lua_gettop(L) > 5)
     {
-        type = luaL_checkinteger(L, 5);
+        model = luaL_checkinteger(L, 5);
     }
 
-    br_createBulletFromScript(ud->barrage, buffer, originX, originY, type);
+    br_createBulletFromScript(ud->barrage, buffer, originX, originY, model);
 
     return 0;
 }
@@ -183,7 +183,7 @@ static int ud_barrage_yield(lua_State* L)
 
     // Since we are we are technically referring to an array from lua, let's start our
     // indices at 1.
-    lua_pushinteger(L, b->type + 1);
+    lua_pushinteger(L, b->model + 1);
 
     return 6;
 }

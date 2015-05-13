@@ -121,7 +121,7 @@ void br_runOnLoadFunc_(struct Barrage* barrage)
 
 void br_createBulletFromFile(struct Barrage* barrage,
                              const char* filename,
-                             float originX, float originY, int type)
+                             float originX, float originY, int model)
 {
     // Eval file
     if (luaL_dofile(barrage->L, filename))
@@ -149,14 +149,14 @@ void br_createBulletFromFile(struct Barrage* barrage,
     int ref = luaL_ref(barrage->L, LUA_REGISTRYINDEX);
     bl_setLuaFunction(b, ref);
 
-    bl_setType(b, type);
+    bl_setModel(b, model);
 
     barrage->activeCount++;
 }
 
 void br_createBulletFromScript(struct Barrage* barrage,
                                const char* script,
-                               float originX, float originY, int type)
+                               float originX, float originY, int model)
 {
     // Run the inline script.
     if (luaL_dostring(barrage->L, script))
@@ -184,7 +184,7 @@ void br_createBulletFromScript(struct Barrage* barrage,
     int ref = luaL_ref(barrage->L, LUA_REGISTRYINDEX);
     bl_setLuaFunction(b, ref);
 
-    bl_setType(b, type);
+    bl_setModel(b, model);
 
     barrage->activeCount++;
 }
@@ -198,7 +198,7 @@ void br_createBullet(struct Barrage* barrage,
     bl_setBulletData(b, x, y, vx, vy);
     bl_setLuaFunction(b, luaFuncRef);
 
-    bl_setType(b, type);
+    bl_setModel(b, type);
 
     barrage->queue.size++;
 }

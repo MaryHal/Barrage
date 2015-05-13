@@ -236,14 +236,14 @@ int l_isDying(lua_State* L)
 
 int l_setType(lua_State* L)
 {
-    int type = luaL_checkinteger(L, 1);
-    bl_setType(g_bullet, type - 1);
+    int modelIndex = luaL_checkinteger(L, 1);
+    bl_setModel(g_bullet, modelIndex - 1);
     return 0;
 }
 
 int l_getType(lua_State* L)
 {
-    lua_pushinteger(L, bl_getType(g_bullet) + 1);
+    lua_pushinteger(L, bl_getModel(g_bullet) + 1);
     return 1;
 }
 

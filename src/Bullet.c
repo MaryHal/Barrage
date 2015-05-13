@@ -14,7 +14,7 @@ void bl_resetBullet(struct Bullet* b)
 {
     bl_setBulletData(b, 0.0f, 0.0f, 0.0f, 0.0f);
 
-    b->type = 0;
+    b->model = 0;
     b->frame = 0;
     b->luaFuncRef = LUA_NOREF;
 }
@@ -42,7 +42,7 @@ void bl_copyBullet(struct Bullet* to, struct Bullet* from)
     to->vx = from->vx;
     to->vy = from->vy;
 
-    to->type = from->type;
+    to->model = from->model;
     to->frame = from->frame;
 
     to->luaFuncRef = from->luaFuncRef;
@@ -172,14 +172,14 @@ int bl_isDying(struct Bullet* b)
     return b->frame < 0;
 }
 
-void bl_setType(struct Bullet* b, int i)
+void bl_setModel(struct Bullet* b, int modelIndex)
 {
-    b->type = i;
+    b->model = modelIndex;
 }
 
-int bl_getType(struct Bullet* b)
+int bl_getModel(struct Bullet* b)
 {
-    return b->type;
+    return b->model;
 }
 
 void bl_resetFrameCount(struct Bullet* b)
