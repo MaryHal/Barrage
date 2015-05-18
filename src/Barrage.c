@@ -42,7 +42,8 @@ struct Barrage* br_createBarrage(struct Barrage* barrage)
     memset(barrage, 0, sizeof(struct Barrage));
 #endif
 
-    // Create a new lua state (if it's the first one created), otherwise get the global lua state.
+    // Create a new lua state (if it's the first one created), otherwise get the
+    // global lua state.
     barrage->L = br_initGlobalLuaState_();
 
     barrage->index = 0;
@@ -81,28 +82,35 @@ void br_deleteBarrage(struct Barrage* barrage, bool doFree)
         luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef);
     }
 
-    // Since we are using a global lua state, don't destroy it if a single barrage is destroyed.
+    // Since we are using a global lua state, don't destroy it if a single
+    // barrage is destroyed.
 
-    // From the Lua documentation: "On several platforms, you may not need to call this function,
-    // because all resources are naturally released when the host program ends. On the other
-    // hand..."
+    // From the Lua documentation: "On several platforms, you may not need to
+    // call [lua_close], because all resources are naturally released when the
+    // host program ends. On the other hand..."
 
     // So we're all good, right?
 
     /* lua_close(barrage->L); */
 
-    if (doFree)
-    {
-        free(barrage);
-    }
+     if (doFree)
+     {
+         free(barrage);
+     }
 }
 
-void br_runOnLoadFunc_(struct Barrage* barrage)
+struct Bullet* br_pushBarrageFunctions_(struct Barrage* barrage)
 {
-    const char* funcName = "onLoad";
+    // We expect the script to return a table to us that contains an `onLoad`
+    // function and a `main` function.
 
-    // Get the function at table["onLoad"].
-    lua_pushstring(barrage->L, funcName);
+    // Push a copy of the script's table to the top of the lua stack since we
+    // need to grab two things from it.
+    lua_pushvalue(barrage->L, -1);
+
+    // Pop the table from the stack and replace it with the function at
+    // table["onLoad"].
+    lua_pushstring(barrage->L, "onLoad");
     lua_gettable(barrage->L, -2);
 
     // Run function on load(if it exists)
@@ -117,6 +125,22 @@ void br_runOnLoadFunc_(struct Barrage* barrage)
     {
         lua_pop(barrage->L, 1);
     }
+
+    // Create a new bullet and attach the `main` function to it.
+    struct Bullet* b = br_getFreeBullet_(barrage);
+
+    // Pop the table from the stack and replace it with the function at
+    // table["main"].
+    lua_pushstring(barrage->L, "main");
+    lua_gettable(barrage->L, -2);
+
+    // Pop the function off the stack and create a reference to it.
+    int ref = luaL_ref(barrage->L, LUA_REGISTRYINDEX);
+    bl_setLuaFunction(b, ref);
+
+    barrage->activeCount++;
+
+    return b;
 }
 
 void br_createBulletFromFile(struct Barrage* barrage,
@@ -129,29 +153,10 @@ void br_createBulletFromFile(struct Barrage* barrage,
         luaL_error(barrage->L, "%s", lua_tostring(barrage->L, -1));
     }
 
-    // We expect the script to return a table to us that contains an `onLoad` function and a `main`
-    // function.
+    struct Bullet* initialBullet = br_pushBarrageFunctions_(barrage);
 
-    // Create a copy of the script's table since we need to grab two things from it.
-    lua_pushvalue(barrage->L, -1);
-
-    // Check if onLoad function exists and run it.
-    br_runOnLoadFunc_(barrage);
-
-    struct Bullet* b = br_getFreeBullet_(barrage);
-    bl_setPosition(b, originX, originY);
-
-    // Get the function at table["main"].
-    lua_pushstring(barrage->L, "main");
-    lua_gettable(barrage->L, -2);
-
-    // Pop the function off the stack and create a reference to it.
-    int ref = luaL_ref(barrage->L, LUA_REGISTRYINDEX);
-    bl_setLuaFunction(b, ref);
-
-    bl_setModel(b, model);
-
-    barrage->activeCount++;
+    bl_setPosition(initialBullet, originX, originY);
+    bl_setModel(initialBullet, model);
 }
 
 void br_createBulletFromScript(struct Barrage* barrage,
@@ -164,29 +169,10 @@ void br_createBulletFromScript(struct Barrage* barrage,
         luaL_error(barrage->L, "%s", lua_tostring(barrage->L, -1));
     }
 
-    // We expect the script to return a table to us that contains an `onLoad` function and a `main`
-    // function.
+    struct Bullet* initialBullet = br_pushBarrageFunctions_(barrage);
 
-    // Create a copy of the script's table since we need to grab two things from it.
-    lua_pushvalue(barrage->L, -1);
-
-    // Check if onLoad function exists and run it.
-    br_runOnLoadFunc_(barrage);
-
-    struct Bullet* b = br_getFreeBullet_(barrage);
-    bl_setPosition(b, originX, originY);
-
-    // Get the function at table["main"].
-    lua_pushstring(barrage->L, "main");
-    lua_gettable(barrage->L, -2);
-
-    // Pop the function off the stack and create a reference to it.
-    int ref = luaL_ref(barrage->L, LUA_REGISTRYINDEX);
-    bl_setLuaFunction(b, ref);
-
-    bl_setModel(b, model);
-
-    barrage->activeCount++;
+    bl_setPosition(initialBullet, originX, originY);
+    bl_setModel(initialBullet, model);
 }
 
 void br_createBullet(struct Barrage* barrage,

@@ -16,10 +16,11 @@
 // Forward declaration
 struct SpacialPartition;
 
-// Since we don't really know where in our `bullets` array a bullet will be added and we can add a
-// bullet at any time during the update loop, we won't know when that bullet will be updated for the
-// first time. To fix this problem, we'll queue up bullets added in the middle of the update loop
-// and add them all at the end.
+// Since we don't really know where in our `bullets` array a bullet will be
+// added and we can add a bullet at any time during the update loop, we won't
+// know when that bullet will be updated for the first time. To fix this
+// problem, we'll queue up bullets added in the middle of the update loop and
+// add them all at the end.
 struct BulletQueue
 {
         size_t size;
@@ -31,8 +32,9 @@ struct Barrage
         lua_State* L;
 
         size_t index;
-        size_t processedCount; // Internally keeps track of the number of bullets that still need to
-                               // be processed (updated or yielded).
+        size_t processedCount; // Internally keeps track of the number of
+                               // bullets that still need to be processed
+                               // (during tick or yield loop).
         size_t activeCount;    // Keeps track of the number of alive bullets.
         size_t killCount;      // Number of bullets to kill on next update.
 
@@ -57,7 +59,11 @@ lua_State* br_initGlobalLuaState_();
 struct Barrage* br_createBarrage(struct Barrage* barrage);
 void br_deleteBarrage(struct Barrage* barrage, bool onHeap);
 
-void br_runOnLoadFunc_(struct Barrage* barrage);
+// Setup our barrage. Runs onLoad and attach the `main` function to a new
+// bullet. This function expects a table with an `main` function (and an option
+// `onLoad` function) on top of the global lua stack.
+struct Bullet* br_pushBarrageFunctions_(struct Barrage* barrage);
+
 void br_createBulletFromFile(struct Barrage* barrage,
                              const char* filename,
                              float originX, float originY, int type);
