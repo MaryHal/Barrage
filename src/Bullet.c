@@ -120,9 +120,7 @@ void bl_setDirectionRelative(struct Bullet* b, float dir)
 
 void bl_aimAtPoint(struct Bullet* b, float tx, float ty)
 {
-    // TODO: use getDirectionAim
-    bl_setDirection(b, bl_PI - atan2(tx - b->x,
-                                     ty - b->y));
+    bl_setDirection(b, bl_getAimDirection(b, tx, ty));
 }
 
 float bl_getAimDirection(struct Bullet* b, float tx, float ty)
@@ -151,14 +149,15 @@ void bl_vanish(struct Bullet* b, int framesTilDeath)
 
 void bl_kill(struct Bullet* b)
 {
-    // A bullet's frame counter needs to be updated _after_ running its Lua function to keep the mental
-    // model of the bullet consistent. For example, when we initially run a bullet, we expect the turn
-    // counter to start at 0 since technically, no frames have elapsed for that bullet.
+    // A bullet's frame counter needs to be updated _after_ running its Lua
+    // function to keep the mental model of the bullet consistent. For example,
+    // when we initially run a bullet, we expect the turn counter to start at 0
+    // since technically, no frames have elapsed for that bullet.
 
-    // As such, since the frame counter determines bullet state, when we kill a bullet, we want the
-    // frame counter to be one behind the state we want it to be in. I.e. after the function is run,
-    // the turn counter is immediately updated and will be flagged as dead (or dying) at the correct
-    // time.
+    // As such, since the frame counter determines bullet state, when we kill a
+    // bullet, we want the frame counter to be one behind the state we want it
+    // to be in. I.e. after the function is run, the turn counter is immediately
+    // updated and will be flagged as dead (or dying) at the correct time.
     b->frame = DEAD - 1;
 }
 
@@ -213,6 +212,7 @@ void bl_update(struct Bullet* b)
 void bl_fixSpeed(struct Bullet* b)
 {
     // See https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
+
     // Direction (alone) is dependent on components, so if speed is set to 0.0f,
     // setting a direction will not do anything.
     if (fabs(b->vy) < FLT_EPSILON)
