@@ -8,6 +8,8 @@ Lua scripting for shmup barrage patterns. Rewrite of the C++ version ([BulletLua
 
 ![test3.lua](http://giant.gfycat.com/BelatedFakeBoilweevil.gif)
 
+An involved example usage of this library (using [LÖVE](https://love2d.org/)) can be found [here](https://github.com/sanford1/flaming-octo-avenger).
+
 ## Building this project
 
 Dependencies: python, [ninja](https://martine.github.io/ninja/), [lua](http://www.lua.org/) (or [luajit](http://luajit.org/))
@@ -155,7 +157,7 @@ Keep in mind the lua executable version should match the lua version linked to b
         end
     end
 
-A more involved example can be found [here](https://github.com/sanford1/flaming-octo-avenger)
+A more involved example can be found [here](https://github.com/sanford1/flaming-octo-avenger).
 
 ## Barrage Scripting
 
