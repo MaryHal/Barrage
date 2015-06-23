@@ -280,3 +280,54 @@ When you create a barrage, it will immediately evaluate the file and run the `on
 #### Do nothing
 
     Pass `nil` to setFunction or launch*. nullFunc was removed.
+
+## Barrage Example Scripts
+
+### Test12.lua
+
+    -- Declare our lua module for this Barrage. Barrage modules at their minimum are
+    -- tables that contain a `main` function.
+    local test12
+
+    -- All bullets have a function (or nil) associated with them. The associated
+    -- function is run once per frame.
+
+    test12 = {
+
+    -- Our initial bullet will run the main function once per frame.
+    main = function ()
+        frame = getFrameCount()
+        rank = getRank()
+
+        -- Every second (when frameCount % 60 == 0) ...
+        if (math.fmod(frame, 60) == 0) then
+            -- Launch a new bullet with the `shoot` function attached to it.
+            launch(1, 180, 4, test12.shoot)
+        end
+    end,
+
+    shoot = function ()
+        -- Constantly home in on the player, then...
+        aimAtTarget()
+
+        -- After 40 frames, Launch 40 bullets that run the blaze function.
+        if (getFrameCount() == 40) then
+            launchCircle(1, 40, 8, test12.blaze)
+
+            -- We don't want this bullet to linger around, so get rid of it immediately.
+            kill()
+        end
+    end,
+
+    blaze = function ()
+        -- Constantly turn to create a circular movement effect.
+        setDirectionRelative(8)
+
+        -- Fade out after 20 frames.
+        if (getFrameCount() == 20) then
+            vanish()
+        end
+    end
+    }
+
+    return test12
