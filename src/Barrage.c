@@ -71,6 +71,8 @@ struct Barrage* br_createBarrage(struct Barrage* barrage)
 
     barrage->rank = 0.8f;
 
+    barrage->timeAccumulator = 0.0f;
+
     return barrage;
 }
 
@@ -248,7 +250,7 @@ void br_setPlayerPosition(struct Barrage* barrage, float x, float y)
     barrage->playerY = y;
 }
 
-bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
+bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp, float dt)
 {
     if (sp != NULL)
         br_clear(sp);
@@ -264,6 +266,13 @@ bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
     barrage->killCount = 0;
 
     barrage->processedCount= 0;
+
+    // Calculate how many full frames to update.
+    barrage->timeAccumulator += dt;
+    int numUpdates = barrage->timeAccumulator / FRAME_TIME_MS;
+    barrage->timeAccumulator -= numUpdates * FRAME_TIME_MS;
+
+    float scaledDt = dt / FRAME_TIME_MS;
 
     for (barrage->index = 0;
          barrage->processedCount < barrage->activeCount && barrage->index < MAX_BULLETS;
@@ -283,31 +292,33 @@ bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
             continue;
         }
 
-        // Run bullet function
-
-        // Push lua function ref to the top of the lua stack.
-        lua_rawgeti(barrage->L, LUA_REGISTRYINDEX,
-                    barrage->bullets[barrage->index].luaFuncRef);
-
-        // Let's branch more! Retire nullFunc by allowing nil to be passed as a function
-        // reference.
-        if (!lua_isnil(barrage->L, -1))
+        for (int i = 0; i < numUpdates; ++i)
         {
-#if NDEBUG
-            lua_call(barrage->L, 0, 0);
-#else
-            if (lua_pcall(barrage->L, 0, 0, 0))
+            // Push lua function ref to the top of the lua stack.
+            lua_rawgeti(barrage->L, LUA_REGISTRYINDEX,
+                        barrage->bullets[barrage->index].luaFuncRef);
+
+            // Let's branch more! Retire nullFunc by allowing nil to be passed as a function
+            // reference.
+            if (!lua_isnil(barrage->L, -1))
             {
-                luaL_error(barrage->L, "[%s]", lua_tostring(barrage->L, -1));
-            }
+#if NDEBUG
+                lua_call(barrage->L, 0, 0);
+#else
+                if (lua_pcall(barrage->L, 0, 0, 0))
+                {
+                    luaL_error(barrage->L, "[%s]", lua_tostring(barrage->L, -1));
+                }
 #endif
-        }
-        else
-        {
-            lua_pop(barrage->L, 1);
+            }
+            else
+            {
+                lua_pop(barrage->L, 1);
+            }
+
+            barrage->bullets[barrage->index].frame++;
         }
 
-        barrage->bullets[barrage->index].frame++;
         barrage->processedCount++;
 
         // TODO: Check if bullet is out of "bounds".
@@ -326,8 +337,8 @@ bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
         }
 
         // Update Position
-        barrage->bullets[barrage->index].x += barrage->bullets[barrage->index].vx;
-        barrage->bullets[barrage->index].y += barrage->bullets[barrage->index].vy;
+        barrage->bullets[barrage->index].x += barrage->bullets[barrage->index].vx * scaledDt;
+        barrage->bullets[barrage->index].y += barrage->bullets[barrage->index].vy * scaledDt;
 
         // Finally, add this bullet to our collision detection system.
         if (sp != NULL)

@@ -48,6 +48,8 @@ struct Barrage
 
         float playerX, playerY;
         float rank;             // Requested difficulty of this barrage (0.0, 1.0]
+
+        float timeAccumulator;
 };
 
 // Pointers to the bullet/barrage that is currently being processed.
@@ -88,7 +90,7 @@ void br_storeFloat(struct Barrage* barrage, const char* key, float value);
 float br_getFloat(struct Barrage* barrage, const char* key);
 
 void br_setPlayerPosition(struct Barrage* barrage, float x, float y);
-bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp);
+bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp, float dt);
 
 void br_vanishAll(struct Barrage* barrage);
 
