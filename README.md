@@ -283,6 +283,8 @@ When you create a barrage, it will immediately evaluate the file and run the `on
 
 ## Barrage Example Scripts
 
+[Small collection of scripts](https://github.com/sanford1/flaming-octo-avenger/tree/master/barrage)
+
 ### Test12.lua
 
     -- Declare our lua module for this Barrage. Barrage modules at their minimum are
