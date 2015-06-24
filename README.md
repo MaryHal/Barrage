@@ -6,6 +6,8 @@ Lua scripting for shmup barrage patterns. Rewrite of the C++ version ([BulletLua
 > up games. These patterns, while difficult to dodge in game and hard to appreciate while in the
 > heat of the moment, can be beautiful to spectate.
 
+![test3.lua](http://giant.gfycat.com/BelatedFakeBoilweevil.gif)
+
 ## Building this project
 
 Dependencies: python, [ninja](https://martine.github.io/ninja/), [lua](http://www.lua.org/) (or [luajit](http://luajit.org/))
@@ -51,7 +53,8 @@ Link libbarrage.so and make sure your compiler can find the correct header files
     struct SpacialPartition sp;
     br_createSpacialPartition(&sp)
 
-    // Add a new collision model (currently only different sized rectangles)
+    // Add a new collision model to our collision manager.
+    // This will register the model so that BulletLua scripts can refer to this model by index.
     int newModelIndex = br_addModel(&sp, (struct Rect){0, 0, 100, 100});
 
     // Launch a bullet with the default collision hitbox (0)
@@ -75,7 +78,13 @@ Link libbarrage.so and make sure your compiler can find the correct header files
         while (br_hasNext(&barrage))
         {
             struct Bullet* b = br_yield(&barrage);
-            drawImage(b->x, b->y);
+
+            // If you want to draw a different sprite according to the current bullet's model, go for it!
+            if (b->model == 0)
+                drawDefaultBulletImage(b->x, b->y);
+            else if (b->model == 1)
+                drawSomeOtherBulletImage(b->x, b->y);
+            ...
         }
     }
 
@@ -131,9 +140,9 @@ Keep in mind the lua executable version should match the lua version linked to b
     function draw(dt)
         while myBarrage:hasNext() do
             -- yield will give us plenty of variables to play with.
-            --    x, y is the position of the center of this bullet.
-            --    vx, vy is the velocity of the this bullet.
-            --    `alpha` is a range [0.0, 1.0] describing the current state of this bullet.
+            --    `x, y` is the position of the center of this bullet.
+            --    `vx, vy` is the velocity of the this bullet.
+            --    `alpha` is a range [0.0, 1.0] describing the intended transparency of this bullet.
             --        0.0 = Dead, 1.0 = Alive, (0.0, 1.0) = Dying (vanishing, no hitbox)
             --    `model` is the model index of this bullet.
             local x, y, vx, vy, alpha, model = myBarrage:yield()
@@ -255,7 +264,7 @@ When you create a barrage, it will immediately evaluate the file and run the `on
 #### Setting Bullet collision models
 
     -- A `model` is simply an integer attached to a bullet denoting which collision rectangle
-    -- to use during the collision detection phase. This may also be used by a higher level
+    -- to use during the collision detection phase. This variable may also be used by a higher level
     -- program to decide, for example, how to draw this bullet.
     setModel(int modelIndex)
     modelIndex = getModel()

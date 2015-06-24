@@ -5,6 +5,8 @@
 
 #include <barrage/Rect.h>
 
+#include <assert.h>
+
 struct SpacialPartition* br_createSpacialPartition(struct SpacialPartition* sp)
 {
     if (sp == NULL)
@@ -41,12 +43,13 @@ void br_deleteSpacialPartition(struct SpacialPartition* sp, bool doFree)
 size_t br_addModel(struct SpacialPartition* sp, struct Rect r)
 {
     sp->models[sp->modelCount++] = r;
-
     return sp->modelCount;
 }
 
 struct Rect br_getModel(struct SpacialPartition* sp, int modelIndex)
 {
+    assert(modelIndex < modelCount);
+
     return sp->models[modelIndex];
 }
 
@@ -64,6 +67,8 @@ void br_addBullet(struct SpacialPartition* sp, struct Bullet* bullet)
     {
         return;
     }
+
+    assert(sp->bucketSize[x][y] < BUCKET_LID);
 
     if (sp->bucketSize[x][y] < BUCKET_LID)
     {
@@ -108,13 +113,12 @@ bool br_checkCollision_(struct SpacialPartition* sp, struct Rect playerRect)
 bool br_checkCollision(struct SpacialPartition* sp,
                         float playerX, float playerY, float playerWidth, float playerHeight)
 {
-    struct Rect player =
-        {
-            playerX - playerWidth / 2,
-            playerY - playerHeight / 2,
-            playerWidth,
-            playerHeight
-        };
+    struct Rect player = {
+        .x      = playerX - playerWidth / 2,
+        .y      = playerY - playerHeight / 2,
+        .width  = playerWidth,
+        .height = playerHeight
+    };
 
     return br_checkCollision_(sp, player);
 }
