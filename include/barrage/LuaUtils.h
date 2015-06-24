@@ -3,6 +3,6 @@
 
 #include <lua.h>
 
-void stackDump (lua_State *L);
+void stackDump(lua_State *L);
 
 #endif /* LUAUTILS_H */

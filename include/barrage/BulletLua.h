@@ -5,11 +5,8 @@
 #include <lauxlib.h>
 #include <lualib.h>
 
-// Debug function
-void stackDump (lua_State *L);
-
 // Load our functions.
-void registerLuaFunctions(lua_State* L);
+void br_registerLuaFunctions_(lua_State* L);
 
 // Lua wrapper functions.
 

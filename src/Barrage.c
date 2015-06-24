@@ -1,6 +1,5 @@
 #include <barrage/Barrage.h>
 #include <barrage/BulletLua.h>
-#include <barrage/LuaUtils.h>
 
 #include <stdbool.h>
 #include <string.h>
@@ -22,7 +21,7 @@ lua_State* br_initGlobalLuaState_()
         g_L = luaL_newstate();
 
         // Register Bullet functions.
-        registerLuaFunctions(g_L);
+        br_registerLuaFunctions_(g_L);
 
         //Open all lua standard libraries.
         luaL_openlibs(g_L);
@@ -77,7 +76,7 @@ struct Barrage* br_createBarrage(struct Barrage* barrage)
 
 void br_deleteBarrage(struct Barrage* barrage, bool doFree)
 {
-    // TODO: Determine which function references to unref.
+    // TODO: If possible, More carefully determine which function references to unref.
     for (int i = 0; i < MAX_BULLETS; ++i)
     {
         luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[i].luaFuncRef);
@@ -315,21 +314,24 @@ bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
 
                 continue;
             }
+
+            // Update Position
+            barrage->bullets[barrage->index].x += barrage->bullets[barrage->index].vx;
+            barrage->bullets[barrage->index].y += barrage->bullets[barrage->index].vy;
+
+            // Finally, add this bullet to our collision detection system.
+            if (sp != NULL)
+            {
+                br_addBullet(sp, &barrage->bullets[barrage->index]);
+            }
         }
-        else
+        else // We're dead! Don't do anything!
         {
             // TODO: Profile this loop to see if saving memory hampers speed. Since bullet data is
             // unioned with our a linked list node data, we need to skip updating this bullet's
             // position if dead (or else we'll secretly be doing pointer arithmetic).
             continue;
         }
-
-        // Update Position
-        barrage->bullets[barrage->index].x += barrage->bullets[barrage->index].vx;
-        barrage->bullets[barrage->index].y += barrage->bullets[barrage->index].vy;
-
-        if (sp != NULL)
-            br_addBullet(sp, &barrage->bullets[barrage->index]);
     }
 
     bool bulletLaunched = barrage->queue.size > 0;

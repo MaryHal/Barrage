@@ -8,7 +8,7 @@
 #include <barrage/MathUtils.h>
 #include <barrage/RandCompat.h>
 
-void registerLuaFunctions(lua_State* L)
+void br_registerLuaFunctions_(lua_State* L)
 {
     /* lua_register(L, "nullfunc", &l_nullFunc); */
 
@@ -208,6 +208,11 @@ int l_vanish(lua_State* L)
     }
     else
     {
+        // TODO: variable length vanishes don't quite work how I'd like them to.
+        // Since bullet transparency is dependent on both the total vanish
+        // duration and current elapsed vanish time, and we don't store the
+        // total vanish duration, we cannot reliably calculate bullet
+        // transparency.
         bl_vanish(g_bullet, luaL_checkinteger(L, 1));
     }
 
