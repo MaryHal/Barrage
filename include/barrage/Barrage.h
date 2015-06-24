@@ -13,6 +13,9 @@
 #define QUEUE_SIZE  (1 << 8)
 #define MAX_BULLETS (1 << 10)
 
+#define FPS 60
+#define FRAME_TIME_MS (1.0f / FPS)
+
 // Forward declaration
 struct SpacialPartition;
 

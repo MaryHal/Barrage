@@ -4,10 +4,12 @@
 #include <barrage/SpacialPartition.h>
 
 #include <math.h>
+#include <stdbool.h>
 
-int isInRange(float value, float expected, float tolerance)
+bool inFloatRange(float value, float expected)
 {
-    return fabs(expected - value) < tolerance;
+    const float TOLERANCE = 1e-4;
+    return fabs(value/expected - 1.0f) < TOLERANCE;
 }
 
 TEST BasicMovementTest()
@@ -29,18 +31,18 @@ TEST BasicMovementTest()
     br_createBarrage(&barrage);
     br_createBulletFromScript(&barrage, script, 320.0f, 120.0f, 0);
 
-    ASSERT(barrage.bullets[0].x == 320.0f);
-    ASSERT(barrage.bullets[0].y == 120.0f);
+    ASSERT(inFloatRange(barrage.bullets[0].x, 320.0f) &&
+           inFloatRange(barrage.bullets[0].y, 120.0f));
 
     br_tick(&barrage, NULL);
 
-    ASSERT(barrage.bullets[0].x == 330.0f);
-    ASSERT(barrage.bullets[0].y == 130.0f);
+    ASSERT(inFloatRange(barrage.bullets[0].x, 330.0f) &&
+           inFloatRange(barrage.bullets[0].y, 130.0f));
 
     br_tick(&barrage, NULL);
 
-    ASSERT(barrage.bullets[0].x == 335.0f);
-    ASSERT(barrage.bullets[0].y == 135.0f);
+    ASSERT(inFloatRange(barrage.bullets[0].x, 335.0f) &&
+           inFloatRange(barrage.bullets[0].y, 135.0f));
 
     br_deleteBarrage(&barrage, false);
 
@@ -184,8 +186,8 @@ TEST StorageTest()
 
     br_tick(&barrage, NULL);
 
-    ASSERT(barrage.bullets[0].x == 20.0f);
-    ASSERT(barrage.bullets[0].y == 10.0f);
+    ASSERT(inFloatRange(barrage.bullets[0].x, 20.0f) &&
+           inFloatRange(barrage.bullets[0].y, 10.0f));
 
     br_deleteBarrage(&barrage, false);
 

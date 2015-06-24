@@ -272,65 +272,67 @@ bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp)
         // Make sure the lua interface knows which bullet is currently being updated.
         g_bullet = &barrage->bullets[barrage->index];
 
-        // Run lua function.
-        if (!bl_isDead(&barrage->bullets[barrage->index]))
+        // We're dead! Don't do anything!
+        if (bl_isDead(&barrage->bullets[barrage->index]))
         {
-            // Push lua function ref to the top of the lua stack.
-            lua_rawgeti(barrage->L, LUA_REGISTRYINDEX,
-                        barrage->bullets[barrage->index].luaFuncRef);
-
-            // Let's branch more! Retire nullFunc by allowing nil to be passed as a function
-            // reference.
-            if (!lua_isnil(barrage->L, -1))
-            {
-#if NDEBUG
-                lua_call(barrage->L, 0, 0);
-#else
-                if (lua_pcall(barrage->L, 0, 0, 0))
-                {
-                    luaL_error(barrage->L, "[%s]", lua_tostring(barrage->L, -1));
-                }
-#endif
-            }
-            else
-            {
-                lua_pop(barrage->L, 1);
-            }
-
-            barrage->bullets[barrage->index].frame++;
-            barrage->processedCount++;
-
-            // TODO: Check if out of bounds or bullet is dead
-            if (bl_isDead(&barrage->bullets[barrage->index]))
-            {
-                // Remove function reference from bullet and Lua State.
-                /* luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[barrage->index].luaFuncRef); */
-
-                // Re-add this bullet to the free list.
-                bl_setNext(&barrage->bullets[barrage->index], barrage->firstAvailable);
-                barrage->firstAvailable = &barrage->bullets[barrage->index];
-
-                barrage->killCount++;
-
-                continue;
-            }
-
-            // Update Position
-            barrage->bullets[barrage->index].x += barrage->bullets[barrage->index].vx;
-            barrage->bullets[barrage->index].y += barrage->bullets[barrage->index].vy;
-
-            // Finally, add this bullet to our collision detection system.
-            if (sp != NULL)
-            {
-                br_addBullet(sp, &barrage->bullets[barrage->index]);
-            }
-        }
-        else // We're dead! Don't do anything!
-        {
-            // TODO: Profile this loop to see if saving memory hampers speed. Since bullet data is
-            // unioned with our a linked list node data, we need to skip updating this bullet's
-            // position if dead (or else we'll secretly be doing pointer arithmetic).
+            // TODO: Profile this loop to see if saving memory (and causing more
+            // branching) hampers speed. Since bullet data is unioned with our a
+            // linked list node data, we need to skip updating this bullet's
+            // position if dead (or else we'll secretly be doing pointer
+            // arithmetic).
             continue;
+        }
+
+        // Run bullet function
+
+        // Push lua function ref to the top of the lua stack.
+        lua_rawgeti(barrage->L, LUA_REGISTRYINDEX,
+                    barrage->bullets[barrage->index].luaFuncRef);
+
+        // Let's branch more! Retire nullFunc by allowing nil to be passed as a function
+        // reference.
+        if (!lua_isnil(barrage->L, -1))
+        {
+#if NDEBUG
+            lua_call(barrage->L, 0, 0);
+#else
+            if (lua_pcall(barrage->L, 0, 0, 0))
+            {
+                luaL_error(barrage->L, "[%s]", lua_tostring(barrage->L, -1));
+            }
+#endif
+        }
+        else
+        {
+            lua_pop(barrage->L, 1);
+        }
+
+        barrage->bullets[barrage->index].frame++;
+        barrage->processedCount++;
+
+        // TODO: Check if bullet is out of "bounds".
+        if (bl_isDead(&barrage->bullets[barrage->index]))
+        {
+            // Remove function reference from bullet and Lua State.
+            /* luaL_unref(barrage->L, LUA_REGISTRYINDEX, barrage->bullets[barrage->index].luaFuncRef); */
+
+            // Re-add this bullet to the free list.
+            bl_setNext(&barrage->bullets[barrage->index], barrage->firstAvailable);
+            barrage->firstAvailable = &barrage->bullets[barrage->index];
+
+            barrage->killCount++;
+
+            continue;
+        }
+
+        // Update Position
+        barrage->bullets[barrage->index].x += barrage->bullets[barrage->index].vx;
+        barrage->bullets[barrage->index].y += barrage->bullets[barrage->index].vy;
+
+        // Finally, add this bullet to our collision detection system.
+        if (sp != NULL)
+        {
+            br_addBullet(sp, &barrage->bullets[barrage->index]);
         }
     }
 
