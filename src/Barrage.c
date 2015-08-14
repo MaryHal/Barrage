@@ -181,6 +181,8 @@ void br_createBullet(struct Barrage* barrage,
                      float x, float y, float vx, float vy,
                      int luaFuncRef, int type)
 {
+    assert(barrage->queue.size < QUEUE_SIZE);
+
     struct Bullet* b = &barrage->queue.bullets[barrage->queue.size];
 
     bl_setBulletData(b, x, y, vx, vy);
@@ -258,11 +260,12 @@ bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp, float dt)
     // Make sure the lua interface knows which barrage is currently being updated.
     g_barrage = barrage;
 
-    // Amount of killed bullets this frame. We want to update activeCount after all the bullets have
-    // been updated. Since a new bullet can be launched during the update loop and we don't know
-    // where in our bullets array a new bullet will spawn, we wouldn't know whether or not the new
-    // bullet will be updated this frame or not. If we queue up bullet updates (and bullet counts)
-    // after the loop, we have much more consistent behavior.
+    // Amount of killed bullets this frame. We want to update activeCount after
+    // all the bullets have been updated. Since a new bullet can be launched
+    // during the update loop and we don't know where in our bullets array a new
+    // bullet will spawn, we wouldn't know whether or not the new bullet will be
+    // updated this frame or not. If we queue up bullet updates (and bullet
+    // counts) after the loop, we have much more consistent behavior.
     barrage->killCount = 0;
 
     barrage->processedCount= 0;
@@ -272,6 +275,11 @@ bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp, float dt)
     int numUpdates = barrage->timeAccumulator / FRAME_TIME_MS;
     barrage->timeAccumulator -= numUpdates * FRAME_TIME_MS;
 
+    // Normally updating position is simple: position = position + velocity.
+    // However, this expects a dt of one frame (1/60 of a second by default). As
+    // such, to update on a subframe, we need to scale dt to be a percentage of
+    // a full frame. This means updating position will now be: position =
+    // position + velocity * scaling_factor.
     float scaledDt = dt / FRAME_TIME_MS;
 
     for (barrage->index = 0;
@@ -292,6 +300,8 @@ bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp, float dt)
             continue;
         }
 
+        // TODO: This loop that partially manages frame independent update does
+        // not handle the case where dt is really long.
         for (int i = 0; i < numUpdates; ++i)
         {
             // Push lua function ref to the top of the lua stack.

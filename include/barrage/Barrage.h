@@ -16,19 +16,7 @@
 #define FPS 60
 #define FRAME_TIME_MS (1.0f / FPS)
 
-// Forward declaration
 struct SpacialPartition;
-
-// Since we don't really know where in our `bullets` array a bullet will be
-// added and we can add a bullet at any time during the update loop, we won't
-// know when that bullet will be updated for the first time. To fix this
-// problem, we'll queue up bullets added in the middle of the update loop and
-// add them all at the end.
-struct BulletQueue
-{
-        size_t size;
-        struct Bullet bullets[QUEUE_SIZE];
-};
 
 struct Barrage
 {
@@ -42,9 +30,22 @@ struct Barrage
         size_t killCount;      // Number of bullets to kill on next update.
 
         struct Bullet* firstAvailable; // Implicit linked list of free bullets.
+
+        // TODO: Integrate a dynamic, resizable array instead of a static array.
+        // This will probably involve restructuring our free bullet list since
+        // dynamic arrays in C usually have unstable object addresses.
         struct Bullet bullets[MAX_BULLETS];
 
-        struct BulletQueue queue; // Queue of new bullets to add at the end up update phase.
+        // Since we don't really know where in our `bullets` array a bullet will
+        // be added and we can add a bullet at any time during the update loop,
+        // we won't know when that bullet will be updated for the first time. To
+        // fix this problem, we'll queue up bullets added in the middle of the
+        // update loop and add them all at the end.
+        struct BulletQueue
+        {
+                size_t size;
+                struct Bullet bullets[QUEUE_SIZE];
+        } queue;
 
         float playerX, playerY;
         float rank;             // Requested difficulty of this barrage (0.0, 1.0]

@@ -46,9 +46,9 @@ size_t br_addModel(struct SpacialPartition* sp, struct Rect r)
     return sp->modelCount;
 }
 
-struct Rect br_getModel(struct SpacialPartition* sp, int modelIndex)
+struct Rect br_getModel(struct SpacialPartition* sp, size_t modelIndex)
 {
-    assert(modelIndex < modelCount);
+    assert(modelIndex < sp->modelCount);
 
     return sp->models[modelIndex];
 }
