@@ -165,6 +165,7 @@ A more involved example can be found [here](https://github.com/sanford1/flaming-
 
 A bare-bones barrage script is structured like a lua module:
 
+    local myBarrage
     myBarrage = {
         -- Optional
         onLoad = function ()
@@ -180,7 +181,7 @@ When you create a barrage, it will immediately evaluate the file and run the `on
 
 The above example is formatted not unlike how you'd normally describe a Javascript object. An alternate way to describe the same table would be like this:
 
-    myBarrage = {}
+    local myBarrage = {}
 
     function myBarrage.onLoad()
     end
