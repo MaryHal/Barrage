@@ -333,3 +333,12 @@ When you create a barrage, it will immediately evaluate the file and run the `on
     }
 
     return test12
+
+## Roadmap
+
+- Determine whether or not to keep using a free-list (embedded in each bullet) for bookkeeping (keeping track of unused bullets).
+
+- Closely tied to the previous point, consider using dynamic, variable length arrays instead of static arrays. Since most implementations of variable-length arrays in C have unstable object addresses, we can no longer use a linked list for our free-list. Instead, we would have to use array indices.
+
+- Consider a better "standard" Barrage module format. Should _all_ the important functions be contained inside the module table?
+

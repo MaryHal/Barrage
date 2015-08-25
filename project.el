@@ -3,6 +3,7 @@
 ;;;    Eval this file!
 
 ;;; Code:
+
 (require 'projectile)
 
 (puthash (projectile-project-root)

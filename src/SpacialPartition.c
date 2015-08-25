@@ -15,6 +15,9 @@ struct SpacialPartition* br_createSpacialPartition(struct SpacialPartition* sp)
     }
 
     memset(sp->bucketSize, 0, sizeof(sp->bucketSize));
+
+    // Since we delete lazily (reset the size of each bucket), we actually don't
+    // need to reset the data inside the buckets.
     /* memset(sp->buckets, 0, sizeof(sp->buckets)); */
 
     memset(sp->models, 0, sizeof(sp->models));
@@ -80,6 +83,7 @@ void br_addBullet(struct SpacialPartition* sp, struct Bullet* bullet)
 
 void br_clear(struct SpacialPartition* sp)
 {
+    // Lazy deletion! Just reset the size count of each bucket.
     memset(sp->bucketSize, 0, sizeof(sp->bucketSize));
 }
 

@@ -20,8 +20,9 @@
 // Maximum bullets per bucket.
 #define BUCKET_LID   100
 
-// Cut an area into a grid and organize all bullets into each grid cell so during the collision
-// detection step we only need to compare bullets inside a single cell.
+// Cut an area into a static grid and organize all bullets into each grid cell
+// so during the collision detection step we only need to compare bullets inside
+// a single cell.
 struct SpacialPartition
 {
         struct Bullet buckets[HORI_BUCKETS][VERT_BUCKETS][BUCKET_LID];
