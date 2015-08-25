@@ -27,6 +27,12 @@ lua_State* br_initGlobalLuaState_()
         luaL_openlibs(g_L);
     }
 
+    // Set a global variable for our barrage scripts.
+    if (luaL_dostring(g_L, "DEFAULT_MODEL=1"))
+    {
+        luaL_error(g_L, "%s", lua_tostring(g_L, -1));
+    }
+
     return g_L;
 }
 
