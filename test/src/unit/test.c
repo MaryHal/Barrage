@@ -34,12 +34,12 @@ TEST BasicMovementTest()
     ASSERT(inFloatRange(barrage.bullets[0].x, 320.0f) &&
            inFloatRange(barrage.bullets[0].y, 120.0f));
 
-    br_tick(&barrage, NULL, 1.0f / 60.0f);
+    br_tick(&barrage, NULL, BARRAGE_FRAME_TIME_MS);
 
     ASSERT(inFloatRange(barrage.bullets[0].x, 330.0f) &&
            inFloatRange(barrage.bullets[0].y, 130.0f));
 
-    br_tick(&barrage, NULL, 1.0f / 60.0f);
+    br_tick(&barrage, NULL, BARRAGE_FRAME_TIME_MS);
 
     ASSERT(inFloatRange(barrage.bullets[0].x, 335.0f) &&
            inFloatRange(barrage.bullets[0].y, 135.0f));
@@ -64,9 +64,9 @@ TEST NilFuncTest()
     br_createBulletFromScript(&barrage, script, 320.0f, 120.0f, 0);
 
     // Set LuaFuncRef to point to nil. I hope we don't segfault!
-    br_tick(&barrage, NULL, 1.0f / 60.0f);
-    br_tick(&barrage, NULL, 1.0f / 60.0f);
-    br_tick(&barrage, NULL, 1.0f / 60.0f);
+    br_tick(&barrage, NULL, BARRAGE_FRAME_TIME_MS);
+    br_tick(&barrage, NULL, BARRAGE_FRAME_TIME_MS);
+    br_tick(&barrage, NULL, BARRAGE_FRAME_TIME_MS);
 
     br_deleteBarrage(&barrage, false);
 
@@ -91,14 +91,14 @@ TEST VanishTest()
 
     for (int i = 0; i < 35; ++i)
     {
-        br_tick(&barrage, NULL, 1.0f / 60.0f);
+        br_tick(&barrage, NULL, BARRAGE_FRAME_TIME_MS);
     }
 
     ASSERT_EQ(barrage.activeCount, 0);
 
     for (int i = 0; i < 10; ++i)
     {
-        br_tick(&barrage, NULL, 1.0f / 60.0f);
+        br_tick(&barrage, NULL, BARRAGE_FRAME_TIME_MS);
     }
 
     ASSERT_EQ(barrage.activeCount, 0);
@@ -128,9 +128,9 @@ TEST LaunchTest()
     br_createBulletFromScript(&barrage, script, 320.0f, 120.0f, 0);
 
     ASSERT_EQ(barrage.activeCount, 1);
-    br_tick(&barrage, NULL, 1.0f / 60.0f);
+    br_tick(&barrage, NULL, BARRAGE_FRAME_TIME_MS);
     ASSERT_EQ(barrage.activeCount, 5);
-    br_tick(&barrage, NULL, 1.0f / 60.0f);
+    br_tick(&barrage, NULL, BARRAGE_FRAME_TIME_MS);
     ASSERT_EQ(barrage.activeCount, 0);
 
     br_deleteBarrage(&barrage, false);
@@ -155,7 +155,7 @@ TEST ModelTest()
     br_createSpacialPartition(&sp);
     br_addModel(&sp, (struct Rect){0, 0, 100, 100});
 
-    br_tick(&barrage, &sp, 1.0f / 60.0f);
+    br_tick(&barrage, &sp, BARRAGE_FRAME_TIME_MS);
     ASSERT(br_checkCollision(&sp, 30.0f, 30.0f, 4.0f, 4.0f) == true);
 
     br_deleteBarrage(&barrage, false);
@@ -184,7 +184,7 @@ TEST StorageTest()
     const char* key = "BarrageTestValue";
     br_storeFloat(&barrage, key, 20.0f);
 
-    br_tick(&barrage, NULL, 1.0f / 60.0f);
+    br_tick(&barrage, NULL, BARRAGE_FRAME_TIME_MS);
 
     ASSERT(inFloatRange(barrage.bullets[0].x, 20.0f) &&
            inFloatRange(barrage.bullets[0].y, 10.0f));
@@ -213,7 +213,7 @@ TEST BasicCollisionTest()
 
     ASSERT(br_checkCollision(&sp, 0.0f, 0.0f, 4.0f, 4.0f) == false);
 
-    br_tick(&barrage, &sp, 1.0f / 60.0f);
+    br_tick(&barrage, &sp, BARRAGE_FRAME_TIME_MS);
 
     ASSERT(br_checkCollision(&sp, 18.0f, 8.0f, 4.0f, 4.0f) == true);
     ASSERT(br_checkCollision(&sp, 13.0f, 8.0f, 4.0f, 4.0f) == false);

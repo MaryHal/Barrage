@@ -278,15 +278,15 @@ bool br_tick(struct Barrage* barrage, struct SpacialPartition* sp, float dt)
 
     // Calculate how many full frames to update.
     barrage->timeAccumulator += dt;
-    int numUpdates = barrage->timeAccumulator / FRAME_TIME_MS;
-    barrage->timeAccumulator -= numUpdates * FRAME_TIME_MS;
+    int numUpdates = barrage->timeAccumulator / BARRAGE_FRAME_TIME_MS;
+    barrage->timeAccumulator -= numUpdates * BARRAGE_FRAME_TIME_MS;
 
     // Normally updating position is simple: position = position + velocity.
     // However, this expects a dt of one frame (1/60 of a second by default). As
     // such, to update on a subframe, we need to scale dt to be a percentage of
     // a full frame. This means updating position will now be: position =
     // position + velocity * scaling_factor.
-    float scaledDt = dt / FRAME_TIME_MS;
+    float scaledDt = dt / BARRAGE_FRAME_TIME_MS;
 
     for (barrage->index = 0;
          barrage->processedCount < barrage->activeCount && barrage->index < MAX_BULLETS;

@@ -309,8 +309,8 @@ int l_launch(lua_State* L)
     float dir   = degToRad(luaL_checknumber(L, 2));
     float speed = luaL_checknumber(L, 3);
 
-    // Third argument is a function handle.
-    int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    // Fourth argument is a function handle.
+    int ref = (lua_gettop(L) > 3) ? luaL_ref(L, LUA_REGISTRYINDEX) : LUA_NOREF;
 
     br_launch(g_barrage, g_bullet, dir, speed, ref, type - 1);
 
@@ -322,8 +322,8 @@ int l_launchAtTarget(lua_State* L)
     int type    = luaL_checkinteger(L, 1);
     float speed = luaL_checknumber(L, 2);
 
-    // Second argument is a function handle.
-    int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    // Third argument is a function handle.
+    int ref = (lua_gettop(L) > 2) ? luaL_ref(L, LUA_REGISTRYINDEX) : LUA_NOREF;
 
     br_launchAtTarget(g_barrage, g_bullet, speed, ref, type - 1);
 
@@ -336,8 +336,8 @@ int l_launchCircle(lua_State* L)
     int segments = luaL_checkint(L, 2);
     float speed  = luaL_checknumber(L, 3);
 
-    // Third argument is a function handle.
-    int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    // Fourth argument is a function handle.
+    int ref = (lua_gettop(L) > 3) ? luaL_ref(L, LUA_REGISTRYINDEX) : LUA_NOREF;
 
     br_launchCircle(g_barrage, g_bullet, segments, speed, ref, type - 1);
 

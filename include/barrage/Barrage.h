@@ -13,8 +13,8 @@
 #define QUEUE_SIZE  (1 << 8)
 #define MAX_BULLETS (1 << 12)
 
-#define FPS 60
-#define FRAME_TIME_MS (1.0f / FPS)
+#define BARRAGE_FPS 60
+#define BARRAGE_FRAME_TIME_MS (1.0f / BARRAGE_FPS)
 
 struct SpacialPartition;
 
