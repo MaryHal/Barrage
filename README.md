@@ -340,5 +340,6 @@ When you create a barrage, it will immediately evaluate the file and run the `on
 
 - Closely tied to the previous point, consider using dynamic, variable length arrays instead of static arrays. Since most implementations of variable-length arrays in C have unstable object addresses, we can no longer use a linked list for our free-list. Instead, we would have to use array indices.
 
-- Consider a better "standard" Barrage module format. Should _all_ the important functions be contained inside the module table?
+- Consider the order in which bullets should be drawn/stored. Since bullets are constantly dying and being born (and "shuffled" due to our free-list stack), bullets don't really have a defined z-ordering. The consequence of this is that between pairs of bullets, you can't be sure which one is on top, and the one currently on top will not always be on top. This is very noticable with slower moving clumps of bullets (see test02.lua [here](https://github.com/sanford1/flaming-octo-avenger))
 
+- Consider a better "standard" Barrage module format. Should _all_ the important functions be contained inside the module table?
