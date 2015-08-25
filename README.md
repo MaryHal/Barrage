@@ -178,6 +178,18 @@ A bare-bones barrage script is structured like a lua module:
 
 When you create a barrage, it will immediately evaluate the file and run the `onLoad` function in your table if it exists. Next, it will create a bullet and associate the `main` function with it. What this means is that on each frame (tick), `main` will be run. Some documentation for bullet functions can be found below and a set of example scripts can be found in `example/barrage`
 
+The above example is formatted not unlike how you'd normally describe a Javascript object. An alternate way to describe the same table would be like this:
+
+    myBarrage = {}
+
+    function myBarrage.onLoad()
+    end
+
+    function myBarrage.main()
+    end
+
+    return myBarrage
+
 ### Available bullet functions
 
 #### Position functions
