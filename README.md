@@ -249,7 +249,7 @@ The above example is formatted not unlike how you'd normally describe a Javascri
     -- Switch current running function. This also resets the bullet's frame counter.
     setFunction(function)
 
-    -- Shoot a bullet from current bullet's position moving in direction (d) at speed (s) running function (func).
+    -- Shoot a bullet from current bullet's position moving in direction (d) at speed (s) running function (func). For all launch functions, "func" is an optional argument. If omitted, the launched bullet will not have an associated function attached to it.
 
     launch(int modelIndex, float d, float s, func)
 
@@ -281,6 +281,10 @@ The above example is formatted not unlike how you'd normally describe a Javascri
     -- A `model` is simply an integer attached to a bullet denoting which collision rectangle
     -- to use during the collision detection phase. This variable may also be used by a higher level
     -- program to decide, for example, how to draw this bullet.
+
+    -- Barrage contains a default model (defined as DEFAULT_MODEL in the lua
+       interface) which is the 4x4 pixel square at the center of a bullet.
+
     setModel(int modelIndex)
     modelIndex = getModel()
 
