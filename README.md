@@ -298,6 +298,21 @@ The above example is formatted not unlike how you'd normally describe a Javascri
 
 [Small collection of scripts](https://github.com/sanford1/flaming-octo-avenger/tree/master/barrage)
 
+### Test14.lua
+
+    local test14 = {}
+
+    function test14.main()
+        frame = getFrameCount()
+        rank = getRank()
+
+        if (math.fmod(frame, math.floor(120 * (1.2 - rank))) == 0) then
+            launchCircle(DEFAULT_MODEL, 40, 3)
+        end
+    end
+
+    return test14
+
 ### Test12.lua
 
     -- Declare our lua module for this Barrage. Barrage modules at their minimum are
