@@ -10,7 +10,7 @@
 /* #include <stddef.h> */
 #include <stdbool.h>
 
-#define QUEUE_SIZE  (1 << 8)
+#define QUEUE_SIZE  (1 << 10)
 #define MAX_BULLETS (1 << 12)
 
 #define BARRAGE_FPS 60

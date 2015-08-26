@@ -376,4 +376,6 @@ The above example is formatted not unlike how you'd normally describe a Javascri
 
     - Preliminary thinking: older bullets _must_ be before newer ones. Right now, if a bullet dies, it leaves a hole to be filled in the bullets array. What could possibly work is a circular buffer that, when full, will start to shift elements forward to fill the holes...
 
+    - If we use a stack-like structure for our bullets array (probably avoiding deletion/shifting when bullets die, leaving holes), how large should we make it? What are the conditions to reorder and fill holes?
+
 - Consider a better "standard" Barrage module format. Should _all_ the important functions be contained inside the module table?
