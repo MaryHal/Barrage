@@ -1,20 +1,27 @@
 language: c
+
+sudo: false
 compiler:
     - gcc
     - clang
-
-sudo: false
 
 branches:
     only:
         - master
         - test
 
+install:
+    - if [ "$CC" = "gcc" ]; then export CC="gcc-4.8"; fi
+
 addons:
     apt:
+        sources:
+            - ubuntu-toolchain-r-test
         packages:
-        - ninja-build
-        - liblua5.2-dev
+            - gcc-4.8
+            - clang
+            - ninja-build
+            - liblua5.2-dev
 
 script:
     - python ./bootstrap.py --ci --cxx=$CC
