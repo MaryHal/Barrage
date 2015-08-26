@@ -1,6 +1,7 @@
+sudo: false
+
 language: c
 
-sudo: false
 compiler:
     - gcc
     - clang
@@ -8,7 +9,6 @@ compiler:
 branches:
     only:
         - master
-        - test
 
 install:
     - if [ "$CC" = "gcc" ]; then export CC="gcc-4.8"; fi
