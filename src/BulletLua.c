@@ -190,7 +190,7 @@ int l_linearInterpolate(lua_State* L)
 {
     float targetX = luaL_checknumber(L, 1);
     float targetY = luaL_checknumber(L, 2);
-    int steps = luaL_checkint(L, 3);
+    int steps = luaL_checkinteger(L, 3);
 
     bl_linearInterpolate(g_bullet, targetX, targetY, steps);
 
@@ -333,7 +333,7 @@ int l_launchAtTarget(lua_State* L)
 int l_launchCircle(lua_State* L)
 {
     int type     = luaL_checkinteger(L, 1);
-    int segments = luaL_checkint(L, 2);
+    int segments = luaL_checkinteger(L, 2);
     float speed  = luaL_checknumber(L, 3);
 
     // Fourth argument is a function handle.

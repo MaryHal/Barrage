@@ -71,7 +71,7 @@ void br_addBullet(struct SpacialPartition* sp, struct Bullet* bullet)
         return;
     }
 
-    assert(sp->bucketSize[x][y] < BUCKET_LID);
+    assert(sp->bucketSize[x][y] <= BUCKET_LID);
 
     if (sp->bucketSize[x][y] < BUCKET_LID)
     {
