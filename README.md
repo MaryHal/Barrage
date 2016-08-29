@@ -6,7 +6,7 @@ Lua scripting for shmup barrage patterns. Rewrite of the C++ version ([BulletLua
 > up games. These patterns, while difficult to dodge in game and hard to appreciate while in the
 > heat of the moment, can be beautiful to spectate.
 
-![test3.lua](http://giant.gfycat.com/BelatedFakeBoilweevil.gif)
+![test3.lua](http://giant.gfycat.com/BelatedFakeBoilweevil.gif?raw=true)
 
 An involved example usage of this library (using [LÖVE](https://love2d.org/)) can be found [here](https://github.com/sanford1/flaming-octo-avenger).
 
