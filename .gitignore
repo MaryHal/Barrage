@@ -39,3 +39,4 @@ compile_commands.json
 .ninja_deps
 .ninja_log
 /example/assets/audio/
+*.gif
